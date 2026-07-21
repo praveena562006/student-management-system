@@ -159,6 +159,11 @@ Logout
 📝 Marks
 </a>
 
+ <a href="subjects.php">
+        📚 Subjects
+ </a>
+
+
 <a href="reports.php">
 📊 Reports
 </a>
