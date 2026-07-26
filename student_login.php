@@ -12,7 +12,6 @@ include "db.php";
 if (isset($_SESSION["student_id"])) {
 
     header("Location: student_dashboard.php");
-
     exit();
 
 }
@@ -39,107 +38,194 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     /* Get Password */
 
-    $password = trim($_POST["password"]);
-
-
-
-    /* =====================================================
-       SEARCH STUDENT USING REGISTRATION NUMBER
-    ===================================================== */
-
-    $sql = "
-
-        SELECT
-            id,
-            name,
-            roll_no,
-            registration_no,
-            dob,
-            gender,
-            department,
-            year,
-            semester,
-            email
-
-        FROM students
-
-        WHERE registration_no = ?
-
-        LIMIT 1
-
-    ";
-
-
-    $stmt = mysqli_prepare($conn, $sql);
-
+    $password = $_POST["password"];
 
 
     /* =====================================================
-       CHECK QUERY
+       BASIC VALIDATION
     ===================================================== */
 
-    if ($stmt) {
+    if ($registration_no == "" || $password == "") {
 
+        $error = "Please enter your Registration Number and password.";
 
-        /* Attach Registration Number */
+    }
 
-        mysqli_stmt_bind_param(
-
-            $stmt,
-
-            "s",
-
-            $registration_no
-
-        );
-
-
-        /* Execute Query */
-
-        mysqli_stmt_execute($stmt);
-
-
-        /* Get Result */
-
-        $result = mysqli_stmt_get_result($stmt);
-
-
-        /* Get Student Row */
-
-        $student = mysqli_fetch_assoc($result);
-
+    else {
 
 
         /* =================================================
-           IF STUDENT EXISTS
+           SEARCH STUDENT
         ================================================= */
 
-        if ($student) {
+        $sql = "
+
+            SELECT
+                id,
+                name,
+                roll_no,
+                registration_no,
+                dob,
+                gender,
+                department,
+                year,
+                semester,
+                email,
+                password,
+                email_verified
+
+            FROM students
+
+            WHERE registration_no = ?
+
+            LIMIT 1
+
+        ";
 
 
-            /*
-                DOB is stored in database like:
-
-                2006-06-05
-
-                We convert it into:
-
-                05062006
-
-                DDMMYYYY
-            */
+        $stmt = mysqli_prepare($conn, $sql);
 
 
-            if (!empty($student["dob"])) {
+        if ($stmt) {
 
 
-                $dob_password = date(
+            mysqli_stmt_bind_param(
+                $stmt,
+                "s",
+                $registration_no
+            );
 
-                    "dmY",
 
-                    strtotime($student["dob"])
+            mysqli_stmt_execute($stmt);
 
-                );
+
+            $result =
+                mysqli_stmt_get_result($stmt);
+
+
+            $student =
+                mysqli_fetch_assoc($result);
+
+
+
+            /* =============================================
+               CHECK WHETHER STUDENT EXISTS
+            ============================================= */
+
+            if ($student) {
+
+
+                /* =========================================
+                   VERIFY PASSWORD HASH
+                ========================================= */
+
+                if (
+                    password_verify(
+                        $password,
+                        $student["password"]
+                    )
+                ) {
+
+
+                    /* =====================================
+                       CHECK EMAIL VERIFICATION
+                    ===================================== */
+
+                    if (
+                        (int)$student["email_verified"] !== 1
+                    ) {
+
+
+                        $error =
+                            "Your email address has not been verified yet. "
+                            .
+                            "Please open the verification email sent by EduTrack and verify your account before logging in.";
+
+
+                    }
+
+                    else {
+
+
+                        /* =================================
+                           LOGIN SUCCESSFUL
+                        ================================= */
+
+
+                        /*
+                            Prevent session fixation by
+                            generating a new session ID.
+                        */
+
+                        session_regenerate_id(true);
+
+
+
+                        /* =============================
+                           SAVE STUDENT SESSION
+                        ============================= */
+
+                        $_SESSION["student_id"] =
+                            $student["id"];
+
+
+                        $_SESSION["student_name"] =
+                            $student["name"];
+
+
+                        $_SESSION["student_registration"] =
+                            $student["registration_no"];
+
+
+                        $_SESSION["student_department"] =
+                            $student["department"];
+
+
+                        $_SESSION["student_year"] =
+                            $student["year"];
+
+
+                        $_SESSION["student_semester"] =
+                            $student["semester"];
+
+
+                        $_SESSION["student_email"] =
+                            $student["email"];
+
+
+                        $_SESSION["role"] =
+                            "student";
+
+
+                        /* =============================
+                           REDIRECT TO DASHBOARD
+                        ============================= */
+
+                        header(
+                            "Location: student_dashboard.php"
+                        );
+
+                        exit();
+
+                    }
+
+
+                }
+
+                else {
+
+
+                    /* =================================
+                       INCORRECT PASSWORD
+                    ================================= */
+
+                    $error =
+                        "Incorrect password. "
+                        .
+                        "For a newly created account, the initial password is your Date of Birth in DDMMYYYY format.";
+
+
+                }
 
 
             }
@@ -147,128 +233,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             else {
 
 
-                $dob_password = "";
-
-            }
-
-
-
-            /* =================================================
-               VERIFY PASSWORD
-            ================================================= */
-
-            if ($password === $dob_password) {
-
-
-                /*
-                    Generate a fresh session ID
-                    after successful login.
-                */
-
-                session_regenerate_id(true);
-
-
-
-                /* =============================================
-                   SAVE STUDENT INFORMATION IN SESSION
-                ============================================= */
-
-
-                $_SESSION["student_id"] =
-                    $student["id"];
-
-
-                $_SESSION["student_name"] =
-                    $student["name"];
-
-
-                $_SESSION["student_registration"] =
-                    $student["registration_no"];
-
-
-                $_SESSION["student_department"] =
-                    $student["department"];
-
-
-                $_SESSION["student_year"] =
-                    $student["year"];
-
-
-                $_SESSION["student_semester"] =
-                    $student["semester"];
-
-
-                $_SESSION["role"] =
-                    "student";
-
-
-
-                /* =============================================
-                   REDIRECT TO STUDENT DASHBOARD
-                ============================================= */
-
-                header(
-
-                    "Location: student_dashboard.php"
-
-                );
-
-
-                exit();
-
-            }
-
-
-            /* =================================================
-               WRONG PASSWORD
-            ================================================= */
-
-            else {
-
+                /* =====================================
+                   STUDENT NOT FOUND
+                ===================================== */
 
                 $error =
+                    "Student account not found. Please check your Registration Number.";
 
-                    "Incorrect password. Enter your Date of Birth in DDMMYYYY format.";
 
             }
+
+
+            mysqli_stmt_close($stmt);
 
 
         }
-
-
-        /* =====================================================
-           STUDENT DOES NOT EXIST
-        ===================================================== */
 
         else {
 
 
             $error =
+                "Database error. Unable to process student login.";
 
-                "Student account not found. Please check your Registration Number.";
 
         }
-
-
-
-        /* Close Statement */
-
-        mysqli_stmt_close($stmt);
-
-
-    }
-
-
-    /* =========================================================
-       DATABASE QUERY ERROR
-    ========================================================= */
-
-    else {
-
-
-        $error =
-
-            "Database error. Unable to process student login.";
 
     }
 
@@ -284,26 +272,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
 
-
     <meta charset="UTF-8">
-
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-
     <title>
         Student Login - EduTrack
     </title>
-
 
     <link
         rel="stylesheet"
         href="css/style.css"
     >
-
 
 </head>
 
@@ -311,15 +294,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="student-login-body">
 
 
-
 <div class="student-login-wrapper">
-
 
 
     <!-- =====================================================
          LEFT SIDE - BRANDING
     ====================================================== -->
-
 
     <div class="student-login-brand">
 
@@ -356,10 +336,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </p>
 
 
-
-            <!-- FEATURES -->
-
-
             <div class="login-features">
 
 
@@ -391,6 +367,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
 
+                <div>
+
+                    ✉ Email Verified Accounts
+
+                </div>
+
+
             </div>
 
 
@@ -405,15 +388,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          RIGHT SIDE - LOGIN FORM
     ====================================================== -->
 
-
     <div class="student-login-section">
 
 
         <div class="student-login-card">
-
-
-
-            <!-- ICON -->
 
 
             <div class="login-icon">
@@ -421,10 +399,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 🎓
 
             </div>
-
-
-
-            <!-- TITLE -->
 
 
             <h2>
@@ -436,7 +410,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <p class="login-subtitle">
 
-                Sign in using your student credentials.
+                Sign in using your verified student account.
 
             </p>
 
@@ -445,7 +419,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- =================================================
                  ERROR MESSAGE
             ================================================== -->
-
 
             <?php
 
@@ -456,16 +429,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="error-message">
 
-
                     ⚠️
-
 
                     <?php
 
                     echo htmlspecialchars($error);
 
                     ?>
-
 
                 </div>
 
@@ -482,12 +452,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  LOGIN FORM
             ================================================== -->
 
-
             <form method="POST">
-
-
-
-                <!-- REGISTRATION NUMBER -->
 
 
                 <label>
@@ -510,9 +475,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if (isset($_POST["username"])) {
 
                             echo htmlspecialchars(
-
                                 $_POST["username"]
-
                             );
 
                         }
@@ -527,15 +490,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-                <!-- PASSWORD -->
-
-
                 <label>
 
                     Password
 
                 </label>
-
 
 
                 <div class="password-field">
@@ -556,10 +515,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         required
 
                     >
-
-
-
-                    <!-- SHOW/HIDE PASSWORD -->
 
 
                     <button
@@ -583,9 +538,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-                <!-- LOGIN BUTTON -->
-
-
                 <button
 
                     type="submit"
@@ -607,7 +559,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  LOGIN INFORMATION
             ================================================== -->
 
-
             <div class="student-login-help">
 
 
@@ -628,8 +579,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         Initial Password:
                     </strong>
 
-                    Your Date of Birth in
-                    DDMMYYYY format
+                    Your Date of Birth in DDMMYYYY format
 
                 </p>
 
@@ -651,6 +601,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </p>
 
 
+                <p>
+
+                    <strong>
+                        Email Verification:
+                    </strong>
+
+                    New student accounts must verify
+                    their email before logging in.
+
+                </p>
+
+
             </div>
 
 
@@ -658,7 +620,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- =================================================
                  FOOTER
             ================================================== -->
-
 
             <div class="login-footer">
 
@@ -704,7 +665,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      JAVASCRIPT
 ========================================================= -->
 
-
 <script>
 
 
@@ -712,27 +672,20 @@ function toggleStudentPassword() {
 
 
     const passwordField =
-
         document.getElementById(
-
             "studentPassword"
-
         );
 
 
     if (passwordField.type === "password") {
 
-
         passwordField.type = "text";
-
 
     }
 
     else {
 
-
         passwordField.type = "password";
-
 
     }
 
@@ -742,8 +695,6 @@ function toggleStudentPassword() {
 </script>
 
 
-
 </body>
-
 
 </html>

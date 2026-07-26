@@ -1,6 +1,7 @@
 .env
 .env.*
 config.local.php
+mail_config.php
 *.log
 .DS_Store
 Thumbs.db

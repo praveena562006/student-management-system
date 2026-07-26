@@ -3,6 +3,7 @@
 session_start();
 
 include "db.php";
+require_once __DIR__ . '/send_verification.php';
 
 
 /* =========================================================
@@ -305,6 +306,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 );
 
 
+            /* =================================================
+            GENERATE EMAIL VERIFICATION TOKEN
+            ================================================= */
+
+            $verification_token = bin2hex(random_bytes(32));
+
+            $email_verified = 0;
+
 
             /* =================================================
                INSERT STUDENT INTO DATABASE
@@ -328,12 +337,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     phone,
                     address,
                     username,
-                    password
+                    password,
+                    verification_token,
+                    email_verified
                 )
 
                 VALUES
 
                 (
+                    ?,
+                    ?,
                     ?,
                     ?,
                     ?,
@@ -364,38 +377,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             mysqli_stmt_bind_param(
 
-                $stmt,
+             $stmt,
 
-                "sssssssssssss",
-
-                $name,
-
-                $roll_no,
-
-                $registration_no,
-
-                $dob,
-
-                $gender,
-
-                $department,
-
-                $year,
-
-                $semester,
-
-                $email,
-
-                $phone,
-
-                $address,
-
-                $username,
-
-                $hashed_password
+            "ssssssssssssssi",
+        
+             $name,
+            $roll_no,
+            $registration_no,
+            $dob,
+            $gender,
+            $department,
+            $year,
+            $semester,
+            $email,
+            $phone,
+            $address,
+            $username,
+            $hashed_password,
+            $verification_token,
+            $email_verified
 
             );
-
 
 
             /* =================================================
@@ -422,15 +424,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $created_password =
                     $default_password;
 
+                /* =============================================
+                SEND VERIFICATION EMAIL
+                ============================================= */
 
+                $email_sent = sendVerificationEmail(
+                    $email,
+                    $name,
+                    $verification_token
+                );
+
+                
+
+               if ($email_sent) {
 
                 $message =
+                    "Student added successfully! A verification email has been sent to "
+                    . $email
+                    . ".";
 
-                    "Student added successfully!";
+            } else {
 
+                $message =
+                    "Student was added successfully, but the verification email could not be sent.";
 
-                $message_type =
-                    "success";
+            }
+
+            $message_type = "success";
 
 
 
