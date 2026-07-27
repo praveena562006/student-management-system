@@ -1,96 +1,233 @@
 <?php
 
 session_start();
-
 include "db.php";
+
+/* ==========================================
+   CHECK ADMIN LOGIN
+========================================== */
 
 if (!isset($_SESSION["admin"])) {
     header("Location: login.php");
     exit();
 }
 
-$message = "";
 
-$selected_date = isset($_GET["date"])
-    ? $_GET["date"]
-    : date("Y-m-d");
+/* ==========================================
+   FILTER VALUES
+========================================== */
 
+$department = isset($_GET["department"])
+    ? trim($_GET["department"])
+    : "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$section = isset($_GET["section"])
+    ? trim($_GET["section"])
+    : "";
 
-    $selected_date = $_POST["attendance_date"];
+$year = isset($_GET["year"])
+    ? trim($_GET["year"])
+    : "";
 
-    if (isset($_POST["attendance"])) {
+$semester = isset($_GET["semester"])
+    ? trim($_GET["semester"])
+    : "";
 
-        foreach ($_POST["attendance"] as $student_id => $status) {
-
-            $student_id = intval($student_id);
-
-            /*
-             Check whether attendance for this
-             student and date already exists.
-            */
-
-            $check_sql = "SELECT id FROM attendance
-                          WHERE student_id = $student_id
-                          AND attendance_date = '$selected_date'";
-
-            $check_result = mysqli_query($conn, $check_sql);
+$day = isset($_GET["day"])
+    ? trim($_GET["day"])
+    : "";
 
 
-            if (mysqli_num_rows($check_result) > 0) {
+/* ==========================================
+   GET FILTER OPTIONS FROM TIMETABLE
+========================================== */
 
-                /*
-                 Attendance already exists,
-                 so update it.
-                */
-
-                $sql = "UPDATE attendance
-                        SET status = '$status'
-                        WHERE student_id = $student_id
-                        AND attendance_date = '$selected_date'";
-
-            } else {
-
-                /*
-                 Attendance does not exist,
-                 so create a new record.
-                */
-
-                $sql = "INSERT INTO attendance
-                        (student_id, attendance_date, status)
-                        VALUES
-                        ($student_id, '$selected_date', '$status')";
-            }
-
-            mysqli_query($conn, $sql);
-        }
-
-        $message = "Attendance saved successfully!";
-    }
-}
-
-
-/*
- Get all students.
-*/
-
-$students = mysqli_query(
+$departments = mysqli_query(
     $conn,
-    "SELECT * FROM students ORDER BY roll_no ASC"
+    "SELECT DISTINCT department
+     FROM timetable
+     ORDER BY department"
 );
+
+$sections = mysqli_query(
+    $conn,
+    "SELECT DISTINCT section
+     FROM timetable
+     ORDER BY section"
+);
+
+$years = mysqli_query(
+    $conn,
+    "SELECT DISTINCT year
+     FROM timetable
+     ORDER BY year"
+);
+
+$semesters = mysqli_query(
+    $conn,
+    "SELECT DISTINCT semester
+     FROM timetable
+     ORDER BY semester"
+);
+
+
+/* ==========================================
+   GET TIMETABLE
+========================================== */
+
+$timetable_result = null;
+
+if (
+    $department != "" &&
+    $section != "" &&
+    $year != "" &&
+    $semester != "" &&
+    $day != ""
+) {
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "SELECT *
+         FROM timetable
+         WHERE department = ?
+         AND section = ?
+         AND year = ?
+         AND semester = ?
+         AND day_of_week = ?
+         ORDER BY start_period ASC"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sssis",
+        $department,
+        $section,
+        $year,
+        $semester,
+        $day
+    );
+
+    mysqli_stmt_execute($stmt);
+
+    $timetable_result =
+        mysqli_stmt_get_result($stmt);
+}
 
 ?>
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Attendance Management</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="css/style.css">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+Attendance Management - EduTrack
+</title>
+
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
+
+<style>
+
+.attendance-filter-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(170px, 1fr));
+    gap: 18px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.filter-group select {
+    padding: 11px;
+    border: 1px solid #d7dce5;
+    border-radius: 7px;
+    background: white;
+}
+
+.load-button {
+    background: #2878d0;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.load-button:hover {
+    opacity: 0.9;
+}
+
+.timetable-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.class-summary {
+    background: #edf5ff;
+    border-left: 4px solid #2878d0;
+    padding: 15px 18px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.take-attendance-btn {
+    display: inline-block;
+    background: #198754;
+    color: white;
+    text-decoration: none;
+    padding: 9px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.take-attendance-btn:hover {
+    opacity: 0.9;
+}
+
+.no-classes {
+    padding: 30px;
+    text-align: center;
+    color: #777;
+}
+
+.session-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #eef2f7;
+    font-size: 13px;
+}
+
+</style>
 
 </head>
 
@@ -98,179 +235,521 @@ $students = mysqli_query(
 <body>
 
 
+<!-- ==========================================
+     NAVBAR
+========================================== -->
+
 <div class="navbar">
 
-    <h2>🎓 Student Management Portal</h2>
+<h2>
+🎓 Student Management Portal
+</h2>
 
-    <div>
+<div>
 
-        <span>
-            Welcome,
-            <?php echo htmlspecialchars($_SESSION["admin"]); ?>
-        </span>
+<span>
+Welcome,
+<?php
+echo htmlspecialchars($_SESSION["admin"]);
+?>
+</span>
 
-        <a href="logout.php" class="logout-btn">
-            Logout
-        </a>
-
-    </div>
+<a
+    href="logout.php"
+    class="logout-btn"
+>
+Logout
+</a>
 
 </div>
+
+</div>
+
 
 
 <div class="main-layout">
 
 
-<!-- SIDEBAR -->
+<!-- ==========================================
+     SIDEBAR
+========================================== -->
 
 <div class="sidebar">
 
-    <h3>ADMIN PANEL</h3>
+<h3>
+ADMIN PANEL
+</h3>
 
-    <a href="dashboard.php">
-        🏠 Dashboard
-    </a>
+<a href="dashboard.php">
+🏠 Dashboard
+</a>
 
-    <a href="add_student.php">
-        ➕ Add Student
-    </a>
+<a href="add_student.php">
+➕ Add Student
+</a>
 
-    <a href="view_students.php">
-        👨‍🎓 Students
-    </a>
+<a href="view_students.php">
+👨‍🎓 Students
+</a>
 
-    <a href="attendance.php" class="active">
-        📅 Attendance
-    </a>
+<a
+    href="attendance.php"
+    class="active"
+>
+📅 Attendance
+</a>
 
-    <a href="attendance_history.php">
-        📋 Attendance History
-    </a>
+<a href="attendance_history.php">
+📋 Attendance History
+</a>
 
-    <a href="marks.php">
-        📝 Marks
-    </a>
+<a href="marks.php">
+📝 Marks
+</a>
 
-    <a href="reports.php">
-        📊 Reports
-    </a>
+<a href="reports.php">
+📊 Reports
+</a>
 
-    <a href="logout.php">
-        🚪 Logout
-    </a>
+<a href="logout.php">
+🚪 Logout
+</a>
 
 </div>
 
 
-<!-- MAIN CONTENT -->
+
+<!-- ==========================================
+     MAIN CONTENT
+========================================== -->
 
 <div class="main-content">
 
 
 <div class="page-header">
 
-    <div>
-
-        <h1>📅 Attendance Management</h1>
-
-        <p>
-            Mark daily attendance for students.
-        </p>
-
-    </div>
-
-</div>
-
-
-<?php
-
-if ($message != "") {
-
-?>
-
-<div class="alert-success">
-
-    ✓ <?php echo $message; ?>
-
-</div>
-
-<?php
-
-}
-
-?>
-
-
-<form method="POST">
-
-
-<div class="attendance-toolbar">
-
-
 <div>
 
-    <label>
-        Attendance Date
-    </label>
+<h1>
+📅 Attendance Management
+</h1>
 
-    <input
-        type="date"
-        name="attendance_date"
-        value="<?php echo $selected_date; ?>"
-        required
-    >
+<p>
+Select a class and subject from the timetable
+to take period-wise attendance.
+</p>
+
+</div>
 
 </div>
 
 
-<div class="attendance-actions">
 
-    <button
-        type="button"
-        class="secondary-button"
-        onclick="markAll('Present')"
-    >
+<!-- ==========================================
+     FILTERS
+========================================== -->
 
-        ✓ Mark All Present
+<div class="attendance-filter-card">
 
-    </button>
+<form method="GET">
+
+<div class="filter-grid">
 
 
-    <button
-        type="button"
-        class="danger-action"
-        onclick="markAll('Absent')"
-    >
+<!-- DEPARTMENT -->
 
-        ✕ Mark All Absent
+<div class="filter-group">
 
-    </button>
+<label>
+Department
+</label>
+
+<select
+    name="department"
+    required
+>
+
+<option value="">
+Select Department
+</option>
+
+<?php
+
+while (
+    $row = mysqli_fetch_assoc($departments)
+) {
+
+    $value = $row["department"];
+
+    $selected =
+        ($department == $value)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php
+        echo htmlspecialchars($value);
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars($value);
+?>
+
+</option>
+
+<?php
+}
+?>
+
+</select>
+
+</div>
+
+
+
+<!-- SECTION -->
+
+<div class="filter-group">
+
+<label>
+Section
+</label>
+
+<select
+    name="section"
+    required
+>
+
+<option value="">
+Select Section
+</option>
+
+<?php
+
+while (
+    $row = mysqli_fetch_assoc($sections)
+) {
+
+    $value = $row["section"];
+
+    $selected =
+        ($section == $value)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php
+        echo htmlspecialchars($value);
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars($value);
+?>
+
+</option>
+
+<?php
+}
+?>
+
+</select>
+
+</div>
+
+
+
+<!-- YEAR -->
+
+<div class="filter-group">
+
+<label>
+Year
+</label>
+
+<select
+    name="year"
+    required
+>
+
+<option value="">
+Select Year
+</option>
+
+<?php
+
+while (
+    $row = mysqli_fetch_assoc($years)
+) {
+
+    $value = $row["year"];
+
+    $selected =
+        ($year == $value)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php
+        echo htmlspecialchars($value);
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars($value);
+?>
+
+</option>
+
+<?php
+}
+?>
+
+</select>
+
+</div>
+
+
+
+<!-- SEMESTER -->
+
+<div class="filter-group">
+
+<label>
+Semester
+</label>
+
+<select
+    name="semester"
+    required
+>
+
+<option value="">
+Select Semester
+</option>
+
+<?php
+
+while (
+    $row = mysqli_fetch_assoc($semesters)
+) {
+
+    $value = $row["semester"];
+
+    $selected =
+        ((string)$semester === (string)$value)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php
+        echo htmlspecialchars($value);
+    ?>"
+    <?php echo $selected; ?>
+>
+
+Semester
+<?php
+echo htmlspecialchars($value);
+?>
+
+</option>
+
+<?php
+}
+?>
+
+</select>
+
+</div>
+
+
+
+<!-- DAY -->
+
+<div class="filter-group">
+
+<label>
+Day
+</label>
+
+<select
+    name="day"
+    required
+>
+
+<option value="">
+Select Day
+</option>
+
+<?php
+
+$days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+];
+
+foreach ($days as $day_option) {
+
+    $selected =
+        ($day == $day_option)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php echo $day_option; ?>"
+    <?php echo $selected; ?>
+>
+
+<?php echo $day_option; ?>
+
+</option>
+
+<?php
+}
+?>
+
+</select>
+
+</div>
+
+
+
+<!-- LOAD BUTTON -->
+
+<div class="filter-group">
+
+<button
+    type="submit"
+    class="load-button"
+>
+
+Load Timetable
+
+</button>
 
 </div>
 
 
 </div>
 
+</form>
 
-<div class="table-card">
+</div>
+
+
+
+<?php
+
+if (
+    $department != "" &&
+    $section != "" &&
+    $year != "" &&
+    $semester != "" &&
+    $day != ""
+) {
+
+?>
+
+
+<!-- ==========================================
+     SELECTED CLASS
+========================================== -->
+
+<div class="class-summary">
+
+<strong>
+Selected Class:
+</strong>
+
+<?php
+echo htmlspecialchars($department);
+?>
+
+-
+
+<?php
+echo htmlspecialchars($section);
+?>
+
+&nbsp; | &nbsp;
+
+<?php
+echo htmlspecialchars($year);
+?>
+
+&nbsp; | &nbsp;
+
+Semester
+
+<?php
+echo htmlspecialchars($semester);
+?>
+
+&nbsp; | &nbsp;
+
+<?php
+echo htmlspecialchars($day);
+?>
+
+</div>
+
+
+
+<!-- ==========================================
+     TIMETABLE TABLE
+========================================== -->
+
+<div class="timetable-card">
 
 
 <table class="modern-table">
-
 
 <thead>
 
 <tr>
 
-    <th>Roll Number</th>
+<th>
+Subject Code
+</th>
 
-    <th>Student Name</th>
+<th>
+Subject Name
+</th>
 
-    <th>Department</th>
+<th>
+Periods
+</th>
 
-    <th>Year</th>
+<th>
+Time
+</th>
 
-    <th>Attendance Status</th>
+<th>
+Type
+</th>
+
+<th>
+Action
+</th>
 
 </tr>
 
@@ -282,137 +761,138 @@ if ($message != "") {
 
 <?php
 
-if (mysqli_num_rows($students) > 0) {
+if (
+    $timetable_result &&
+    mysqli_num_rows($timetable_result) > 0
+) {
 
-    while ($student = mysqli_fetch_assoc($students)) {
-
-        $student_id = $student["id"];
-
-
-        /*
-         Find existing attendance for selected date.
-        */
-
-        $existing = mysqli_query(
-            $conn,
-            "SELECT status FROM attendance
-             WHERE student_id = $student_id
-             AND attendance_date = '$selected_date'"
-        );
-
-
-        $existing_row = mysqli_fetch_assoc($existing);
-
-        $current_status =
-            $existing_row
-            ? $existing_row["status"]
-            : "";
+    while (
+        $class =
+        mysqli_fetch_assoc($timetable_result)
+    ) {
 
 ?>
 
 
 <tr>
 
+
 <td>
 
-    <?php
-    echo htmlspecialchars($student["roll_no"]);
-    ?>
+<strong>
+
+<?php
+echo htmlspecialchars(
+    $class["subject_code"]
+);
+?>
+
+</strong>
 
 </td>
 
 
+
 <td>
 
-    <strong>
-
-        <?php
-        echo htmlspecialchars($student["name"]);
-        ?>
-
-    </strong>
+<?php
+echo htmlspecialchars(
+    $class["subject_name"]
+);
+?>
 
 </td>
 
 
-<td>
-
-    <span class="department-badge">
-
-        <?php
-        echo htmlspecialchars($student["department"]);
-        ?>
-
-    </span>
-
-</td>
-
 
 <td>
 
-    <?php
-    echo htmlspecialchars($student["year"]);
-    ?>
+<span class="session-badge">
 
-</td>
+P<?php
+echo intval(
+    $class["start_period"]
+);
+?>
 
+<?php
 
-<td>
+if (
+    $class["end_period"]
+    !=
+    $class["start_period"]
+) {
 
+?>
 
-<div class="attendance-options">
+-
 
+P<?php
+echo intval(
+    $class["end_period"]
+);
+?>
 
-<label class="present-option">
+<?php
+}
+?>
 
-<input
-    type="radio"
-    name="attendance[<?php echo $student_id; ?>]"
-    value="Present"
-
-    <?php
-
-    if ($current_status == "Present")
-        echo "checked";
-
-    ?>
-
-    required
->
-
-<span>
-✓ Present
 </span>
 
-</label>
+</td>
 
 
 
-<label class="absent-option">
+<td>
 
-<input
-    type="radio"
-    name="attendance[<?php echo $student_id; ?>]"
-    value="Absent"
+<?php
 
-    <?php
+echo date(
+    "g:i A",
+    strtotime($class["start_time"])
+);
 
-    if ($current_status == "Absent")
-        echo "checked";
+?>
 
-    ?>
+-
 
+<?php
+
+echo date(
+    "g:i A",
+    strtotime($class["end_time"])
+);
+
+?>
+
+</td>
+
+
+
+<td>
+
+<?php
+echo htmlspecialchars(
+    $class["session_type"]
+);
+?>
+
+</td>
+
+
+
+<td>
+
+<a
+    class="take-attendance-btn"
+    href="take_attendance.php?timetable_id=<?php
+        echo intval($class["id"]);
+    ?>"
 >
 
-<span>
-✕ Absent
-</span>
+Take Attendance
 
-</label>
-
-
-</div>
-
+</a>
 
 </td>
 
@@ -431,9 +911,12 @@ if (mysqli_num_rows($students) > 0) {
 
 <tr>
 
-<td colspan="5" class="no-data">
+<td
+    colspan="6"
+    class="no-classes"
+>
 
-    No students found.
+No timetable classes found for this selection.
 
 </td>
 
@@ -449,32 +932,22 @@ if (mysqli_num_rows($students) > 0) {
 
 </tbody>
 
-
 </table>
 
 
 </div>
 
 
-<button
-    type="submit"
-    class="save-large-button"
->
+<?php
 
-    💾 Save Attendance
+}
 
-</button>
-
-
-</form>
+?>
 
 
 </div>
 
 </div>
-
-
-<script src="js/script.js"></script>
 
 
 </body>

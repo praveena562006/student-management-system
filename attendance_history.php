@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-
 include "db.php";
 
 if (!isset($_SESSION["admin"])) {
@@ -9,62 +8,441 @@ if (!isset($_SESSION["admin"])) {
     exit();
 }
 
+$message = "";
+$message_type = "";
+
+
+/* =========================================================
+   UPDATE ATTENDANCE
+========================================================= */
+
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["update_attendance"])
+) {
+
+    $record_id = intval($_POST["record_id"]);
+    $new_status = $_POST["status"] ?? "";
+
+    if (
+        $record_id <= 0 ||
+        !in_array(
+            $new_status,
+            ["Present", "Absent"],
+            true
+        )
+    ) {
+
+        $message = "Invalid attendance update.";
+        $message_type = "error";
+
+    } else {
+
+        $update_stmt = mysqli_prepare(
+            $conn,
+            "UPDATE attendance_records
+             SET status = ?
+             WHERE id = ?"
+        );
+
+        mysqli_stmt_bind_param(
+            $update_stmt,
+            "si",
+            $new_status,
+            $record_id
+        );
+
+        if (mysqli_stmt_execute($update_stmt)) {
+
+            if (mysqli_stmt_affected_rows($update_stmt) >= 0) {
+
+                $message =
+                    "Attendance updated successfully!";
+
+                $message_type = "success";
+
+            } else {
+
+                $message =
+                    "Attendance could not be updated.";
+
+                $message_type = "error";
+            }
+
+        } else {
+
+            $message =
+                "Attendance update failed.";
+
+            $message_type = "error";
+        }
+
+        mysqli_stmt_close($update_stmt);
+    }
+}
+
+
+/* =========================================================
+   FILTER VALUES
+========================================================= */
+
+$department =
+    isset($_GET["department"])
+    ? trim($_GET["department"])
+    : "";
+
+$section =
+    isset($_GET["section"])
+    ? trim($_GET["section"])
+    : "";
+
+$date =
+    isset($_GET["date"])
+    ? trim($_GET["date"])
+    : "";
+
+
+/* =========================================================
+   GET FILTER OPTIONS
+========================================================= */
+
+$departments = mysqli_query(
+    $conn,
+    "SELECT DISTINCT department
+     FROM timetable
+     ORDER BY department"
+);
+
+$sections = mysqli_query(
+    $conn,
+    "SELECT DISTINCT section
+     FROM timetable
+     ORDER BY section"
+);
+
+
+/* =========================================================
+   GET ATTENDANCE HISTORY
+========================================================= */
 
 $sql = "
-
 SELECT
 
-students.id,
+    ar.id AS record_id,
+    ar.status,
 
-students.name,
+    s.id AS student_id,
+    s.roll_no,
+    s.name AS student_name,
 
-students.roll_no,
+    ats.id AS session_id,
+    ats.attendance_date,
 
-students.department,
+    t.department,
+    t.section,
+    t.year,
+    t.semester,
+    t.day_of_week,
+    t.subject_code,
+    t.subject_name,
+    t.start_period,
+    t.end_period
 
-COUNT(attendance.id) AS total_days,
+FROM attendance_records ar
 
-SUM(
-    CASE
-    WHEN attendance.status = 'Present'
-    THEN 1
-    ELSE 0
-    END
-) AS present_days,
+INNER JOIN students s
+    ON ar.student_id = s.id
 
-SUM(
-    CASE
-    WHEN attendance.status = 'Absent'
-    THEN 1
-    ELSE 0
-    END
-) AS absent_days
+INNER JOIN attendance_sessions ats
+    ON ar.session_id = ats.id
 
-FROM students
+INNER JOIN timetable t
+    ON ats.timetable_id = t.id
 
-LEFT JOIN attendance
-ON students.id = attendance.student_id
-
-GROUP BY students.id
-
-ORDER BY students.roll_no ASC
-
+WHERE 1 = 1
 ";
 
 
-$result = mysqli_query($conn, $sql);
+$params = [];
+$types = "";
+
+
+/* Department Filter */
+
+if ($department != "") {
+
+    $sql .= " AND t.department = ?";
+
+    $params[] = $department;
+    $types .= "s";
+}
+
+
+/* Section Filter */
+
+if ($section != "") {
+
+    $sql .= " AND t.section = ?";
+
+    $params[] = $section;
+    $types .= "s";
+}
+
+
+/* Date Filter */
+
+if ($date != "") {
+
+    $sql .= " AND ats.attendance_date = ?";
+
+    $params[] = $date;
+    $types .= "s";
+}
+
+
+$sql .= "
+ORDER BY
+    ats.attendance_date DESC,
+    t.department ASC,
+    t.section ASC,
+    t.start_period ASC,
+    s.roll_no ASC
+";
+
+
+$stmt =
+    mysqli_prepare(
+        $conn,
+        $sql
+    );
+
+
+if (!empty($params)) {
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        $types,
+        ...$params
+    );
+}
+
+
+mysqli_stmt_execute($stmt);
+
+$result =
+    mysqli_stmt_get_result($stmt);
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+$total_records = 0;
+$total_present = 0;
+$total_absent = 0;
+
+$rows = [];
+
+
+while (
+    $row =
+    mysqli_fetch_assoc($result)
+) {
+
+    $rows[] = $row;
+
+    $total_records++;
+
+    if (
+        $row["status"] == "Present"
+    ) {
+
+        $total_present++;
+    }
+
+    if (
+        $row["status"] == "Absent"
+    ) {
+
+        $total_absent++;
+    }
+}
 
 ?>
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
-<title>Attendance History</title>
+<meta charset="UTF-8">
 
-<link rel="stylesheet" href="css/style.css">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+Attendance History - EduTrack
+</title>
+
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
+
+
+<style>
+
+.filter-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 11px;
+    border: 1px solid #d8dde5;
+    border-radius: 7px;
+}
+
+.filter-button {
+    background: #2878d0;
+    color: white;
+    border: none;
+    padding: 12px 17px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.clear-button {
+    display: inline-block;
+    background: #6c757d;
+    color: white;
+    padding: 11px 17px;
+    border-radius: 7px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.summary-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+    color: #666;
+}
+
+.summary-card strong {
+    font-size: 28px;
+}
+
+.status-present {
+    color: #198754;
+    font-weight: 600;
+}
+
+.status-absent {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.history-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.period-badge {
+    background: #edf5ff;
+    padding: 5px 9px;
+    border-radius: 15px;
+    white-space: nowrap;
+}
+
+
+/* EDIT ATTENDANCE */
+
+.edit-attendance-form {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+.edit-attendance-form select {
+    padding: 7px;
+    border: 1px solid #d8dde5;
+    border-radius: 6px;
+}
+
+.edit-save-button {
+    background: #2878d0;
+    color: white;
+    border: none;
+    padding: 7px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.edit-save-button:hover {
+    opacity: 0.9;
+}
+
+.alert-success {
+    background: #d1e7dd;
+    color: #0f5132;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #842029;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+</style>
 
 </head>
 
@@ -72,23 +450,51 @@ $result = mysqli_query($conn, $sql);
 <body>
 
 
+<!-- NAVBAR -->
+
 <div class="navbar">
 
-<h2>🎓 Student Management Portal</h2>
+<h2>
+🎓 Student Management Portal
+</h2>
 
-<a href="logout.php" class="logout-btn">
+<div>
+
+<span>
+
+Welcome,
+
+<?php
+echo htmlspecialchars(
+    $_SESSION["admin"]
+);
+?>
+
+</span>
+
+<a
+    href="logout.php"
+    class="logout-btn"
+>
 Logout
 </a>
 
 </div>
 
+</div>
+
+
 
 <div class="main-layout">
 
 
+<!-- SIDEBAR -->
+
 <div class="sidebar">
 
-<h3>ADMIN PANEL</h3>
+<h3>
+ADMIN PANEL
+</h3>
 
 <a href="dashboard.php">
 🏠 Dashboard
@@ -106,7 +512,10 @@ Logout
 📅 Attendance
 </a>
 
-<a href="attendance_history.php" class="active">
+<a
+    href="attendance_history.php"
+    class="active"
+>
 📋 Attendance History
 </a>
 
@@ -125,6 +534,9 @@ Logout
 </div>
 
 
+
+<!-- MAIN CONTENT -->
+
 <div class="main-content">
 
 
@@ -132,10 +544,12 @@ Logout
 
 <div>
 
-<h1>📋 Attendance Report</h1>
+<h1>
+📋 Attendance History
+</h1>
 
 <p>
-Student attendance percentage and statistics.
+View and correct subject-wise student attendance.
 </p>
 
 </div>
@@ -143,54 +557,319 @@ Student attendance percentage and statistics.
 </div>
 
 
-<div class="table-card">
+<!-- MESSAGE -->
+
+<?php if ($message != "") { ?>
+
+<div
+class="<?php
+echo
+    ($message_type == "success")
+    ? "alert-success"
+    : "alert-error";
+?>"
+>
+
+<?php
+echo htmlspecialchars($message);
+?>
+
+</div>
+
+<?php } ?>
+
+
+
+<!-- FILTERS -->
+
+<div class="filter-card">
+
+<form method="GET">
+
+<div class="filter-grid">
+
+
+<div class="filter-group">
+
+<label>
+Department
+</label>
+
+<select name="department">
+
+<option value="">
+All Departments
+</option>
+
+
+<?php
+
+while (
+    $filter_row =
+    mysqli_fetch_assoc($departments)
+) {
+
+    $value =
+        $filter_row["department"];
+
+    $selected =
+        ($department == $value)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php
+        echo htmlspecialchars($value);
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars($value);
+?>
+
+</option>
+
+<?php } ?>
+
+</select>
+
+</div>
+
+
+
+<div class="filter-group">
+
+<label>
+Section
+</label>
+
+<select name="section">
+
+<option value="">
+All Sections
+</option>
+
+
+<?php
+
+while (
+    $filter_row =
+    mysqli_fetch_assoc($sections)
+) {
+
+    $value =
+        $filter_row["section"];
+
+    $selected =
+        ($section == $value)
+        ? "selected"
+        : "";
+
+?>
+
+<option
+    value="<?php
+        echo htmlspecialchars($value);
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars($value);
+?>
+
+</option>
+
+<?php } ?>
+
+</select>
+
+</div>
+
+
+
+<div class="filter-group">
+
+<label>
+Attendance Date
+</label>
+
+<input
+    type="date"
+    name="date"
+    value="<?php
+        echo htmlspecialchars($date);
+    ?>"
+>
+
+</div>
+
+
+
+<div class="filter-group">
+
+<button
+    type="submit"
+    class="filter-button"
+>
+Apply Filters
+</button>
+
+</div>
+
+
+
+<div class="filter-group">
+
+<a
+    href="attendance_history.php"
+    class="clear-button"
+>
+Clear Filters
+</a>
+
+</div>
+
+
+</div>
+
+</form>
+
+</div>
+
+
+
+<!-- SUMMARY -->
+
+<div class="summary-grid">
+
+
+<div class="summary-card">
+
+<h3>
+Total Records
+</h3>
+
+<strong>
+<?php echo $total_records; ?>
+</strong>
+
+</div>
+
+
+
+<div class="summary-card">
+
+<h3>
+Present
+</h3>
+
+<strong class="status-present">
+<?php echo $total_present; ?>
+</strong>
+
+</div>
+
+
+
+<div class="summary-card">
+
+<h3>
+Absent
+</h3>
+
+<strong class="status-absent">
+<?php echo $total_absent; ?>
+</strong>
+
+</div>
+
+
+
+<div class="summary-card">
+
+<h3>
+Attendance %
+</h3>
+
+<strong>
+
+<?php
+
+if ($total_records > 0) {
+
+    echo round(
+        (
+            $total_present /
+            $total_records
+        ) * 100,
+        1
+    );
+
+} else {
+
+    echo "0";
+}
+
+?>%
+
+</strong>
+
+</div>
+
+
+</div>
+
+
+
+<!-- HISTORY TABLE -->
+
+<div class="history-card">
 
 
 <table class="modern-table">
 
 
+<thead>
+
 <tr>
 
-<th>Roll No.</th>
+<th>Date</th>
+
+<th>Roll No</th>
 
 <th>Student</th>
 
 <th>Department</th>
 
-<th>Total Days</th>
+<th>Section</th>
 
-<th>Present</th>
+<th>Year / Sem</th>
 
-<th>Absent</th>
+<th>Subject</th>
 
-<th>Percentage</th>
+<th>Period</th>
 
 <th>Status</th>
 
+<th>Edit</th>
+
 </tr>
+
+</thead>
+
+
+<tbody>
 
 
 <?php
 
-while ($row = mysqli_fetch_assoc($result)) {
+if (count($rows) > 0) {
 
-
-$total = $row["total_days"];
-
-$present = $row["present_days"];
-
-
-if ($total > 0) {
-
-    $percentage =
-        round(($present / $total) * 100, 2);
-
-} else {
-
-    $percentage = 0;
-
-}
-
+foreach ($rows as $row) {
 
 ?>
 
@@ -200,87 +879,180 @@ if ($total > 0) {
 
 <td>
 
-<?php echo htmlspecialchars($row["roll_no"]); ?>
+<?php
+
+echo date(
+    "d-m-Y",
+    strtotime(
+        $row["attendance_date"]
+    )
+);
+
+?>
 
 </td>
+
 
 
 <td>
 
-<a
-href="student_profile.php?id=<?php echo $row["id"]; ?>"
-class="student-link"
->
-
-<?php echo htmlspecialchars($row["name"]); ?>
-
-</a>
+<?php
+echo htmlspecialchars(
+    $row["roll_no"]
+);
+?>
 
 </td>
 
-
-<td>
-
-<?php echo htmlspecialchars($row["department"]); ?>
-
-</td>
-
-
-<td>
-
-<?php echo $total; ?>
-
-</td>
-
-
-<td>
-
-<span class="status-present">
-
-<?php echo $present; ?>
-
-</span>
-
-</td>
-
-
-<td>
-
-<span class="status-absent">
-
-<?php echo $row["absent_days"]; ?>
-
-</span>
-
-</td>
 
 
 <td>
 
 <strong>
 
-<?php echo $percentage; ?>%
+<?php
+echo htmlspecialchars(
+    $row["student_name"]
+);
+?>
 
 </strong>
 
 </td>
 
 
+
 <td>
 
+<?php
+echo htmlspecialchars(
+    $row["department"]
+);
+?>
+
+</td>
+
+
+
+<td>
+
+<?php
+echo htmlspecialchars(
+    $row["section"]
+);
+?>
+
+</td>
+
+
+
+<td>
+
+<?php
+echo htmlspecialchars(
+    $row["year"]
+);
+?>
+
+<br>
+
+<small>
+
+Semester
+
+<?php
+echo htmlspecialchars(
+    $row["semester"]
+);
+?>
+
+</small>
+
+</td>
+
+
+
+<td>
+
+<strong>
+
+<?php
+echo htmlspecialchars(
+    $row["subject_name"]
+);
+?>
+
+</strong>
+
+<br>
+
+<small>
+
+<?php
+echo htmlspecialchars(
+    $row["subject_code"]
+);
+?>
+
+</small>
+
+</td>
+
+
+
+<td>
+
+<span class="period-badge">
+
+P<?php
+echo intval(
+    $row["start_period"]
+);
+?>
 
 <?php
 
-if ($percentage >= 75) {
+if (
+    $row["start_period"]
+    !=
+    $row["end_period"]
+) {
 
 ?>
 
-<span class="good-status">
+-
 
-Eligible
+P<?php
+echo intval(
+    $row["end_period"]
+);
+?>
+
+<?php } ?>
 
 </span>
 
+</td>
+
+
+
+<!-- CURRENT STATUS -->
+
+<td>
+
+<?php
+
+if (
+    $row["status"] == "Present"
+) {
+
+?>
+
+<span class="status-present">
+
+✓ Present
+
+</span>
 
 <?php
 
@@ -288,19 +1060,103 @@ Eligible
 
 ?>
 
+<span class="status-absent">
 
-<span class="bad-status">
-
-Shortage
+✕ Absent
 
 </span>
 
+<?php } ?>
 
-<?php
+</td>
 
-}
 
-?>
+
+<!-- EDIT ATTENDANCE -->
+
+<td>
+
+
+<form
+    method="POST"
+    class="edit-attendance-form"
+>
+
+
+<input
+    type="hidden"
+    name="record_id"
+    value="<?php
+        echo intval(
+            $row["record_id"]
+        );
+    ?>"
+>
+
+
+<select
+    name="status"
+    required
+>
+
+
+<option
+    value="Present"
+
+    <?php
+
+    if (
+        $row["status"]
+        == "Present"
+    ) {
+
+        echo "selected";
+    }
+
+    ?>
+>
+
+Present
+
+</option>
+
+
+<option
+    value="Absent"
+
+    <?php
+
+    if (
+        $row["status"]
+        == "Absent"
+    ) {
+
+        echo "selected";
+    }
+
+    ?>
+>
+
+Absent
+
+</option>
+
+
+</select>
+
+
+<button
+    type="submit"
+    name="update_attendance"
+    class="edit-save-button"
+>
+
+Save
+
+</button>
+
+
+</form>
 
 
 </td>
@@ -313,8 +1169,32 @@ Shortage
 
 }
 
+} else {
+
 ?>
 
+
+<tr>
+
+<td
+    colspan="10"
+    style="
+        text-align:center;
+        padding:30px;
+    "
+>
+
+No attendance records found.
+
+</td>
+
+</tr>
+
+
+<?php } ?>
+
+
+</tbody>
 
 </table>
 

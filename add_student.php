@@ -13,7 +13,6 @@ require_once __DIR__ . '/send_verification.php';
 if (!isset($_SESSION["admin"])) {
 
     header("Location: login.php");
-
     exit();
 }
 
@@ -23,12 +22,27 @@ if (!isset($_SESSION["admin"])) {
 ========================================================= */
 
 $message = "";
-
 $message_type = "";
-
 $created_username = "";
-
 $created_password = "";
+
+
+/* =========================================================
+   DEFAULT FORM VALUES
+========================================================= */
+
+$name = "";
+$roll_no = "";
+$registration_no = "";
+$dob = "";
+$gender = "";
+$department = "";
+$section = "";
+$year = "";
+$semester = "";
+$email = "";
+$phone = "";
+$address = "";
 
 
 /* =========================================================
@@ -42,28 +56,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
        GET VALUES FROM FORM
     ===================================================== */
 
-    $name = trim($_POST["name"]);
+    $name =
+        trim($_POST["name"] ?? "");
 
-    $roll_no = trim($_POST["roll_no"]);
+    $roll_no =
+        trim($_POST["roll_no"] ?? "");
 
     $registration_no =
-        trim($_POST["registration_no"]);
+        trim($_POST["registration_no"] ?? "");
 
-    $dob = $_POST["dob"];
+    $dob =
+        $_POST["dob"] ?? "";
 
-    $gender = $_POST["gender"];
+    $gender =
+        $_POST["gender"] ?? "";
 
-    $department = $_POST["department"];
+    $department =
+        $_POST["department"] ?? "";
 
-    $year = $_POST["year"];
+    $section =
+        $_POST["section"] ?? "";
 
-    $semester = $_POST["semester"];
+    $year =
+        $_POST["year"] ?? "";
 
-    $email = trim($_POST["email"]);
+    $semester =
+        $_POST["semester"] ?? "";
 
-    $phone = trim($_POST["phone"]);
+    $email =
+        trim($_POST["email"] ?? "");
 
-    $address = trim($_POST["address"]);
+    $phone =
+        trim($_POST["phone"] ?? "");
+
+    $address =
+        trim($_POST["address"] ?? "");
 
 
     /* =====================================================
@@ -77,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         empty($dob) ||
         empty($gender) ||
         empty($department) ||
+        empty($section) ||
         empty($year) ||
         empty($semester) ||
         empty($email) ||
@@ -166,6 +194,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
+    /* =====================================================
+       VALIDATE YEAR AND SEMESTER
+    ===================================================== */
+
+    elseif (
+        ($year == "1st Year" &&
+            !in_array(
+                (int)$semester,
+                [1, 2],
+                true
+            )
+        )
+        ||
+        ($year == "2nd Year" &&
+            !in_array(
+                (int)$semester,
+                [3, 4],
+                true
+            )
+        )
+        ||
+        ($year == "3rd Year" &&
+            !in_array(
+                (int)$semester,
+                [5, 6],
+                true
+            )
+        )
+        ||
+        ($year == "4th Year" &&
+            !in_array(
+                (int)$semester,
+                [7, 8],
+                true
+            )
+        )
+    ) {
+
+        $message =
+            "Invalid semester selected for the chosen year.";
+
+        $message_type =
+            "error";
+    }
+
+
     else {
 
 
@@ -173,15 +247,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
            CHECK DUPLICATE ROLL NUMBER OR REGISTRATION NO
         ================================================= */
 
-        $check_sql =
-
-            "SELECT id
-
-             FROM students
-
-             WHERE roll_no = ?
-
-             OR registration_no = ?";
+        $check_sql = "
+            SELECT id
+            FROM students
+            WHERE roll_no = ?
+            OR registration_no = ?
+        ";
 
 
         $check_stmt =
@@ -216,56 +287,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ) > 0
         ) {
 
-
             $message =
-
                 "A student with this Roll Number or Registration Number already exists.";
-
 
             $message_type =
                 "error";
 
-        }
-
-
-        else {
+        } else {
 
 
             /* =================================================
-               AUTOMATICALLY CREATE STUDENT LOGIN
+               AUTOMATIC STUDENT LOGIN
             ================================================= */
-
-
-            /*
-               Registration Number becomes
-               Student Username
-
-               Example:
-
-               Registration Number:
-               23CSBS001
-
-               Username:
-               23CSBS001
-            */
 
             $username =
                 $registration_no;
 
 
-
             /*
-               INITIAL PASSWORD
-
-               DOB stored by HTML:
-
-               2005-05-10
-
-               Converted into:
-
-               10052005
-
-               Format:
+               DOB password:
                DDMMYYYY
             */
 
@@ -279,25 +319,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 );
 
 
-
             /* =================================================
-               HASH PASSWORD BEFORE STORING
+               HASH PASSWORD
             ================================================= */
-
-
-            /*
-               IMPORTANT:
-
-               We DO NOT store:
-
-               10052005
-
-               directly inside MySQL.
-
-               password_hash() converts it
-               into a secure password hash.
-            */
-
 
             $hashed_password =
                 password_hash(
@@ -307,23 +331,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
             /* =================================================
-            GENERATE EMAIL VERIFICATION TOKEN
+               EMAIL VERIFICATION TOKEN
             ================================================= */
 
-            $verification_token = bin2hex(random_bytes(32));
+            $verification_token =
+                bin2hex(
+                    random_bytes(32)
+                );
+
 
             $email_verified = 0;
 
 
             /* =================================================
-               INSERT STUDENT INTO DATABASE
+               INSERT STUDENT
             ================================================= */
 
+            $sql = "
 
-            $sql =
-
-                "INSERT INTO students
-
+                INSERT INTO students
                 (
                     name,
                     roll_no,
@@ -331,6 +357,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     dob,
                     gender,
                     department,
+                    section,
                     year,
                     semester,
                     email,
@@ -343,8 +370,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 )
 
                 VALUES
-
                 (
+                    ?,
                     ?,
                     ?,
                     ?,
@@ -360,7 +387,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ?,
                     ?,
                     ?
-                )";
+                )
+
+            ";
 
 
             $stmt =
@@ -370,51 +399,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 );
 
 
-            /* =================================================
-               BIND VALUES
-            ================================================= */
-
-
             mysqli_stmt_bind_param(
 
-             $stmt,
+                $stmt,
 
-            "ssssssssssssssi",
-        
-             $name,
-            $roll_no,
-            $registration_no,
-            $dob,
-            $gender,
-            $department,
-            $year,
-            $semester,
-            $email,
-            $phone,
-            $address,
-            $username,
-            $hashed_password,
-            $verification_token,
-            $email_verified
+                "sssssssssssssssi",
+
+                $name,
+                $roll_no,
+                $registration_no,
+                $dob,
+                $gender,
+                $department,
+                $section,
+                $year,
+                $semester,
+                $email,
+                $phone,
+                $address,
+                $username,
+                $hashed_password,
+                $verification_token,
+                $email_verified
 
             );
 
 
             /* =================================================
-               EXECUTE INSERT
+               EXECUTE
             ================================================= */
-
 
             if (
                 mysqli_stmt_execute(
                     $stmt
                 )
             ) {
-
-
-                /* =============================================
-                   SAVE CREDENTIALS FOR DISPLAY
-                ============================================= */
 
 
                 $created_username =
@@ -424,95 +443,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $created_password =
                     $default_password;
 
+
                 /* =============================================
-                SEND VERIFICATION EMAIL
+                   SEND VERIFICATION EMAIL
                 ============================================= */
 
-                $email_sent = sendVerificationEmail(
-                    $email,
-                    $name,
-                    $verification_token
-                );
+                $email_sent =
+                    sendVerificationEmail(
+                        $email,
+                        $name,
+                        $verification_token
+                    );
 
-                
 
-               if ($email_sent) {
+                if ($email_sent) {
 
-                $message =
-                    "Student added successfully! A verification email has been sent to "
-                    . $email
-                    . ".";
+                    $message =
+                        "Student added successfully! A verification email has been sent to "
+                        . $email
+                        . ".";
+
+                } else {
+
+                    $message =
+                        "Student was added successfully, but the verification email could not be sent.";
+                }
+
+
+                $message_type =
+                    "success";
+
+
+                /* =============================================
+                   CLEAR FORM
+                ============================================= */
+
+                $name = "";
+                $roll_no = "";
+                $registration_no = "";
+                $dob = "";
+                $gender = "";
+                $department = "";
+                $section = "";
+                $year = "";
+                $semester = "";
+                $email = "";
+                $phone = "";
+                $address = "";
 
             } else {
 
                 $message =
-                    "Student was added successfully, but the verification email could not be sent.";
-
-            }
-
-            $message_type = "success";
-
-
-
-                /* =============================================
-                   CLEAR FORM AFTER SUCCESS
-                ============================================= */
-
-
-                $name = "";
-
-                $roll_no = "";
-
-                $registration_no = "";
-
-                $dob = "";
-
-                $gender = "";
-
-                $department = "";
-
-                $year = "";
-
-                $semester = "";
-
-                $email = "";
-
-                $phone = "";
-
-                $address = "";
-
-            }
-
-
-            else {
-
-
-                $message =
-
                     "Error adding student: "
-                    .
-                    mysqli_error($conn);
-
+                    . mysqli_error($conn);
 
                 $message_type =
                     "error";
-
             }
 
 
             mysqli_stmt_close(
                 $stmt
             );
-
         }
 
 
         mysqli_stmt_close(
             $check_stmt
         );
-
     }
-
 }
 
 ?>
@@ -522,29 +521,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <html lang="en">
 
-
 <head>
 
+<meta charset="UTF-8">
 
-    <meta charset="UTF-8">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
+<title>
+Add Student - EduTrack
+</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-
-    <title>
-        Add Student - EduTrack
-    </title>
-
-
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
-
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
 
 </head>
 
@@ -552,1040 +545,843 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
 
-<!-- =====================================================
-     NAVIGATION BAR
-===================================================== -->
-
+<!-- NAVBAR -->
 
 <div class="navbar">
 
+<h2>
+🎓 EduTrack
+</h2>
 
-    <h2>
+<div>
 
-        🎓 EduTrack
+<a
+    href="dashboard.php"
+    class="nav-link"
+>
+Dashboard
+</a>
 
-    </h2>
+<a
+    href="view_students.php"
+    class="nav-link"
+>
+Students
+</a>
 
+<a
+    href="attendance.php"
+    class="nav-link"
+>
+Attendance
+</a>
 
-    <div>
+<a
+    href="marks.php"
+    class="nav-link"
+>
+Marks
+</a>
 
+<a
+    href="reports.php"
+    class="nav-link"
+>
+Reports
+</a>
 
-        <a
-            href="dashboard.php"
-            class="nav-link"
-        >
+<a
+    href="logout.php"
+    class="logout-btn"
+>
+Logout
+</a>
 
-            Dashboard
-
-        </a>
-
-
-        <a
-            href="view_students.php"
-            class="nav-link"
-        >
-
-            Students
-
-        </a>
-
-
-        <a
-            href="attendance.php"
-            class="nav-link"
-        >
-
-            Attendance
-
-        </a>
-
-
-        <a
-            href="marks.php"
-            class="nav-link"
-        >
-
-            Marks
-
-        </a>
-
-
-        <a
-            href="reports.php"
-            class="nav-link"
-        >
-
-            Reports
-
-        </a>
-
-
-        <a
-            href="logout.php"
-            class="logout-btn"
-        >
-
-            Logout
-
-        </a>
-
-
-    </div>
-
+</div>
 
 </div>
 
 
 
-<!-- =====================================================
-     ADD STUDENT FORM
-===================================================== -->
-
+<!-- ADD STUDENT FORM -->
 
 <div class="form-container">
 
 
-    <h1>
-
-        ➕ Add New Student
-
-    </h1>
+<h1>
+➕ Add New Student
+</h1>
 
 
-    <p>
-
-        Enter the student's personal and
-        academic information below.
-
-    </p>
+<p>
+Enter the student's personal and academic information below.
+</p>
 
 
 
-    <!-- =================================================
-         SUCCESS / ERROR MESSAGE
-    ================================================= -->
+<!-- MESSAGE -->
 
+<?php
 
-    <?php
-
-
-    if ($message != "") {
-
-
-        if (
-            $message_type
-            == "success"
-        ) {
-
-
-            echo
-
-            "<div class='success-message'>
-
-                ✓ "
-                .
-                htmlspecialchars($message)
-                .
-
-            "</div>";
-
-
-        }
-
-
-        else {
-
-
-            echo
-
-            "<div class='error-message'>
-
-                ⚠ "
-                .
-                htmlspecialchars($message)
-                .
-
-            "</div>";
-
-
-        }
-
-    }
-
-
-    ?>
-
-
-
-    <!-- =================================================
-         NEW STUDENT LOGIN CREDENTIALS
-    ================================================= -->
-
-
-    <?php
-
+if ($message != "") {
 
     if (
-        $created_username != ""
-        &&
-        $created_password != ""
+        $message_type ==
+        "success"
     ) {
 
+?>
 
-    ?>
+<div class="success-message">
 
+✓
 
-        <div class="student-credentials-card">
+<?php
+echo htmlspecialchars(
+    $message
+);
+?>
 
+</div>
 
-            <div class="credentials-icon">
+<?php
 
-                🔐
+    } else {
 
-            </div>
+?>
 
+<div class="error-message">
 
-            <div>
+⚠
 
+<?php
+echo htmlspecialchars(
+    $message
+);
+?>
 
-                <h3>
+</div>
 
-                    Student Login Created
-
-                </h3>
-
-
-                <p>
-
-                    Share these initial login
-                    credentials with the student.
-
-                </p>
-
-
-
-                <div class="credential-row">
-
-
-                    <span>
-
-                        Username
-
-                    </span>
-
-
-                    <strong>
-
-                        <?php
-
-                        echo htmlspecialchars(
-                            $created_username
-                        );
-
-                        ?>
-
-                    </strong>
-
-
-                </div>
-
-
-
-                <div class="credential-row">
-
-
-                    <span>
-
-                        Initial Password
-
-                    </span>
-
-
-                    <strong>
-
-                        <?php
-
-                        echo htmlspecialchars(
-                            $created_password
-                        );
-
-                        ?>
-
-                    </strong>
-
-
-                </div>
-
-
-
-                <small>
-
-                    Username is the student's
-                    Registration Number and the
-                    initial password is their DOB
-                    in DDMMYYYY format.
-
-                </small>
-
-
-            </div>
-
-
-        </div>
-
-
-    <?php
-
+<?php
 
     }
+}
+
+?>
 
 
+
+<!-- STUDENT LOGIN CREDENTIALS -->
+
+<?php
+
+if (
+    $created_username != "" &&
+    $created_password != ""
+) {
+
+?>
+
+
+<div class="student-credentials-card">
+
+
+<div class="credentials-icon">
+
+🔐
+
+</div>
+
+
+<div>
+
+
+<h3>
+Student Login Created
+</h3>
+
+
+<p>
+Share these initial login credentials with the student.
+</p>
+
+
+<div class="credential-row">
+
+<span>
+Username
+</span>
+
+<strong>
+
+<?php
+echo htmlspecialchars(
+    $created_username
+);
+?>
+
+</strong>
+
+</div>
+
+
+<div class="credential-row">
+
+<span>
+Initial Password
+</span>
+
+<strong>
+
+<?php
+echo htmlspecialchars(
+    $created_password
+);
+?>
+
+</strong>
+
+</div>
+
+
+<small>
+
+Username is the student's Registration Number and the
+initial password is their DOB in DDMMYYYY format.
+
+</small>
+
+
+</div>
+
+</div>
+
+
+<?php } ?>
+
+
+
+<form method="POST">
+
+
+<!-- STUDENT NAME -->
+
+<label>
+Student Name
+</label>
+
+<input
+    type="text"
+    name="name"
+
+    value="<?php
+        echo htmlspecialchars(
+            $name
+        );
+    ?>"
+
+    placeholder="Enter student full name"
+
+    pattern="[A-Za-z ]+"
+
+    title="Name should contain only letters and spaces"
+
+    required
+>
+
+
+
+<!-- ROLL NUMBER -->
+
+<label>
+Roll Number
+</label>
+
+<input
+    type="text"
+    name="roll_no"
+
+    value="<?php
+        echo htmlspecialchars(
+            $roll_no
+        );
+    ?>"
+
+    placeholder="Example: 101"
+
+    maxlength="50"
+
+    required
+>
+
+
+
+<!-- REGISTRATION NUMBER -->
+
+<label>
+Registration Number
+</label>
+
+<input
+    type="text"
+    name="registration_no"
+
+    value="<?php
+        echo htmlspecialchars(
+            $registration_no
+        );
+    ?>"
+
+    placeholder="Example: 23CSBS001"
+
+    maxlength="50"
+
+    required
+>
+
+
+<small class="form-help">
+
+Registration Number will automatically
+become the student's login username.
+
+</small>
+
+
+
+<!-- DATE OF BIRTH -->
+
+<label>
+Date of Birth
+</label>
+
+<input
+    type="date"
+    name="dob"
+
+    value="<?php
+        echo htmlspecialchars(
+            $dob
+        );
+    ?>"
+
+    max="<?php
+        echo date("Y-m-d");
+    ?>"
+
+    required
+>
+
+
+<small class="form-help">
+
+The student's DOB will be used to generate the initial
+login password in DDMMYYYY format.
+
+</small>
+
+
+
+<!-- GENDER -->
+
+<label>
+Gender
+</label>
+
+
+<select
+    name="gender"
+    required
+>
+
+<option value="">
+Select Gender
+</option>
+
+
+<option
+    value="Female"
+
+    <?php
+    if ($gender == "Female") {
+        echo "selected";
+    }
     ?>
+>
+Female
+</option>
 
 
+<option
+    value="Male"
 
-    <!-- =================================================
-         ADD STUDENT FORM
-    ================================================= -->
+    <?php
+    if ($gender == "Male") {
+        echo "selected";
+    }
+    ?>
+>
+Male
+</option>
 
 
-    <form method="POST">
+<option
+    value="Other"
 
+    <?php
+    if ($gender == "Other") {
+        echo "selected";
+    }
+    ?>
+>
+Other
+</option>
 
 
-        <!-- =============================================
-             STUDENT NAME
-        ============================================= -->
+</select>
 
 
-        <label>
 
-            Student Name
+<!-- DEPARTMENT -->
 
-        </label>
+<label>
+Department
+</label>
 
 
-        <input
+<select
+    name="department"
+    required
+>
 
-            type="text"
+<option value="">
+Select Department
+</option>
 
-            name="name"
 
+<?php
 
-            value="<?php
+$departments = [
 
-                echo isset($name)
+    "AI&DS",
+    "CSBS",
+    "IT",
+    "CSE",
+    "ECE",
+    "EEE",
+    "Mechanical",
+    "Civil"
 
-                    ? htmlspecialchars($name)
+];
 
-                    : '';
 
-            ?>"
+foreach (
+    $departments
+    as $dept
+) {
 
+    $selected =
+        ($department == $dept)
+        ? "selected"
+        : "";
 
-            placeholder="Enter student full name"
+?>
 
+<option
+    value="<?php
+        echo htmlspecialchars(
+            $dept
+        );
+    ?>"
+    <?php echo $selected; ?>
+>
 
-            pattern="[A-Za-z ]+"
+<?php
+echo htmlspecialchars(
+    $dept
+);
+?>
 
+</option>
 
-            title="Name should contain only letters and spaces"
+<?php } ?>
 
 
-            required
+</select>
 
-        >
 
 
+<!-- SECTION -->
 
-        <!-- =============================================
-             ROLL NUMBER
-        ============================================= -->
+<label>
+Section
+</label>
 
 
-        <label>
+<select
+    name="section"
+    required
+>
 
-            Roll Number
+<option value="">
+Select Section
+</option>
 
-        </label>
 
+<?php
 
-        <input
+$sections = [
+    "A",
+    "B",
+    "C",
+    "D"
+];
 
-            type="text"
 
-            name="roll_no"
+foreach (
+    $sections
+    as $section_option
+) {
 
+    $selected =
+        ($section == $section_option)
+        ? "selected"
+        : "";
 
-            value="<?php
+?>
 
-                echo isset($roll_no)
+<option
+    value="<?php
+        echo htmlspecialchars(
+            $section_option
+        );
+    ?>"
+    <?php echo $selected; ?>
+>
 
-                    ? htmlspecialchars($roll_no)
+<?php
+echo htmlspecialchars(
+    $section_option
+);
+?>
 
-                    : '';
+</option>
 
-            ?>"
+<?php } ?>
 
 
-            placeholder="Example: 101"
+</select>
 
 
-            maxlength="50"
 
+<!-- YEAR -->
 
-            required
+<label>
+Year
+</label>
 
-        >
 
+<select
+    name="year"
+    id="year"
+    onchange="updateSemesters()"
+    required
+>
 
+<option value="">
+Select Year
+</option>
 
-        <!-- =============================================
-             REGISTRATION NUMBER
-        ============================================= -->
 
+<?php
 
-        <label>
+$years = [
 
-            Registration Number
+    "1st Year",
+    "2nd Year",
+    "3rd Year",
+    "4th Year"
 
-        </label>
+];
 
 
-        <input
+foreach (
+    $years
+    as $year_option
+) {
 
-            type="text"
+    $selected =
+        ($year == $year_option)
+        ? "selected"
+        : "";
 
-            name="registration_no"
+?>
 
+<option
+    value="<?php
+        echo htmlspecialchars(
+            $year_option
+        );
+    ?>"
+    <?php echo $selected; ?>
+>
 
-            value="<?php
+<?php
+echo htmlspecialchars(
+    $year_option
+);
+?>
 
-                echo isset($registration_no)
+</option>
 
-                    ? htmlspecialchars(
-                        $registration_no
-                    )
+<?php } ?>
 
-                    : '';
 
-            ?>"
+</select>
 
 
-            placeholder="Example: 23CSBS001"
 
+<!-- SEMESTER -->
 
-            maxlength="50"
+<label>
+Semester
+</label>
 
 
-            required
+<select
+    name="semester"
+    id="semester"
+    required
+>
 
-        >
+<option value="">
+Select Year First
+</option>
 
+</select>
 
 
-        <small class="form-help">
+<small class="form-help">
 
-            Registration Number will automatically
-            become the student's login username.
+1st Year → Semesters 1 & 2,
+2nd Year → 3 & 4,
+3rd Year → 5 & 6,
+4th Year → 7 & 8.
 
-        </small>
+</small>
 
 
 
-        <!-- =============================================
-             DATE OF BIRTH
-        ============================================= -->
+<!-- EMAIL -->
 
+<label>
+Email Address
+</label>
 
-        <label>
+<input
+    type="email"
+    name="email"
 
-            Date of Birth
+    value="<?php
+        echo htmlspecialchars(
+            $email
+        );
+    ?>"
 
-        </label>
+    placeholder="Example: student@gmail.com"
 
+    required
+>
 
-        <input
 
-            type="date"
 
-            name="dob"
+<!-- PHONE -->
 
+<label>
+Phone Number
+</label>
 
-            value="<?php
+<input
+    type="tel"
+    name="phone"
 
-                echo isset($dob)
+    value="<?php
+        echo htmlspecialchars(
+            $phone
+        );
+    ?>"
 
-                    ? htmlspecialchars($dob)
+    placeholder="Enter 10-digit phone number"
 
-                    : '';
+    pattern="[0-9]{10}"
 
-            ?>"
+    maxlength="10"
 
+    title="Please enter exactly 10 digits"
 
-            max="<?php
+    required
+>
 
-                echo date(
-                    "Y-m-d"
-                );
 
-            ?>"
 
+<!-- ADDRESS -->
 
-            required
+<label>
+Address
+</label>
 
-        >
 
+<textarea
+    name="address"
+    placeholder="Enter student's complete address"
+    required
+><?php
+echo htmlspecialchars(
+    $address
+);
+?></textarea>
 
 
-        <small class="form-help">
 
-            The student's DOB will be used to
-            generate the initial login password
-            in DDMMYYYY format.
+<!-- SUBMIT -->
 
-        </small>
+<button
+    type="submit"
+    class="add-student-button"
+>
 
+➕ Add Student & Create Login
 
+</button>
 
-        <!-- =============================================
-             GENDER
-        ============================================= -->
 
-
-        <label>
-
-            Gender
-
-        </label>
-
-
-        <select
-
-            name="gender"
-
-            required
-
-        >
-
-
-            <option value="">
-
-                Select Gender
-
-            </option>
-
-
-
-            <option
-
-                value="Female"
-
-                <?php
-
-                if (
-                    isset($gender)
-                    &&
-                    $gender == "Female"
-                ) {
-
-                    echo "selected";
-
-                }
-
-                ?>
-
-            >
-
-                Female
-
-            </option>
-
-
-
-            <option
-
-                value="Male"
-
-                <?php
-
-                if (
-                    isset($gender)
-                    &&
-                    $gender == "Male"
-                ) {
-
-                    echo "selected";
-
-                }
-
-                ?>
-
-            >
-
-                Male
-
-            </option>
-
-
-
-            <option
-
-                value="Other"
-
-                <?php
-
-                if (
-                    isset($gender)
-                    &&
-                    $gender == "Other"
-                ) {
-
-                    echo "selected";
-
-                }
-
-                ?>
-
-            >
-
-                Other
-
-            </option>
-
-
-        </select>
-
-
-
-        <!-- =============================================
-             DEPARTMENT
-        ============================================= -->
-
-
-        <label>
-
-            Department
-
-        </label>
-
-
-        <select
-
-            name="department"
-
-            required
-
-        >
-
-
-            <option value="">
-
-                Select Department
-
-            </option>
-
-
-
-            <?php
-
-
-            $departments = [
-
-                "CSBS",
-
-                "CSE",
-
-                "ECE",
-
-                "EEE",
-
-                "Mechanical",
-
-                "Civil"
-
-            ];
-
-
-            foreach (
-                $departments
-                as $dept
-            ) {
-
-
-                $selected = "";
-
-
-                if (
-                    isset($department)
-                    &&
-                    $department == $dept
-                ) {
-
-
-                    $selected =
-                        "selected";
-
-
-                }
-
-
-                echo
-
-                "<option
-                    value='"
-                    .
-                    htmlspecialchars($dept)
-                    .
-                    "'
-                    $selected
-                >"
-
-                .
-                htmlspecialchars($dept)
-
-                .
-
-                "</option>";
-
-
-            }
-
-
-            ?>
-
-
-        </select>
-
-
-
-        <!-- =============================================
-             YEAR
-        ============================================= -->
-
-
-        <label>
-
-            Year
-
-        </label>
-
-
-        <select
-
-            name="year"
-
-            required
-
-        >
-
-
-            <option value="">
-
-                Select Year
-
-            </option>
-
-
-
-            <?php
-
-
-            $years = [
-
-                "1st Year",
-
-                "2nd Year",
-
-                "3rd Year",
-
-                "4th Year"
-
-            ];
-
-
-            foreach (
-                $years
-                as $year_option
-            ) {
-
-
-                $selected = "";
-
-
-                if (
-                    isset($year)
-                    &&
-                    $year
-                    ==
-                    $year_option
-                ) {
-
-
-                    $selected =
-                        "selected";
-
-
-                }
-
-
-                echo
-
-                "<option
-                    value='"
-                    .
-                    htmlspecialchars(
-                        $year_option
-                    )
-                    .
-                    "'
-                    $selected
-                >"
-
-                .
-                htmlspecialchars(
-                    $year_option
-                )
-
-                .
-
-                "</option>";
-
-
-            }
-
-
-            ?>
-
-
-        </select>
-
-
-
-        <!-- =============================================
-             SEMESTER
-        ============================================= -->
-
-
-        <label>
-
-            Semester
-
-        </label>
-
-
-        <select
-
-            name="semester"
-
-            required
-
-        >
-
-
-            <option value="">
-
-                Select Semester
-
-            </option>
-
-
-
-            <?php
-
-
-            for (
-                $i = 1;
-                $i <= 8;
-                $i++
-            ) {
-
-
-                $selected = "";
-
-
-                if (
-                    isset($semester)
-                    &&
-                    $semester == $i
-                ) {
-
-
-                    $selected =
-                        "selected";
-
-
-                }
-
-
-                echo
-
-                "<option
-                    value='$i'
-                    $selected
-                >
-
-                    Semester $i
-
-                </option>";
-
-
-            }
-
-
-            ?>
-
-
-        </select>
-
-
-
-        <!-- =============================================
-             EMAIL
-        ============================================= -->
-
-
-        <label>
-
-            Email Address
-
-        </label>
-
-
-        <input
-
-            type="email"
-
-            name="email"
-
-
-            value="<?php
-
-                echo isset($email)
-
-                    ? htmlspecialchars($email)
-
-                    : '';
-
-            ?>"
-
-
-            placeholder="Example: student@gmail.com"
-
-
-            required
-
-        >
-
-
-
-        <!-- =============================================
-             PHONE NUMBER
-        ============================================= -->
-
-
-        <label>
-
-            Phone Number
-
-        </label>
-
-
-        <input
-
-            type="tel"
-
-            name="phone"
-
-
-            value="<?php
-
-                echo isset($phone)
-
-                    ? htmlspecialchars($phone)
-
-                    : '';
-
-            ?>"
-
-
-            placeholder="Enter 10-digit phone number"
-
-
-            pattern="[0-9]{10}"
-
-
-            maxlength="10"
-
-
-            title="Please enter exactly 10 digits"
-
-
-            required
-
-        >
-
-
-
-        <!-- =============================================
-             ADDRESS
-        ============================================= -->
-
-
-        <label>
-
-            Address
-
-        </label>
-
-
-        <textarea
-
-            name="address"
-
-            placeholder="Enter student's complete address"
-
-            required
-
-        ><?php
-
-            echo isset($address)
-
-                ? htmlspecialchars(
-                    $address
-                )
-
-                : '';
-
-        ?></textarea>
-
-
-
-        <!-- =============================================
-             SUBMIT BUTTON
-        ============================================= -->
-
-
-        <button
-
-            type="submit"
-
-            class="add-student-button"
-
-        >
-
-            ➕ Add Student & Create Login
-
-        </button>
-
-
-    </form>
+</form>
 
 
 </div>
 
 
-</body>
 
+<!-- =====================================================
+     YEAR -> SEMESTER JAVASCRIPT
+===================================================== -->
+
+<script>
+
+function updateSemesters() {
+
+
+    const year =
+        document.getElementById(
+            "year"
+        ).value;
+
+
+    const semesterSelect =
+        document.getElementById(
+            "semester"
+        );
+
+
+    const previousSemester =
+        "<?php
+            echo htmlspecialchars(
+                (string)$semester
+            );
+        ?>";
+
+
+    semesterSelect.innerHTML =
+        '<option value="">Select Semester</option>';
+
+
+    let semesters = [];
+
+
+    if (year === "1st Year") {
+
+        semesters = [1, 2];
+
+    }
+
+    else if (year === "2nd Year") {
+
+        semesters = [3, 4];
+
+    }
+
+    else if (year === "3rd Year") {
+
+        semesters = [5, 6];
+
+    }
+
+    else if (year === "4th Year") {
+
+        semesters = [7, 8];
+
+    }
+
+
+    semesters.forEach(
+        function(number) {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                number;
+
+
+            option.textContent =
+                "Semester " + number;
+
+
+            if (
+                String(number) ===
+                String(previousSemester)
+            ) {
+
+                option.selected =
+                    true;
+            }
+
+
+            semesterSelect.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if (year === "") {
+
+        semesterSelect.innerHTML =
+            '<option value="">Select Year First</option>';
+    }
+
+}
+
+
+/* Run automatically when page loads */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        updateSemesters();
+
+    }
+);
+
+</script>
+
+
+</body>
 
 </html>

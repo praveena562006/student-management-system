@@ -12,9 +12,7 @@ include "db.php";
 if (!isset($_SESSION["admin"])) {
 
     header("Location: login.php");
-
     exit();
-
 }
 
 
@@ -24,21 +22,14 @@ if (!isset($_SESSION["admin"])) {
 
 if (!isset($_GET["id"])) {
 
-    header(
-        "Location: view_students.php"
-    );
-
+    header("Location: view_students.php");
     exit();
-
 }
 
 
-$id =
-    intval($_GET["id"]);
-
+$id = intval($_GET["id"]);
 
 $message = "";
-
 $message_type = "";
 
 
@@ -46,14 +37,10 @@ $message_type = "";
    GET STUDENT
 ========================================== */
 
-$stmt =
-    mysqli_prepare(
-        $conn,
-        "SELECT *
-         FROM students
-         WHERE id = ?"
-    );
-
+$stmt = mysqli_prepare(
+    $conn,
+    "SELECT * FROM students WHERE id = ?"
+);
 
 mysqli_stmt_bind_param(
     $stmt,
@@ -61,30 +48,20 @@ mysqli_stmt_bind_param(
     $id
 );
 
-
-mysqli_stmt_execute(
-    $stmt
-);
-
+mysqli_stmt_execute($stmt);
 
 $result =
-    mysqli_stmt_get_result(
-        $stmt
-    );
-
+    mysqli_stmt_get_result($stmt);
 
 $student =
-    mysqli_fetch_assoc(
-        $result
-    );
+    mysqli_fetch_assoc($result);
+
+mysqli_stmt_close($stmt);
 
 
 if (!$student) {
 
-    die(
-        "Student record not found."
-    );
-
+    die("Student record not found.");
 }
 
 
@@ -92,316 +69,368 @@ if (!$student) {
    UPDATE STUDENT
 ========================================== */
 
-if (
-    $_SERVER["REQUEST_METHOD"]
-    == "POST"
-) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
-$name =
-    trim($_POST["name"]);
+    $name =
+        trim($_POST["name"] ?? "");
 
+    $roll_no =
+        trim($_POST["roll_no"] ?? "");
 
-$roll_no =
-    trim($_POST["roll_no"]);
+    $registration_no =
+        trim($_POST["registration_no"] ?? "");
 
+    $dob =
+        $_POST["dob"] ?? "";
 
-$registration_no =
-    trim(
-        $_POST["registration_no"]
-    );
+    $gender =
+        $_POST["gender"] ?? "";
 
+    $department =
+        $_POST["department"] ?? "";
 
-$dob =
-    $_POST["dob"];
+    $section =
+        $_POST["section"] ?? "";
 
+    $year =
+        $_POST["year"] ?? "";
 
-$gender =
-    $_POST["gender"];
+    $semester =
+        $_POST["semester"] ?? "";
 
+    $email =
+        trim($_POST["email"] ?? "");
 
-$department =
-    $_POST["department"];
+    $phone =
+        trim($_POST["phone"] ?? "");
 
+    $address =
+        trim($_POST["address"] ?? "");
 
-$year =
-    $_POST["year"];
 
+    /* ==========================================
+       VALIDATION
+    ========================================== */
 
-$semester =
-    $_POST["semester"];
+    if (
+        empty($name) ||
+        empty($roll_no) ||
+        empty($registration_no) ||
+        empty($dob) ||
+        empty($gender) ||
+        empty($department) ||
+        empty($section) ||
+        empty($year) ||
+        empty($semester) ||
+        empty($email) ||
+        empty($phone) ||
+        empty($address)
+    ) {
 
+        $message =
+            "Please complete all fields.";
 
-$email =
-    trim($_POST["email"]);
+        $message_type =
+            "error";
+    }
 
 
-$phone =
-    trim($_POST["phone"]);
+    elseif (
+        !preg_match(
+            "/^[A-Za-z ]+$/",
+            $name
+        )
+    ) {
 
+        $message =
+            "Student name should contain only letters and spaces.";
 
-$address =
-    trim($_POST["address"]);
+        $message_type =
+            "error";
+    }
 
 
+    elseif (
+        !filter_var(
+            $email,
+            FILTER_VALIDATE_EMAIL
+        )
+    ) {
 
-/* VALIDATION */
+        $message =
+            "Please enter a valid email address.";
 
-if (
-    empty($name) ||
-    empty($roll_no) ||
-    empty($registration_no) ||
-    empty($dob) ||
-    empty($gender) ||
-    empty($department) ||
-    empty($year) ||
-    empty($semester) ||
-    empty($email) ||
-    empty($phone) ||
-    empty($address)
-) {
+        $message_type =
+            "error";
+    }
 
 
-$message =
-    "Please complete all fields.";
+    elseif (
+        !preg_match(
+            "/^[0-9]{10}$/",
+            $phone
+        )
+    ) {
+
+        $message =
+            "Phone number must contain exactly 10 digits.";
+
+        $message_type =
+            "error";
+    }
+
+
+    elseif (
+        strtotime($dob) >
+        strtotime(date("Y-m-d"))
+    ) {
+
+        $message =
+            "Date of Birth cannot be a future date.";
 
+        $message_type =
+            "error";
+    }
 
-$message_type =
-    "error";
 
+    /* ==========================================
+       YEAR / SEMESTER VALIDATION
+    ========================================== */
 
-}
+    elseif (
 
+        (
+            $year == "1st Year" &&
+            !in_array(
+                (int)$semester,
+                [1, 2],
+                true
+            )
+        )
 
-elseif (
-    !filter_var(
-        $email,
-        FILTER_VALIDATE_EMAIL
-    )
-) {
+        ||
 
+        (
+            $year == "2nd Year" &&
+            !in_array(
+                (int)$semester,
+                [3, 4],
+                true
+            )
+        )
 
-$message =
-    "Please enter a valid email address.";
+        ||
 
+        (
+            $year == "3rd Year" &&
+            !in_array(
+                (int)$semester,
+                [5, 6],
+                true
+            )
+        )
+
+        ||
+
+        (
+            $year == "4th Year" &&
+            !in_array(
+                (int)$semester,
+                [7, 8],
+                true
+            )
+        )
 
-$message_type =
-    "error";
+    ) {
 
+        $message =
+            "Invalid semester selected for the chosen year.";
 
-}
+        $message_type =
+            "error";
+    }
 
 
-elseif (
-    !preg_match(
-        "/^[0-9]{10}$/",
-        $phone
-    )
-) {
+    else {
 
+
+        /* ==========================================
+           CHECK DUPLICATES
+        ========================================== */
+
+        $duplicate_stmt =
+            mysqli_prepare(
+                $conn,
+                "SELECT id
+                 FROM students
+                 WHERE
+                    (
+                        roll_no = ?
+                        OR registration_no = ?
+                    )
+                 AND id != ?"
+            );
 
-$message =
-    "Phone number must contain exactly 10 digits.";
 
+        mysqli_stmt_bind_param(
+            $duplicate_stmt,
+            "ssi",
+            $roll_no,
+            $registration_no,
+            $id
+        );
 
-$message_type =
-    "error";
 
+        mysqli_stmt_execute(
+            $duplicate_stmt
+        );
 
-}
 
+        $duplicate_result =
+            mysqli_stmt_get_result(
+                $duplicate_stmt
+            );
 
-else {
 
+        if (
+            mysqli_num_rows(
+                $duplicate_result
+            ) > 0
+        ) {
 
-/* ==========================================
-   CHECK DUPLICATES
-========================================== */
+            $message =
+                "Another student already uses this Roll Number or Registration Number.";
 
-$duplicate_stmt =
-    mysqli_prepare(
-        $conn,
-        "SELECT id
-         FROM students
-         WHERE
-         (roll_no = ?
-         OR registration_no = ?)
-         AND id != ?"
-    );
+            $message_type =
+                "error";
+        }
 
 
-mysqli_stmt_bind_param(
-    $duplicate_stmt,
-    "ssi",
-    $roll_no,
-    $registration_no,
-    $id
-);
+        else {
 
 
-mysqli_stmt_execute(
-    $duplicate_stmt
-);
+            /* ==========================================
+               UPDATE STUDENT
+            ========================================== */
 
+            $update_stmt =
+                mysqli_prepare(
+                    $conn,
+                    "UPDATE students
 
-$duplicate_result =
-    mysqli_stmt_get_result(
-        $duplicate_stmt
-    );
+                     SET
+                        name = ?,
+                        roll_no = ?,
+                        registration_no = ?,
+                        dob = ?,
+                        gender = ?,
+                        department = ?,
+                        section = ?,
+                        year = ?,
+                        semester = ?,
+                        email = ?,
+                        phone = ?,
+                        address = ?
 
+                     WHERE id = ?"
+                );
 
-if (
-    mysqli_num_rows(
-        $duplicate_result
-    ) > 0
-) {
 
+            mysqli_stmt_bind_param(
 
-$message =
-    "Another student already uses this Roll Number or Registration Number.";
+                $update_stmt,
 
+                "ssssssssssssi",
 
-$message_type =
-    "error";
+                $name,
+                $roll_no,
+                $registration_no,
+                $dob,
+                $gender,
+                $department,
+                $section,
+                $year,
+                $semester,
+                $email,
+                $phone,
+                $address,
+                $id
+            );
 
 
-}
+            if (
+                mysqli_stmt_execute(
+                    $update_stmt
+                )
+            ) {
 
+                $message =
+                    "Student information updated successfully!";
 
-else {
+                $message_type =
+                    "success";
 
 
-/* ==========================================
-   UPDATE QUERY
-========================================== */
+                /* Update displayed values */
 
-$update_stmt =
-    mysqli_prepare(
-        $conn,
-        "UPDATE students
+                $student["name"] =
+                    $name;
 
-         SET
-         name = ?,
-         roll_no = ?,
-         registration_no = ?,
-         dob = ?,
-         gender = ?,
-         department = ?,
-         year = ?,
-         semester = ?,
-         email = ?,
-         phone = ?,
-         address = ?
+                $student["roll_no"] =
+                    $roll_no;
 
-         WHERE id = ?"
-    );
+                $student["registration_no"] =
+                    $registration_no;
 
+                $student["dob"] =
+                    $dob;
 
-mysqli_stmt_bind_param(
-    $update_stmt,
-    "sssssssssssi",
+                $student["gender"] =
+                    $gender;
 
-    $name,
-    $roll_no,
-    $registration_no,
-    $dob,
-    $gender,
-    $department,
-    $year,
-    $semester,
-    $email,
-    $phone,
-    $address,
-    $id
-);
+                $student["department"] =
+                    $department;
 
+                $student["section"] =
+                    $section;
 
-if (
-    mysqli_stmt_execute(
-        $update_stmt
-    )
-) {
+                $student["year"] =
+                    $year;
 
+                $student["semester"] =
+                    $semester;
 
-$message =
-    "Student information updated successfully!";
+                $student["email"] =
+                    $email;
 
+                $student["phone"] =
+                    $phone;
 
-$message_type =
-    "success";
+                $student["address"] =
+                    $address;
 
+            } else {
 
-/*
-Update displayed student values
-*/
+                $message =
+                    "Unable to update student: "
+                    . mysqli_error($conn);
 
-$student["name"] =
-    $name;
+                $message_type =
+                    "error";
+            }
 
-$student["roll_no"] =
-    $roll_no;
 
-$student["registration_no"] =
-    $registration_no;
+            mysqli_stmt_close(
+                $update_stmt
+            );
+        }
 
-$student["dob"] =
-    $dob;
 
-$student["gender"] =
-    $gender;
-
-$student["department"] =
-    $department;
-
-$student["year"] =
-    $year;
-
-$student["semester"] =
-    $semester;
-
-$student["email"] =
-    $email;
-
-$student["phone"] =
-    $phone;
-
-$student["address"] =
-    $address;
-
-
-}
-
-
-else {
-
-
-$message =
-    "Unable to update student.";
-
-
-$message_type =
-    "error";
-
-
-}
-
-
-mysqli_stmt_close(
-    $update_stmt
-);
-
-
-}
-
-
-mysqli_stmt_close(
-    $duplicate_stmt
-);
-
-
-}
-
-
+        mysqli_stmt_close(
+            $duplicate_stmt
+        );
+    }
 }
 
 ?>
@@ -414,28 +443,21 @@ mysqli_stmt_close(
 
 <head>
 
-
 <meta charset="UTF-8">
-
 
 <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
 >
 
-
 <title>
-
 Edit Student - EduTrack
-
 </title>
-
 
 <link
     rel="stylesheet"
     href="css/style.css"
 >
-
 
 </head>
 
@@ -447,24 +469,18 @@ Edit Student - EduTrack
 
 <div class="navbar">
 
-
 <h2>
-
 🎓 EduTrack
-
 </h2>
 
 
 <div>
 
-
 <a
     href="dashboard.php"
     class="nav-link"
 >
-
 Dashboard
-
 </a>
 
 
@@ -472,9 +488,15 @@ Dashboard
     href="view_students.php"
     class="nav-link"
 >
-
 Students
+</a>
 
+
+<a
+    href="attendance.php"
+    class="nav-link"
+>
+Attendance
 </a>
 
 
@@ -482,18 +504,16 @@ Students
     href="logout.php"
     class="logout-btn"
 >
-
 Logout
-
 </a>
 
+</div>
 
 </div>
 
 
-</div>
 
-
+<!-- FORM CONTAINER -->
 
 <div class="form-container">
 
@@ -503,21 +523,13 @@ Logout
 
 <div>
 
-
 <h1>
-
 ✏ Edit Student
-
 </h1>
 
-
 <p>
-
-Update personal and academic
-information.
-
+Update personal and academic information.
 </p>
-
 
 </div>
 
@@ -526,9 +538,7 @@ information.
     href="student_profile.php?id=<?php echo $id; ?>"
     class="profile-small-button"
 >
-
 👁 View Profile
-
 </a>
 
 
@@ -536,40 +546,54 @@ information.
 
 
 
-<?php
+<!-- MESSAGE -->
 
+<?php
 
 if ($message != "") {
 
 
-if (
-    $message_type == "success"
-) {
+    if (
+        $message_type ==
+        "success"
+    ) {
 
+?>
 
-echo
-"<div class='success-message'>
-✓ $message
-</div>";
+<div class="success-message">
 
+✓
 
+<?php
+echo htmlspecialchars(
+    $message
+);
+?>
+
+</div>
+
+<?php
+
+    } else {
+
+?>
+
+<div class="error-message">
+
+⚠
+
+<?php
+echo htmlspecialchars(
+    $message
+);
+?>
+
+</div>
+
+<?php
+
+    }
 }
-
-
-else {
-
-
-echo
-"<div class='error-message'>
-⚠ $message
-</div>";
-
-
-}
-
-
-}
-
 
 ?>
 
@@ -577,6 +601,8 @@ echo
 
 <form method="POST">
 
+
+<!-- STUDENT NAME -->
 
 <label>
 Student Name
@@ -602,6 +628,8 @@ Student Name
 
 
 
+<!-- ROLL NUMBER -->
+
 <label>
 Roll Number
 </label>
@@ -622,6 +650,8 @@ Roll Number
 
 
 
+<!-- REGISTRATION NUMBER -->
+
 <label>
 Registration Number
 </label>
@@ -641,6 +671,8 @@ Registration Number
 >
 
 
+
+<!-- DATE OF BIRTH -->
 
 <label>
 Date of Birth
@@ -666,6 +698,8 @@ Date of Birth
 
 
 
+<!-- GENDER -->
+
 <label>
 Gender
 </label>
@@ -689,8 +723,9 @@ Select Gender
     if (
         $student["gender"]
         == "Female"
-    )
+    ) {
         echo "selected";
+    }
     ?>
 >
 
@@ -706,8 +741,9 @@ Female
     if (
         $student["gender"]
         == "Male"
-    )
+    ) {
         echo "selected";
+    }
     ?>
 >
 
@@ -723,8 +759,9 @@ Male
     if (
         $student["gender"]
         == "Other"
-    )
+    ) {
         echo "selected";
+    }
     ?>
 >
 
@@ -737,6 +774,8 @@ Other
 
 
 
+<!-- DEPARTMENT -->
+
 <label>
 Department
 </label>
@@ -744,16 +783,23 @@ Department
 
 <select
     name="department"
+    id="department"
     required
 >
 
 
-<?php
+<option value="">
+Select Department
+</option>
 
+
+<?php
 
 $departments = [
 
+    "AI&DS",
     "CSBS",
+    "IT",
     "CSE",
     "ECE",
     "EEE",
@@ -768,32 +814,118 @@ foreach (
     as $dept
 ) {
 
-
-$selected =
-    $student["department"]
-    == $dept
-    ? "selected"
-    : "";
-
-
-echo
-"<option
-value='$dept'
-$selected
->
-$dept
-</option>";
-
-
-}
-
+    $selected =
+        $student["department"]
+        == $dept
+        ? "selected"
+        : "";
 
 ?>
+
+
+<option
+    value="<?php
+        echo htmlspecialchars(
+            $dept
+        );
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars(
+    $dept
+);
+?>
+
+</option>
+
+
+<?php } ?>
 
 
 </select>
 
 
+
+<!-- SECTION -->
+
+<label>
+Section
+</label>
+
+
+<select
+    name="section"
+    id="section"
+    required
+>
+
+
+<option value="">
+Select Section
+</option>
+
+
+<?php
+
+$sections = [
+
+    "A",
+    "B",
+    "C",
+    "D"
+
+];
+
+
+foreach (
+    $sections
+    as $section_option
+) {
+
+    $selected =
+        (
+            isset(
+                $student["section"]
+            )
+            &&
+            $student["section"]
+            ==
+            $section_option
+        )
+        ? "selected"
+        : "";
+
+?>
+
+
+<option
+    value="<?php
+        echo htmlspecialchars(
+            $section_option
+        );
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars(
+    $section_option
+);
+?>
+
+</option>
+
+
+<?php } ?>
+
+
+</select>
+
+
+
+<!-- YEAR -->
 
 <label>
 Year
@@ -802,12 +934,18 @@ Year
 
 <select
     name="year"
+    id="year"
+    onchange="updateSemesters()"
     required
 >
 
 
-<?php
+<option value="">
+Select Year
+</option>
 
+
+<?php
 
 $years = [
 
@@ -824,32 +962,41 @@ foreach (
     as $year_option
 ) {
 
-
-$selected =
-    $student["year"]
-    == $year_option
-    ? "selected"
-    : "";
-
-
-echo
-"<option
-value='$year_option'
-$selected
->
-$year_option
-</option>";
-
-
-}
-
+    $selected =
+        $student["year"]
+        == $year_option
+        ? "selected"
+        : "";
 
 ?>
+
+
+<option
+    value="<?php
+        echo htmlspecialchars(
+            $year_option
+        );
+    ?>"
+    <?php echo $selected; ?>
+>
+
+<?php
+echo htmlspecialchars(
+    $year_option
+);
+?>
+
+</option>
+
+
+<?php } ?>
 
 
 </select>
 
 
+
+<!-- SEMESTER -->
 
 <label>
 Semester
@@ -858,45 +1005,29 @@ Semester
 
 <select
     name="semester"
+    id="semester"
     required
 >
 
-
-<?php
-
-
-for (
-    $i = 1;
-    $i <= 8;
-    $i++
-) {
-
-
-$selected =
-    $student["semester"]
-    == $i
-    ? "selected"
-    : "";
-
-
-echo
-"<option
-value='$i'
-$selected
->
-Semester $i
-</option>";
-
-
-}
-
-
-?>
-
+<option value="">
+Select Semester
+</option>
 
 </select>
 
 
+<small class="form-help">
+
+1st Year → Semester 1 & 2,
+2nd Year → Semester 3 & 4,
+3rd Year → Semester 5 & 6,
+4th Year → Semester 7 & 8.
+
+</small>
+
+
+
+<!-- EMAIL -->
 
 <label>
 Email Address
@@ -917,6 +1048,8 @@ Email Address
 >
 
 
+
+<!-- PHONE -->
 
 <label>
 Phone Number
@@ -944,6 +1077,8 @@ Phone Number
 
 
 
+<!-- ADDRESS -->
+
 <label>
 Address
 </label>
@@ -953,11 +1088,9 @@ Address
     name="address"
     required
 ><?php
-
 echo htmlspecialchars(
     $student["address"]
 );
-
 ?></textarea>
 
 
@@ -973,6 +1106,146 @@ echo htmlspecialchars(
 
 
 </div>
+
+
+
+<!-- ==========================================
+     YEAR -> SEMESTER JAVASCRIPT
+========================================== -->
+
+<script>
+
+
+function updateSemesters() {
+
+
+    const year =
+        document.getElementById(
+            "year"
+        ).value;
+
+
+    const semesterSelect =
+        document.getElementById(
+            "semester"
+        );
+
+
+    /*
+       Current semester stored in database
+       or submitted by the form.
+    */
+
+    const currentSemester =
+        "<?php
+            echo htmlspecialchars(
+                (string)$student["semester"]
+            );
+        ?>";
+
+
+    semesterSelect.innerHTML =
+        '<option value="">Select Semester</option>';
+
+
+    let semesters = [];
+
+
+    if (
+        year === "1st Year"
+    ) {
+
+        semesters = [1, 2];
+
+    }
+
+
+    else if (
+        year === "2nd Year"
+    ) {
+
+        semesters = [3, 4];
+
+    }
+
+
+    else if (
+        year === "3rd Year"
+    ) {
+
+        semesters = [5, 6];
+
+    }
+
+
+    else if (
+        year === "4th Year"
+    ) {
+
+        semesters = [7, 8];
+
+    }
+
+
+    semesters.forEach(
+        function(number) {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                number;
+
+
+            option.textContent =
+                "Semester " + number;
+
+
+            if (
+                String(number)
+                ===
+                String(currentSemester)
+            ) {
+
+                option.selected =
+                    true;
+            }
+
+
+            semesterSelect.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if (year === "") {
+
+        semesterSelect.innerHTML =
+            '<option value="">Select Year First</option>';
+    }
+
+}
+
+
+/* LOAD CORRECT SEMESTER AUTOMATICALLY */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        updateSemesters();
+
+    }
+);
+
+
+</script>
 
 
 </body>

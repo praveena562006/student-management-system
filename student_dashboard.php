@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-
 include "db.php";
 
 
@@ -14,47 +13,36 @@ if (
     !isset($_SESSION["role"]) ||
     $_SESSION["role"] != "student"
 ) {
-
-    header(
-        "Location: student_login.php"
-    );
-
+    header("Location: student_login.php");
     exit();
 }
 
 
 /* =========================================================
-   CURRENT STUDENT ID
+   CURRENT STUDENT
 ========================================================= */
 
-$student_id =
-    intval(
-        $_SESSION["student_id"]
-    );
+$student_id = intval($_SESSION["student_id"]);
 
 
 /* =========================================================
-   GET CURRENT STUDENT INFORMATION
+   GET STUDENT INFORMATION
 ========================================================= */
 
-$student_stmt =
-    mysqli_prepare(
-        $conn,
-
-        "SELECT
-            id,
-            name,
-            roll_no,
-            registration_no,
-            department,
-            year,
-            semester
-
-         FROM students
-
-         WHERE id = ?"
-    );
-
+$student_stmt = mysqli_prepare(
+    $conn,
+    "SELECT
+        id,
+        name,
+        roll_no,
+        registration_no,
+        department,
+        section,
+        year,
+        semester
+     FROM students
+     WHERE id = ?"
+);
 
 mysqli_stmt_bind_param(
     $student_stmt,
@@ -62,68 +50,64 @@ mysqli_stmt_bind_param(
     $student_id
 );
 
-
-mysqli_stmt_execute(
-    $student_stmt
-);
-
+mysqli_stmt_execute($student_stmt);
 
 $student_result =
-    mysqli_stmt_get_result(
-        $student_stmt
-    );
-
+    mysqli_stmt_get_result($student_stmt);
 
 $student =
-    mysqli_fetch_assoc(
-        $student_result
-    );
+    mysqli_fetch_assoc($student_result);
+
+mysqli_stmt_close($student_stmt);
 
 
 if (!$student) {
 
     session_destroy();
 
-    header(
-        "Location: student_login.php"
-    );
+    header("Location: student_login.php");
 
     exit();
 }
 
 
 /* =========================================================
-   ATTENDANCE SUMMARY
+   NEW ATTENDANCE SUMMARY
+
+   Uses:
+   attendance_records
+   attendance_sessions
 ========================================================= */
 
-$attendance_stmt =
-    mysqli_prepare(
-        $conn,
+$attendance_stmt = mysqli_prepare(
+    $conn,
+    "SELECT
 
-        "SELECT
+        COUNT(ar.id) AS total_classes,
 
-            COUNT(*) AS total_days,
+        SUM(
+            CASE
+                WHEN ar.status = 'Present'
+                THEN 1
+                ELSE 0
+            END
+        ) AS present_classes,
 
-            SUM(
-                CASE
-                    WHEN status = 'Present'
-                    THEN 1
-                    ELSE 0
-                END
-            ) AS present_days,
+        SUM(
+            CASE
+                WHEN ar.status = 'Absent'
+                THEN 1
+                ELSE 0
+            END
+        ) AS absent_classes
 
-            SUM(
-                CASE
-                    WHEN status = 'Absent'
-                    THEN 1
-                    ELSE 0
-                END
-            ) AS absent_days
+     FROM attendance_records ar
 
-         FROM attendance
+     INNER JOIN attendance_sessions ats
+        ON ar.session_id = ats.id
 
-         WHERE student_id = ?"
-    );
+     WHERE ar.student_id = ?"
+);
 
 
 mysqli_stmt_bind_param(
@@ -132,63 +116,38 @@ mysqli_stmt_bind_param(
     $student_id
 );
 
-
-mysqli_stmt_execute(
-    $attendance_stmt
-);
-
+mysqli_stmt_execute($attendance_stmt);
 
 $attendance_result =
-    mysqli_stmt_get_result(
-        $attendance_stmt
-    );
-
+    mysqli_stmt_get_result($attendance_stmt);
 
 $attendance =
-    mysqli_fetch_assoc(
-        $attendance_result
-    );
+    mysqli_fetch_assoc($attendance_result);
+
+mysqli_stmt_close($attendance_stmt);
 
 
-$total_days =
-    intval(
-        $attendance["total_days"] ?? 0
-    );
+$total_classes =
+    intval($attendance["total_classes"] ?? 0);
+
+$present_classes =
+    intval($attendance["present_classes"] ?? 0);
+
+$absent_classes =
+    intval($attendance["absent_classes"] ?? 0);
 
 
-$present_days =
-    intval(
-        $attendance["present_days"] ?? 0
-    );
-
-
-$absent_days =
-    intval(
-        $attendance["absent_days"] ?? 0
-    );
-
-
-if ($total_days > 0) {
-
+if ($total_classes > 0) {
 
     $attendance_percentage =
         round(
-            (
-                $present_days /
-                $total_days
-            ) * 100,
+            ($present_classes / $total_classes) * 100,
             2
         );
 
-
-}
-
-else {
-
+} else {
 
     $attendance_percentage = 0;
-
-
 }
 
 
@@ -196,23 +155,14 @@ else {
    MARKS SUMMARY
 ========================================================= */
 
-$marks_stmt =
-    mysqli_prepare(
-        $conn,
-
-        "SELECT
-
-            COUNT(*) AS total_subjects,
-
-            ROUND(
-                AVG(total_marks),
-                2
-            ) AS average_marks
-
-         FROM marks
-
-         WHERE student_id = ?"
-    );
+$marks_stmt = mysqli_prepare(
+    $conn,
+    "SELECT
+        COUNT(*) AS total_subjects,
+        ROUND(AVG(total_marks), 2) AS average_marks
+     FROM marks
+     WHERE student_id = ?"
+);
 
 
 mysqli_stmt_bind_param(
@@ -221,22 +171,15 @@ mysqli_stmt_bind_param(
     $student_id
 );
 
-
-mysqli_stmt_execute(
-    $marks_stmt
-);
-
+mysqli_stmt_execute($marks_stmt);
 
 $marks_result =
-    mysqli_stmt_get_result(
-        $marks_stmt
-    );
-
+    mysqli_stmt_get_result($marks_stmt);
 
 $marks_summary =
-    mysqli_fetch_assoc(
-        $marks_result
-    );
+    mysqli_fetch_assoc($marks_result);
+
+mysqli_stmt_close($marks_stmt);
 
 
 $total_subjects =
@@ -245,65 +188,49 @@ $total_subjects =
         ?? 0
     );
 
-
 $average_marks =
     $marks_summary["average_marks"]
     ?? 0;
 
 
 /* =========================================================
-   CALCULATE OVERALL GRADE
+   OVERALL GRADE
 ========================================================= */
 
 if ($total_subjects == 0) {
 
     $overall_grade = "N/A";
 
-}
-
-elseif ($average_marks >= 90) {
+} elseif ($average_marks >= 90) {
 
     $overall_grade = "A+";
 
-}
-
-elseif ($average_marks >= 80) {
+} elseif ($average_marks >= 80) {
 
     $overall_grade = "A";
 
-}
-
-elseif ($average_marks >= 70) {
+} elseif ($average_marks >= 70) {
 
     $overall_grade = "B";
 
-}
-
-elseif ($average_marks >= 60) {
+} elseif ($average_marks >= 60) {
 
     $overall_grade = "C";
 
-}
-
-elseif ($average_marks >= 50) {
+} elseif ($average_marks >= 50) {
 
     $overall_grade = "D";
 
-}
-
-else {
+} else {
 
     $overall_grade = "F";
-
 }
 
 ?>
 
-
 <!DOCTYPE html>
 
 <html lang="en">
-
 
 <head>
 
@@ -323,53 +250,58 @@ Student Dashboard - EduTrack
     href="css/style.css"
 >
 
+<style>
+
+.attendance-safe {
+    color: #198754;
+    font-weight: bold;
+}
+
+.attendance-danger {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.attendance-neutral {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+</style>
+
 </head>
 
 
 <body>
 
 
-<!-- ================================================
-     NAVBAR
-================================================ -->
+<!-- NAVBAR -->
 
 <div class="navbar">
 
-
 <div>
 
-
 <h2>
-
 🎓 EduTrack
-
 </h2>
 
-
 <small>
-
 Student Portal
-
 </small>
-
 
 </div>
 
 
-
 <div class="student-nav-user">
-
 
 <span>
 
 👤
 
 <?php
-
 echo htmlspecialchars(
     $student["name"]
 );
-
 ?>
 
 </span>
@@ -379,14 +311,10 @@ echo htmlspecialchars(
     href="student_logout.php"
     class="logout-btn"
 >
-
 Logout
-
 </a>
 
-
 </div>
-
 
 </div>
 
@@ -395,17 +323,12 @@ Logout
 <div class="main-layout">
 
 
-<!-- ================================================
-     STUDENT SIDEBAR
-================================================ -->
+<!-- STUDENT SIDEBAR -->
 
 <div class="sidebar student-sidebar">
 
-
 <h3>
-
 STUDENT PORTAL
-
 </h3>
 
 
@@ -413,57 +336,41 @@ STUDENT PORTAL
     href="student_dashboard.php"
     class="active"
 >
-
 🏠 Dashboard
-
 </a>
 
 
 <a href="student_attendance.php">
-
 📅 My Attendance
-
 </a>
 
 
 <a href="student_marks.php">
-
 📝 My Marks
-
 </a>
 
 
 <a href="student_logout.php">
-
 🚪 Logout
-
 </a>
-
 
 </div>
 
 
 
-<!-- ================================================
-     MAIN CONTENT
-================================================ -->
+<!-- MAIN CONTENT -->
 
 <div class="main-content">
 
 
-<!-- WELCOME CARD -->
-
+<!-- WELCOME -->
 
 <div class="student-welcome-card">
 
-
 <div>
 
-
 <p class="welcome-label">
-
 WELCOME BACK
-
 </p>
 
 
@@ -472,11 +379,9 @@ WELCOME BACK
 Hello,
 
 <?php
-
 echo htmlspecialchars(
     $student["name"]
 );
-
 ?>
 
 👋
@@ -486,62 +391,55 @@ echo htmlspecialchars(
 
 <span>
 
-
 <?php
-
 echo htmlspecialchars(
     $student["registration_no"]
 );
-
 ?>
-
 
 &nbsp; • &nbsp;
 
-
 <?php
-
 echo htmlspecialchars(
     $student["department"]
 );
-
 ?>
-
 
 &nbsp; • &nbsp;
 
+Section
 
 <?php
+echo htmlspecialchars(
+    $student["section"]
+);
+?>
 
+&nbsp; • &nbsp;
+
+<?php
 echo htmlspecialchars(
     $student["year"]
 );
-
 ?>
-
 
 &nbsp; • &nbsp;
 
 Semester
 
 <?php
-
 echo htmlspecialchars(
     $student["semester"]
 );
-
 ?>
 
-
 </span>
-
 
 </div>
 
 
 
 <div class="welcome-avatar">
-
 
 <?php
 
@@ -555,257 +453,149 @@ echo strtoupper(
 
 ?>
 
+</div>
 
 </div>
 
 
-</div>
 
-
-
-<!-- ================================================
-     SUMMARY CARDS
-================================================ -->
+<!-- SUMMARY CARDS -->
 
 <div class="student-stat-grid">
 
 
 <!-- ATTENDANCE -->
 
-
 <div class="student-stat-card">
 
-
 <div class="student-stat-icon">
-
 📅
-
 </div>
 
-
 <p>
-
 Attendance
-
 </p>
 
 
 <h2>
 
 <?php
-
 echo $attendance_percentage;
-
 ?>%
 
 </h2>
 
 
-<?php
+<?php if ($total_classes == 0): ?>
 
-
-if ($total_days == 0) {
-
-
-?>
-
-
-<span class="neutral-status">
-
+<span class="attendance-neutral">
 No Records
-
 </span>
 
 
-<?php
+<?php elseif ($attendance_percentage >= 75): ?>
 
-
-}
-
-elseif (
-    $attendance_percentage >= 75
-) {
-
-
-?>
-
-
-<span class="good-status">
-
-✓ Eligible
-
+<span class="attendance-safe">
+✓ Safe
 </span>
 
 
-<?php
+<?php else: ?>
 
-
-}
-
-else {
-
-
-?>
-
-
-<span class="bad-status">
-
-⚠ Shortage
-
+<span class="attendance-danger">
+⚠ Below 75%
 </span>
 
-
-<?php
-
-}
-
-?>
-
+<?php endif; ?>
 
 </div>
 
 
 
-<!-- PRESENT DAYS -->
-
+<!-- PRESENT -->
 
 <div class="student-stat-card">
 
-
 <div class="student-stat-icon">
-
 ✅
-
 </div>
 
-
 <p>
-
-Days Present
-
+Classes Present
 </p>
 
-
 <h2>
-
-<?php
-
-echo $present_days;
-
-?>
-
+<?php echo $present_classes; ?>
 </h2>
-
 
 <small>
 
 Out of
 
-<?php
+<?php echo $total_classes; ?>
 
-echo $total_days;
-
-?>
-
-working days
+classes
 
 </small>
 
-
 </div>
 
 
 
-<!-- AVERAGE MARKS -->
-
+<!-- ABSENT -->
 
 <div class="student-stat-card">
 
-
 <div class="student-stat-icon">
-
-📊
-
+❌
 </div>
 
-
 <p>
-
-Average Marks
-
+Classes Absent
 </p>
 
-
 <h2>
-
-<?php
-
-echo $average_marks;
-
-?>%
-
+<?php echo $absent_classes; ?>
 </h2>
 
-
 <small>
-
-Across
-
-<?php
-
-echo $total_subjects;
-
-?>
-
-subjects
-
+Subject-wise attendance
 </small>
-
 
 </div>
 
 
 
-<!-- OVERALL GRADE -->
-
+<!-- GRADE -->
 
 <div class="student-stat-card">
 
-
 <div class="student-stat-icon">
-
 🏆
-
 </div>
 
-
 <p>
-
 Overall Grade
-
 </p>
-
 
 <h2>
 
 <?php
-
 echo htmlspecialchars(
     $overall_grade
 );
-
 ?>
 
 </h2>
 
-
 <small>
 
-Academic Performance
+Average Marks:
+
+<?php echo $average_marks; ?>%
 
 </small>
 
-
 </div>
 
 
@@ -813,32 +603,22 @@ Academic Performance
 
 
 
-<!-- ================================================
-     ATTENDANCE OVERVIEW
-================================================ -->
+<!-- ATTENDANCE OVERVIEW -->
 
 <div class="student-dashboard-card">
 
 
 <div class="card-title-row">
 
-
 <div>
 
-
 <h2>
-
 📅 Attendance Overview
-
 </h2>
 
-
 <p>
-
-Your current attendance status
-
+Your period and subject-wise attendance
 </p>
-
 
 </div>
 
@@ -848,7 +628,6 @@ Your current attendance status
 View Full Attendance →
 
 </a>
-
 
 </div>
 
@@ -860,9 +639,7 @@ View Full Attendance →
 <strong>
 
 <?php
-
 echo $attendance_percentage;
-
 ?>%
 
 </strong>
@@ -870,26 +647,23 @@ echo $attendance_percentage;
 
 <span>
 
-<?php
-
-echo $present_days;
-
-?>
+<?php echo $present_classes; ?>
 
 Present
 
 &nbsp; • &nbsp;
 
-<?php
-
-echo $absent_days;
-
-?>
+<?php echo $absent_classes; ?>
 
 Absent
 
-</span>
+&nbsp; • &nbsp;
 
+<?php echo $total_classes; ?>
+
+Total
+
+</span>
 
 </div>
 
@@ -897,25 +671,19 @@ Absent
 
 <div class="attendance-progress-track">
 
-
 <div
-
     class="attendance-progress-fill"
 
     style="width:
     <?php
-
-    echo min(
-        $attendance_percentage,
-        100
-    );
-
+        echo min(
+            $attendance_percentage,
+            100
+        );
     ?>%;"
-
 >
 
 </div>
-
 
 </div>
 
@@ -923,51 +691,41 @@ Absent
 
 <?php
 
-
 if (
-    $total_days > 0 &&
+    $total_classes > 0 &&
     $attendance_percentage < 75
 ) {
 
-
 ?>
-
 
 <div class="student-warning">
 
-⚠ Your attendance is currently below
-the required 75%.
+⚠ Your attendance is below the required
+75%.
 
 Please improve your attendance.
 
 </div>
 
-
 <?php
 
-}
-
-
-elseif (
+} elseif (
+    $total_classes > 0 &&
     $attendance_percentage >= 75
 ) {
 
-
 ?>
-
 
 <div class="student-success-note">
 
 ✓ Your attendance is currently
-above the required 75%.
+75% or above.
 
 </div>
-
 
 <?php
 
 }
-
 
 ?>
 
@@ -976,9 +734,7 @@ above the required 75%.
 
 
 
-<!-- ================================================
-     QUICK ACCESS
-================================================ -->
+<!-- QUICK ACCESS -->
 
 <h2 class="student-section-heading">
 
@@ -995,41 +751,26 @@ Quick Access
     class="student-quick-card"
 >
 
-
 <div class="quick-card-icon">
-
 📅
-
 </div>
-
 
 <div>
 
-
 <h3>
-
 My Attendance
-
 </h3>
 
-
 <p>
-
-View your complete
-attendance history.
-
+View subject-wise attendance,
+percentage and daily history.
 </p>
 
-
 <span>
-
 View Attendance →
-
 </span>
 
-
 </div>
-
 
 </a>
 
@@ -1040,41 +781,26 @@ View Attendance →
     class="student-quick-card"
 >
 
-
 <div class="quick-card-icon">
-
 📝
-
 </div>
-
 
 <div>
 
-
 <h3>
-
 My Marks & Grades
-
 </h3>
 
-
 <p>
-
 View your marks,
 grades and results.
-
 </p>
 
-
 <span>
-
 View Results →
-
 </span>
 
-
 </div>
-
 
 </a>
 
@@ -1083,7 +809,6 @@ View Results →
 
 
 </div>
-
 
 </div>
 
