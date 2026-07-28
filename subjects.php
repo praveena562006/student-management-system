@@ -442,7 +442,7 @@ $subjects =
 </head>
 
 
-<body>
+<body class="edutrack-admin">
 
 
 <!-- =========================================================
@@ -1448,6 +1448,8 @@ $subjects =
 </div>
 
 
+
+<script src="js/script.js"></script>
 </body>
 
 </html>

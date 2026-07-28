@@ -150,7 +150,7 @@ $total_students =
 </head>
 
 
-<body>
+<body class="edutrack-admin">
 
 
 <!-- ==========================================

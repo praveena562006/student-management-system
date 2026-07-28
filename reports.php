@@ -342,7 +342,7 @@ Reports & Analytics - EduTrack
 </head>
 
 
-<body>
+<body class="edutrack-admin">
 
 
 <!-- NAVBAR -->
@@ -1285,6 +1285,8 @@ No subject results available yet.
 </div>
 
 
+
+<script src="js/script.js"></script>
 </body>
 
 </html>

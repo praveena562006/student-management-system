@@ -447,7 +447,7 @@ Attendance History - EduTrack
 </head>
 
 
-<body>
+<body class="edutrack-admin">
 
 
 <!-- NAVBAR -->
@@ -1207,6 +1207,8 @@ No attendance records found.
 </div>
 
 
+
+<script src="js/script.js"></script>
 </body>
 
 </html>

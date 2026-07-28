@@ -106,3 +106,44 @@ function liveSearch() {
     }
 
 }
+
+
+/*
+========================================
+DASHBOARD ENTRANCE ANIMATION
+========================================
+*/
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const sections =
+            document.querySelectorAll(
+                ".dashboard-reveal"
+            );
+
+        if (!sections.length) {
+            return;
+        }
+
+
+        sections.forEach(
+            function (section, index) {
+
+                setTimeout(
+                    function () {
+
+                        section.classList.add(
+                            "is-visible"
+                        );
+
+                    },
+                    70 * index
+                );
+
+            }
+        );
+
+    }
+);

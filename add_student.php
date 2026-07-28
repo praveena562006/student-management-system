@@ -542,7 +542,7 @@ Add Student - EduTrack
 </head>
 
 
-<body>
+<body class="edutrack-admin">
 
 
 <!-- NAVBAR -->
@@ -1382,6 +1382,8 @@ document.addEventListener(
 </script>
 
 
+
+<script src="js/script.js"></script>
 </body>
 
 </html>

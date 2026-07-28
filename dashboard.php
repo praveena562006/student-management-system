@@ -338,6 +338,43 @@ $failed_students =
 
 
 /* =========================================================
+   TOP PERFORMER
+========================================================= */
+
+$top_performer_result = mysqli_query(
+    $conn,
+    "SELECT
+        s.name,
+        s.roll_no,
+        s.department,
+        ROUND(AVG(m.total_marks), 1) AS average_marks
+     FROM marks m
+     INNER JOIN students s
+        ON m.student_id = s.id
+     GROUP BY s.id, s.name, s.roll_no, s.department
+     ORDER BY average_marks DESC
+     LIMIT 1"
+);
+
+$top_performer = $top_performer_result
+    ? mysqli_fetch_assoc($top_performer_result)
+    : null;
+
+
+/* =========================================================
+   DEPARTMENT DISTRIBUTION
+========================================================= */
+
+$department_distribution = mysqli_query(
+    $conn,
+    "SELECT department, COUNT(*) AS total
+     FROM students
+     GROUP BY department
+     ORDER BY total DESC"
+);
+
+
+/* =========================================================
    RECENT ATTENDANCE SESSIONS
 ========================================================= */
 
@@ -370,843 +407,311 @@ $recent_sessions = mysqli_query(
 
 ?>
 
+
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>
-Admin Dashboard - EduTrack
-</title>
-
-<link
-    rel="stylesheet"
-    href="css/style.css"
->
-
-<style>
-
-.dashboard-warning {
-    background: #fff3cd;
-    border: 1px solid #ffe69c;
-    color: #664d03;
-    padding: 16px;
-    border-radius: 10px;
-    margin: 20px 0;
-}
-
-.dashboard-success {
-    background: #d1e7dd;
-    border: 1px solid #badbcc;
-    color: #0f5132;
-    padding: 16px;
-    border-radius: 10px;
-    margin: 20px 0;
-}
-
-.recent-session-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-top: 25px;
-    overflow-x: auto;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
-}
-
-.period-badge {
-    display: inline-block;
-    background: #edf5ff;
-    padding: 5px 10px;
-    border-radius: 15px;
-    white-space: nowrap;
-}
-
-</style>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - EduTrack</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 
-
-<body>
-
-
-<!-- =====================================================
-     NAVBAR
-===================================================== -->
+<body class="admin-dashboard-page">
 
 <div class="navbar">
+    <div class="dashboard-nav-brand">
+        <span>🎓</span>
+        <div>
+            <strong>EduTrack</strong>
+            <small>Academic Management System</small>
+        </div>
+    </div>
 
-<h2>
-🎓 Student Management Portal
-</h2>
-
-
-<div>
-
-<span>
-
-Welcome,
-
-<?php
-echo htmlspecialchars(
-    $_SESSION["admin"]
-);
-?>
-
-</span>
-
-
-<a
-    href="logout.php"
-    class="logout-btn"
->
-Logout
-</a>
-
+    <div class="dashboard-nav-user">
+        <div class="dashboard-admin-avatar">
+            <?php echo strtoupper(substr($_SESSION["admin"], 0, 1)); ?>
+        </div>
+        <div class="dashboard-admin-copy">
+            <strong><?php echo htmlspecialchars($_SESSION["admin"]); ?></strong>
+            <small>Administrator</small>
+        </div>
+        <a href="logout.php" class="logout-btn">Logout</a>
+    </div>
 </div>
-
-</div>
-
-
 
 <div class="main-layout">
 
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
-<div class="sidebar">
-
-<h3>
-ADMIN PANEL
-</h3>
-
-
-<a
-    href="dashboard.php"
-    class="active"
->
-🏠 Dashboard
-</a>
-
-
-<a href="add_student.php">
-➕ Add Student
-</a>
-
-
-<a href="view_students.php">
-👨‍🎓 Students
-</a>
-
-
-<a href="attendance.php">
-📅 Attendance
-</a>
-
-
-<a href="attendance_history.php">
-📋 Attendance History
-</a>
-
-
-<a href="marks.php">
-📝 Marks
-</a>
-
-
-<a href="subjects.php">
-📚 Subjects
-</a>
-
-
-<a href="reports.php">
-📊 Reports
-</a>
-
-
-<a href="logout.php">
-🚪 Logout
-</a>
-
-</div>
-
-
-
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
-
-<div class="main-content">
-
-
-<h1>
-Dashboard
-</h1>
-
-
-<p class="subtitle">
-
-Overview of your Student Management System
-
-</p>
-
-
-
-<!-- =====================================================
-     MAIN STATISTICS
-===================================================== -->
-
-<div class="stats-grid">
-
-
-<!-- TOTAL STUDENTS -->
-
-<div class="stat-card">
-
-<h3>
-Total Students
-</h3>
-
-<h1>
-<?php echo $total_students; ?>
-</h1>
-
-<p>
-Registered Students
-</p>
-
-</div>
-
-
-
-<!-- DEPARTMENTS -->
-
-<div class="stat-card">
-
-<h3>
-Departments
-</h3>
-
-<h1>
-<?php echo $total_departments; ?>
-</h1>
-
-<p>
-Active Departments
-</p>
-
-</div>
-
-
-
-<!-- SESSIONS TODAY -->
-
-<div class="stat-card">
-
-<h3>
-Sessions Today
-</h3>
-
-<h1>
-<?php echo $sessions_today; ?>
-</h1>
-
-<p>
-Subjects Taken Today
-</p>
-
-</div>
-
-
-
-<!-- PRESENT TODAY -->
-
-<div class="stat-card">
-
-<h3>
-Present Today
-</h3>
-
-<h1>
-<?php echo $present_today; ?>
-</h1>
-
-<p>
-Attendance Records
-</p>
-
-</div>
-
-
-
-<!-- ABSENT TODAY -->
-
-<div class="stat-card">
-
-<h3>
-Absent Today
-</h3>
-
-<h1>
-<?php echo $absent_today; ?>
-</h1>
-
-<p>
-Attendance Records
-</p>
-
-</div>
-
-
-
-<!-- TODAY ATTENDANCE -->
-
-<div class="stat-card">
-
-<h3>
-Today's Attendance
-</h3>
-
-<h1>
-<?php echo $today_percentage; ?>%
-</h1>
-
-<p>
-Overall Today
-</p>
-
-</div>
-
-
-
-<!-- OVERALL ATTENDANCE -->
-
-<div class="stat-card">
-
-<h3>
-Overall Attendance
-</h3>
-
-<h1>
 <?php
-echo $overall_attendance_percentage;
-?>%
-</h1>
-
-<p>
-All Attendance Records
-</p>
-
-</div>
-
-
-
-<!-- BELOW 75 -->
-
-<div class="stat-card">
-
-<h3>
-Below 75%
-</h3>
-
-<h1>
-<?php echo $below_75; ?>
-</h1>
-
-<p>
-Students With Shortage
-</p>
-
-</div>
-
-
-
-<!-- PASSED -->
-
-<div class="stat-card">
-
-<h3>
-Passed
-</h3>
-
-<h1>
-<?php echo $passed_students; ?>
-</h1>
-
-<p>
-Students Passing All Recorded Subjects
-</p>
-
-</div>
-
-
-
-<!-- FAILED -->
-
-<div class="stat-card">
-
-<h3>
-Failed
-</h3>
-
-<h1>
-<?php echo $failed_students; ?>
-</h1>
-
-<p>
-Students With Failed Subjects
-</p>
-
-</div>
-
-
-
-<!-- MARK RECORDS -->
-
-<div class="stat-card">
-
-<h3>
-Marks Records
-</h3>
-
-<h1>
-<?php echo $total_mark_records; ?>
-</h1>
-
-<p>
-Published Subject Results
-</p>
-
-</div>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     ATTENDANCE WARNING
-===================================================== -->
-
-<?php
-
-if ($below_75 > 0) {
-
-?>
-
-
-<div class="dashboard-warning">
-
-<strong>
-⚠ Attendance Warning
-</strong>
-
-<br><br>
-
-<?php
-echo $below_75;
-?>
-
-student(s) currently have attendance below the required
-<strong>75%</strong>.
-
-</div>
-
-
-<?php
-
-} elseif ($total_attendance_records > 0) {
-
-?>
-
-
-<div class="dashboard-success">
-
-<strong>
-✓ Attendance Status
-</strong>
-
-<br><br>
-
-All students with recorded attendance currently meet
-the 75% requirement.
-
-</div>
-
-
-<?php } ?>
-
-
-
-<!-- =====================================================
-     QUICK ACTIONS
-===================================================== -->
-
-<h2 class="section-title">
-Quick Actions
-</h2>
-
-
-<div class="quick-actions">
-
-
-<a href="add_student.php">
-
-➕
-<br>
-
-Add Student
-
-</a>
-
-
-
-<a href="attendance.php">
-
-📅
-<br>
-
-Take Attendance
-
-</a>
-
-
-
-<a href="attendance_history.php">
-
-📋
-<br>
-
-Attendance History
-
-</a>
-
-
-
-<a href="marks.php">
-
-📝
-<br>
-
-Manage Marks
-
-</a>
-
-
-
-<a href="view_students.php">
-
-🔍
-<br>
-
-Search Students
-
-</a>
-
-
-
-<a href="subjects.php">
-
-📚
-<br>
-
-Subjects
-
-</a>
-
-
-
-<a href="reports.php">
-
-📊
-<br>
-
-View Reports
-
-</a>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     RECENT ATTENDANCE SESSIONS
-===================================================== -->
-
-<div class="recent-session-card">
-
-
-<h2>
-📅 Recent Attendance Sessions
-</h2>
-
-
-<table class="modern-table">
-
-
-<thead>
-
-<tr>
-
-<th>
-Date
-</th>
-
-<th>
-Department
-</th>
-
-<th>
-Section
-</th>
-
-<th>
-Year / Semester
-</th>
-
-<th>
-Subject
-</th>
-
-<th>
-Period
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-
-<?php
-
-if (
-    $recent_sessions &&
-    mysqli_num_rows(
-        $recent_sessions
-    ) > 0
-) {
-
-
-    while (
-        $session =
-        mysqli_fetch_assoc(
-            $recent_sessions
-        )
-    ) {
-
-?>
-
-
-<tr>
-
-
-<td>
-
-<?php
-
-echo date(
-    "d M Y",
-    strtotime(
-        $session["attendance_date"]
-    )
-);
-
-?>
-
-</td>
-
-
-
-<td>
-
-<?php
-
-echo htmlspecialchars(
-    $session["department"]
-);
-
-?>
-
-</td>
-
-
-
-<td>
-
-<?php
-
-echo htmlspecialchars(
-    $session["section"]
-);
-
-?>
-
-</td>
-
-
-
-<td>
-
-<?php
-
-echo htmlspecialchars(
-    $session["year"]
-);
-
-?>
-
-<br>
-
-<small>
-
-Semester
-
-<?php
-
-echo htmlspecialchars(
-    $session["semester"]
-);
-
-?>
-
-</small>
-
-</td>
-
-
-
-<td>
-
-<strong>
-
-<?php
-
-echo htmlspecialchars(
-    $session["subject_name"]
-);
-
-?>
-
-</strong>
-
-<br>
-
-<small>
-
-<?php
-
-echo htmlspecialchars(
-    $session["subject_code"]
-);
-
-?>
-
-</small>
-
-</td>
-
-
-
-<td>
-
-<span class="period-badge">
-
-P<?php
-
-echo intval(
-    $session["start_period"]
-);
-
-?>
-
-
-<?php
-
-if (
-    $session["start_period"]
-    !=
-    $session["end_period"]
-) {
-
-?>
-
--
-
-P<?php
-
-echo intval(
-    $session["end_period"]
-);
-
-?>
-
-<?php } ?>
-
-
-</span>
-
-</td>
-
-
-</tr>
-
-
-<?php
-
-    }
-
+if (file_exists(__DIR__ . "/includes/admin_sidebar.php")) {
+    include __DIR__ . "/includes/admin_sidebar.php";
 } else {
-
 ?>
+<div class="sidebar edutrack-sidebar">
+    <div class="sidebar-brand-block">
+        <div class="sidebar-brand-icon">🎓</div>
+        <div><strong>EduTrack</strong><small>Academic Management</small></div>
+    </div>
 
+    <div class="sidebar-section-title">OVERVIEW</div>
+    <div class="sidebar-group">
+        <a href="dashboard.php" class="active"><span>🏠</span>Dashboard</a>
+    </div>
 
-<tr>
+    <div class="sidebar-section-title">STUDENT MANAGEMENT</div>
+    <div class="sidebar-group">
+        <a href="view_students.php"><span>👨‍🎓</span>All Students</a>
+        <a href="add_student.php"><span>➕</span>Add Student</a>
+    </div>
 
-<td
-    colspan="6"
-    style="
-        text-align:center;
-        padding:30px;
-    "
->
+    <div class="sidebar-section-title">ACADEMICS</div>
+    <div class="sidebar-group">
+        <a href="attendance.php"><span>✓</span>Take Attendance</a>
+        <a href="attendance_history.php"><span>📋</span>Attendance History</a>
+        <a href="marks.php"><span>📝</span>Marks & Grades</a>
+        <a href="subjects.php"><span>📚</span>Subjects</a>
+    </div>
 
-No attendance sessions have been recorded yet.
+    <div class="sidebar-section-title">INSIGHTS</div>
+    <div class="sidebar-group">
+        <a href="reports.php"><span>📊</span>Reports & Analytics</a>
+    </div>
 
-</td>
-
-</tr>
-
-
+    <div class="sidebar-section-title">ACCOUNT</div>
+    <div class="sidebar-group sidebar-account">
+        <a href="logout.php"><span>🚪</span>Logout</a>
+    </div>
+</div>
 <?php } ?>
 
+<main class="main-content dashboard-v2">
 
-</tbody>
+<section class="university-dashboard-hero dashboard-reveal">
+    <div class="university-hero-copy">
+        <span class="dashboard-eyebrow">ACADEMIC COMMAND CENTER</span>
+        <h1>Good <?php
+            $hour = intval(date("H"));
+            echo $hour < 12 ? "Morning" : ($hour < 17 ? "Afternoon" : "Evening");
+        ?>, <?php echo htmlspecialchars($_SESSION["admin"]); ?>.</h1>
+        <p>Monitor student engagement, attendance and academic performance across EduTrack.</p>
 
+        <div class="university-hero-actions">
+            <a href="attendance.php" class="hero-action-primary">✓ Take Attendance</a>
+            <a href="add_student.php" class="hero-action-secondary">＋ Add Student</a>
+        </div>
+    </div>
 
-</table>
+    <div class="university-hero-side">
+        <div class="academic-year-chip">Academic Portal • <?php echo date("Y"); ?></div>
+        <div class="hero-today-card">
+            <small>TODAY</small>
+            <strong><?php echo date("d"); ?></strong>
+            <span><?php echo date("F Y"); ?></span>
+            <em><?php echo date("l"); ?></em>
+        </div>
+    </div>
+</section>
 
+<section class="dashboard-v2-section dashboard-reveal">
+    <div class="dashboard-v2-heading">
+        <div>
+            <span class="dashboard-eyebrow dark">OVERVIEW</span>
+            <h2>Campus at a glance</h2>
+        </div>
+        <span class="live-data-label"><i></i> Live database</span>
+    </div>
 
+    <div class="primary-metric-grid">
+        <article class="primary-metric-card">
+            <div class="metric-top"><span class="metric-icon">👨‍🎓</span><span class="metric-tag">Students</span></div>
+            <strong><?php echo $total_students; ?></strong>
+            <p>Registered students</p>
+        </article>
+
+        <article class="primary-metric-card">
+            <div class="metric-top"><span class="metric-icon">🏛️</span><span class="metric-tag">Campus</span></div>
+            <strong><?php echo $total_departments; ?></strong>
+            <p>Active departments</p>
+        </article>
+
+        <article class="primary-metric-card">
+            <div class="metric-top"><span class="metric-icon">📈</span><span class="metric-tag">Attendance</span></div>
+            <strong><?php echo $overall_attendance_percentage; ?>%</strong>
+            <p>Overall attendance rate</p>
+        </article>
+
+        <article class="primary-metric-card attention-card">
+            <div class="metric-top"><span class="metric-icon">⚠️</span><span class="metric-tag">Attention</span></div>
+            <strong><?php echo $below_75; ?></strong>
+            <p>Students below 75%</p>
+        </article>
+    </div>
+</section>
+
+<section class="dashboard-focus-grid dashboard-reveal">
+
+    <article class="dashboard-v2-card attendance-focus-card">
+        <div class="card-title-row">
+            <div><span class="dashboard-eyebrow dark">ATTENDANCE</span><h2>Today's academic activity</h2></div>
+            <a href="attendance_history.php">View history →</a>
+        </div>
+
+        <div class="attendance-focus-content">
+            <div class="v2-attendance-ring" style="--attendance: <?php echo min(100, max(0, $today_percentage)); ?>;">
+                <div><strong><?php echo $today_percentage; ?>%</strong><span>Today</span></div>
+            </div>
+
+            <div class="today-stat-list">
+                <div><span>Sessions conducted</span><strong><?php echo $sessions_today; ?></strong></div>
+                <div><span><i class="status-dot present"></i> Present records</span><strong><?php echo $present_today; ?></strong></div>
+                <div><span><i class="status-dot absent"></i> Absent records</span><strong><?php echo $absent_today; ?></strong></div>
+                <div><span>Total attendance records</span><strong><?php echo $total_attendance_records; ?></strong></div>
+            </div>
+        </div>
+    </article>
+
+    <article class="dashboard-v2-card attention-panel">
+        <div class="card-title-row">
+            <div><span class="dashboard-eyebrow dark">PRIORITY</span><h2>Needs attention</h2></div>
+        </div>
+
+        <?php if ($below_75 > 0) { ?>
+        <div class="priority-item priority-warning">
+            <div class="priority-icon">⚠</div>
+            <div><strong>Attendance shortage</strong><p><?php echo $below_75; ?> student(s) are below the 75% attendance requirement.</p></div>
+        </div>
+        <?php } else { ?>
+        <div class="priority-item priority-success">
+            <div class="priority-icon">✓</div>
+            <div><strong>Attendance is healthy</strong><p>No recorded student is currently below the 75% requirement.</p></div>
+        </div>
+        <?php } ?>
+
+        <?php if ($failed_students > 0) { ?>
+        <div class="priority-item priority-warning">
+            <div class="priority-icon">!</div>
+            <div><strong>Academic alert</strong><p><?php echo $failed_students; ?> student(s) have at least one failed subject.</p></div>
+        </div>
+        <?php } else { ?>
+        <div class="priority-item priority-neutral">
+            <div class="priority-icon">📝</div>
+            <div><strong>Academic results</strong><p><?php echo $total_mark_records; ?> subject result(s) are currently published.</p></div>
+        </div>
+        <?php } ?>
+
+        <a href="reports.php" class="panel-link-button">Open Academic Reports →</a>
+    </article>
+</section>
+
+<section class="dashboard-focus-grid dashboard-reveal">
+
+    <article class="dashboard-v2-card">
+        <div class="card-title-row">
+            <div><span class="dashboard-eyebrow dark">PERFORMANCE</span><h2>Academic snapshot</h2></div>
+        </div>
+
+        <div class="academic-snapshot">
+            <div class="snapshot-stat"><span>Passed all recorded subjects</span><strong><?php echo $passed_students; ?></strong></div>
+            <div class="snapshot-stat"><span>Students with failures</span><strong><?php echo $failed_students; ?></strong></div>
+            <div class="snapshot-stat"><span>Published results</span><strong><?php echo $total_mark_records; ?></strong></div>
+        </div>
+
+        <?php if ($top_performer) { ?>
+        <div class="v2-top-performer">
+            <div class="performer-medal">🏆</div>
+            <div class="performer-info">
+                <small>TOP ACADEMIC PERFORMER</small>
+                <strong><?php echo htmlspecialchars($top_performer["name"]); ?></strong>
+                <span><?php echo htmlspecialchars($top_performer["roll_no"]); ?> • <?php echo htmlspecialchars($top_performer["department"]); ?></span>
+            </div>
+            <div class="performer-average"><?php echo $top_performer["average_marks"]; ?>%</div>
+        </div>
+        <?php } ?>
+    </article>
+
+    <article class="dashboard-v2-card">
+        <div class="card-title-row">
+            <div><span class="dashboard-eyebrow dark">DISTRIBUTION</span><h2>Students by department</h2></div>
+        </div>
+
+        <div class="department-v2-list">
+        <?php
+        if ($department_distribution && mysqli_num_rows($department_distribution) > 0) {
+            while ($dept = mysqli_fetch_assoc($department_distribution)) {
+                $dept_percentage = $total_students > 0
+                    ? round(($dept["total"] / $total_students) * 100, 1)
+                    : 0;
+        ?>
+            <div class="department-v2-row">
+                <div><strong><?php echo htmlspecialchars($dept["department"]); ?></strong><span><?php echo intval($dept["total"]); ?> students</span></div>
+                <div class="department-v2-track"><span style="width:<?php echo min(100, $dept_percentage); ?>%"></span></div>
+            </div>
+        <?php
+            }
+        } else {
+        ?>
+            <div class="dashboard-v2-empty">No department information available.</div>
+        <?php } ?>
+        </div>
+    </article>
+</section>
+
+<section class="dashboard-v2-section dashboard-reveal">
+    <div class="dashboard-v2-heading">
+        <div><span class="dashboard-eyebrow dark">SHORTCUTS</span><h2>Quick actions</h2></div>
+    </div>
+
+    <div class="dashboard-action-grid">
+        <a href="add_student.php"><span>👨‍🎓</span><div><strong>Add Student</strong><small>Create a student profile</small></div><b>→</b></a>
+        <a href="attendance.php"><span>✓</span><div><strong>Take Attendance</strong><small>Start a class session</small></div><b>→</b></a>
+        <a href="marks.php"><span>📝</span><div><strong>Publish Marks</strong><small>Record academic results</small></div><b>→</b></a>
+        <a href="reports.php"><span>📊</span><div><strong>View Reports</strong><small>Explore academic insights</small></div><b>→</b></a>
+    </div>
+</section>
+
+<section class="dashboard-v2-section dashboard-reveal">
+    <div class="dashboard-v2-heading">
+        <div><span class="dashboard-eyebrow dark">RECENT ACTIVITY</span><h2>Latest attendance sessions</h2></div>
+        <a href="attendance_history.php" class="section-text-link">See all →</a>
+    </div>
+
+    <div class="dashboard-v2-table-card">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Class</th>
+                    <th>Year / Semester</th>
+                    <th>Subject</th>
+                    <th>Period</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            if ($recent_sessions && mysqli_num_rows($recent_sessions) > 0) {
+                while ($session = mysqli_fetch_assoc($recent_sessions)) {
+            ?>
+                <tr>
+                    <td><strong><?php echo date("d M", strtotime($session["attendance_date"])); ?></strong><br><small><?php echo date("Y", strtotime($session["attendance_date"])); ?></small></td>
+                    <td><span class="class-pill"><?php echo htmlspecialchars($session["department"]); ?> • <?php echo htmlspecialchars($session["section"]); ?></span></td>
+                    <td><?php echo htmlspecialchars($session["year"]); ?><br><small>Semester <?php echo htmlspecialchars($session["semester"]); ?></small></td>
+                    <td><strong><?php echo htmlspecialchars($session["subject_name"]); ?></strong><br><small><?php echo htmlspecialchars($session["subject_code"]); ?></small></td>
+                    <td><span class="period-pill">P<?php echo intval($session["start_period"]); ?><?php if ($session["start_period"] != $session["end_period"]) { ?>–P<?php echo intval($session["end_period"]); ?><?php } ?></span></td>
+                </tr>
+            <?php
+                }
+            } else {
+            ?>
+                <tr><td colspan="5" class="dashboard-v2-empty">No attendance sessions recorded yet.</td></tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</main>
 </div>
 
-
-</div>
-
-</div>
-
-
+<script src="js/script.js"></script>
 </body>
-
 </html>

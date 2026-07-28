@@ -2565,3 +2565,10299 @@ tbody tr:hover {
     }
 
 }
+
+
+/* =========================================================
+   EDUTRACK 2026 — UNIVERSITY PRESENTATION UI OVERRIDES
+   Safe visual upgrade: preserves existing PHP/HTML classes.
+========================================================= */
+
+:root {
+    --et-bg: #f4f7fb;
+    --et-surface: rgba(255,255,255,.94);
+    --et-surface-solid: #ffffff;
+    --et-text: #101828;
+    --et-muted: #667085;
+    --et-border: #e4e9f2;
+    --et-primary: #4f46e5;
+    --et-primary-2: #2563eb;
+    --et-primary-dark: #3730a3;
+    --et-sidebar: #0b1220;
+    --et-sidebar-2: #111c32;
+    --et-success: #15803d;
+    --et-danger: #be123c;
+    --et-warning: #b45309;
+    --et-radius: 16px;
+    --et-shadow: 0 10px 30px rgba(15,23,42,.07);
+    --et-shadow-hover: 0 18px 40px rgba(15,23,42,.12);
+}
+
+html { background: var(--et-bg); }
+
+body {
+    background:
+        radial-gradient(circle at 85% 5%, rgba(79,70,229,.08), transparent 24rem),
+        radial-gradient(circle at 30% 100%, rgba(37,99,235,.06), transparent 28rem),
+        var(--et-bg);
+    color: var(--et-text);
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background: rgba(79,70,229,.18);
+    color: #1e1b4b;
+}
+
+button, .primary-action-btn, .add-button, .student-login-button,
+.add-student-button, .save-large-button {
+    letter-spacing: .01em;
+    box-shadow: 0 8px 18px rgba(79,70,229,.18);
+}
+
+button:hover, .primary-action-btn:hover, .add-button:hover {
+    box-shadow: 0 12px 24px rgba(79,70,229,.24);
+}
+
+input, select, textarea {
+    min-height: 45px;
+    border: 1px solid var(--et-border);
+    border-radius: 11px;
+    background: rgba(255,255,255,.98);
+}
+
+input:hover, select:hover, textarea:hover {
+    border-color: #c7d2fe;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99,102,241,.11);
+}
+
+/* Premium top bar */
+.navbar {
+    min-height: 72px;
+    padding: 0 30px;
+    background: rgba(11,18,32,.97);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 8px 25px rgba(15,23,42,.13);
+    backdrop-filter: blur(14px);
+    position: sticky;
+    top: 0;
+}
+
+.navbar h2 {
+    font-size: 20px;
+    font-weight: 750;
+    letter-spacing: -.45px;
+}
+
+.navbar h2::after {
+    content: "  •  Academic Management";
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+}
+
+.logout-btn {
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.12);
+}
+.logout-btn:hover { background: #dc2626; }
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    min-width: 250px;
+    padding: 28px 14px;
+    background:
+        radial-gradient(circle at 20% 0%, rgba(79,70,229,.22), transparent 15rem),
+        linear-gradient(180deg, var(--et-sidebar), var(--et-sidebar-2));
+    border-right: 1px solid rgba(255,255,255,.04);
+}
+
+.sidebar h3 {
+    color: #7f8da8;
+    padding: 0 13px 8px;
+}
+
+.sidebar a {
+    position: relative;
+    min-height: 45px;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    color: #c9d3e3;
+}
+
+.sidebar a:hover {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(255,255,255,.06);
+    transform: translateX(3px);
+}
+
+.sidebar a.active {
+    background: linear-gradient(135deg, rgba(37,99,235,.98), rgba(79,70,229,.98));
+    border-color: rgba(255,255,255,.12);
+    box-shadow: 0 9px 24px rgba(37,99,235,.25);
+}
+
+/* Main workspace */
+.main-content {
+    padding: 38px clamp(22px, 3vw, 48px);
+    max-width: 1600px;
+}
+
+.main-content > h1 {
+    margin: 0;
+    font-size: clamp(27px, 3vw, 36px);
+    letter-spacing: -.8px;
+}
+
+.subtitle, .page-header p, .student-page-header p {
+    color: var(--et-muted);
+}
+
+.page-header {
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--et-border);
+    margin-bottom: 26px;
+}
+
+.page-header h1, .student-page-header h1 {
+    letter-spacing: -.7px;
+}
+
+/* Dashboard metric cards */
+.stats-grid {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 18px;
+}
+
+.stat-card {
+    min-height: 150px;
+    padding: 25px 25px 22px;
+    border: 1px solid var(--et-border);
+    border-radius: var(--et-radius);
+    box-shadow: var(--et-shadow);
+    background: linear-gradient(145deg, rgba(255,255,255,.99), rgba(248,250,252,.95));
+}
+
+.stat-card::before {
+    width: 5px;
+    background: linear-gradient(180deg, #2563eb, #7c3aed);
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    right: -35px;
+    top: -35px;
+    background: rgba(79,70,229,.055);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--et-shadow-hover);
+    border-color: #d8def0;
+}
+
+.stat-card h1 {
+    font-size: 38px;
+    letter-spacing: -1.2px;
+}
+
+.stat-card h3 {
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: 11px;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(130px,1fr));
+    gap: 14px;
+}
+
+.quick-actions a {
+    width: auto;
+    min-height: 112px;
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    border-radius: 15px;
+    border: 1px solid var(--et-border);
+    box-shadow: var(--et-shadow);
+    font-size: 14px;
+}
+
+.quick-actions a:hover {
+    background: linear-gradient(145deg,#fff,#f7f7ff);
+    border-color: #c7d2fe;
+    box-shadow: var(--et-shadow-hover);
+}
+
+/* Universal cards */
+.form-container, .filter-card, .table-card, .student-table-card,
+.report-card, .marks-form-card, .student-dashboard-card,
+.student-stat-card, .attendance-summary-card, .marks-summary-card,
+.profile-card, .student-quick-card {
+    border-color: var(--et-border);
+    box-shadow: var(--et-shadow);
+}
+
+.form-container {
+    width: min(720px, calc(100% - 30px));
+    border-radius: 20px;
+    padding: 38px;
+}
+
+.report-card, .student-dashboard-card, .marks-form-card, .profile-card {
+    border-radius: 17px;
+}
+
+/* Tables */
+.table-card, .student-table-card {
+    border-radius: 16px;
+    overflow-x: auto;
+}
+
+th, .student-directory-table th, .modern-table th, .student-record-table th {
+    background: #f6f8fc;
+    color: #5c667a;
+    padding: 14px 17px;
+    font-size: 11px;
+    letter-spacing: .065em;
+}
+
+td, .student-directory-table td, .modern-table td, .student-record-table td {
+    padding: 16px 17px;
+}
+
+tbody tr:hover { background: #f7f8ff; }
+
+/* Hero / student area */
+.student-welcome-card, .profile-header, .student-summary {
+    background:
+        radial-gradient(circle at 88% 12%, rgba(255,255,255,.17), transparent 11rem),
+        linear-gradient(125deg,#1d4ed8 0%,#4f46e5 52%,#6d28d9 100%);
+    border: 1px solid rgba(255,255,255,.16);
+    box-shadow: 0 18px 40px rgba(79,70,229,.20);
+}
+
+.student-welcome-card {
+    min-height: 170px;
+    padding: 34px;
+    border-radius: 20px;
+}
+
+.student-stat-grid, .attendance-summary-grid, .marks-summary-grid {
+    gap: 16px;
+}
+
+.student-stat-card, .attendance-summary-card, .marks-summary-card {
+    border-radius: 15px;
+}
+
+.student-stat-card:hover, .attendance-summary-card:hover,
+.marks-summary-card:hover, .student-quick-card:hover {
+    box-shadow: var(--et-shadow-hover);
+}
+
+/* Progress */
+.attendance-progress-track {
+    height: 12px;
+    background: #e7eaf2;
+}
+.attendance-progress-fill {
+    background: linear-gradient(90deg,#2563eb,#4f46e5,#7c3aed);
+    box-shadow: 0 0 16px rgba(79,70,229,.25);
+}
+
+/* Status pills */
+.department-pill, .department-badge, .student-identity-badge,
+.grade-badge, .good-status, .bad-status, .result-pass, .result-fail,
+.attendance-present, .attendance-absent, .status-present, .status-absent,
+.neutral-status {
+    border-radius: 999px;
+    letter-spacing: .015em;
+}
+
+/* Login */
+.login-container, .student-login-card {
+    border-radius: 22px;
+    box-shadow: 0 28px 70px rgba(15,23,42,.13);
+}
+
+.student-login-brand {
+    background:
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,.13), transparent 15rem),
+        radial-gradient(circle at 10% 90%, rgba(255,255,255,.08), transparent 17rem),
+        linear-gradient(145deg,#172554,#1d4ed8 42%,#4f46e5 72%,#6d28d9);
+}
+
+.student-login-brand h1 {
+    font-size: clamp(46px,6vw,68px);
+    font-weight: 800;
+    letter-spacing: -2.5px;
+}
+
+/* Portal landing */
+.portal-body {
+    background:
+        radial-gradient(circle at 12% 15%, rgba(37,99,235,.10), transparent 22rem),
+        radial-gradient(circle at 88% 85%, rgba(124,58,237,.10), transparent 24rem),
+        linear-gradient(135deg,#f8faff,#f3f5ff 50%,#faf8ff);
+}
+
+.portal-container { max-width: 1020px; }
+
+.portal-logo {
+    width: 82px;
+    height: 82px;
+    border-radius: 23px;
+    box-shadow: 0 18px 40px rgba(79,70,229,.26);
+}
+
+.portal-title {
+    font-size: clamp(38px,6vw,54px);
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+.portal-card {
+    padding: 34px;
+    border-radius: 21px;
+    box-shadow: 0 16px 45px rgba(15,23,42,.08);
+}
+
+.portal-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 28px 60px rgba(15,23,42,.14);
+}
+
+/* Alerts */
+.error, .error-message, .success-message, .alert-success,
+.student-warning, .student-success-note, .student-info-note {
+    border-radius: 11px;
+}
+
+/* Attendance controls */
+.attendance-toolbar {
+    border-radius: 16px;
+    box-shadow: var(--et-shadow);
+}
+
+.attendance-options span {
+    border-radius: 999px;
+    font-weight: 650;
+}
+
+/* Smooth but restrained entrance */
+@keyframes etFadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.main-content > * {
+    animation: etFadeUp .32s ease both;
+}
+
+.main-content > *:nth-child(2) { animation-delay: .035s; }
+.main-content > *:nth-child(3) { animation-delay: .07s; }
+.main-content > *:nth-child(4) { animation-delay: .105s; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        transition-duration: .001ms !important;
+    }
+}
+
+/* Presentation laptop optimization */
+@media (max-width: 1200px) {
+    .quick-actions { grid-template-columns: repeat(3,minmax(140px,1fr)); }
+}
+
+@media (max-width: 900px) {
+    .navbar h2::after { display: none; }
+    .sidebar { width: 210px; min-width: 210px; }
+    .stats-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 700px) {
+    .navbar { position: relative; min-height: 64px; padding: 10px 16px; }
+    .navbar span { display: none; }
+    .main-content { padding: 22px 15px; }
+    .quick-actions, .stats-grid { grid-template-columns: 1fr; }
+    .quick-actions a { min-height: 86px; }
+    .sidebar { background: #0b1220; }
+    .form-container { padding: 25px 20px; }
+}
+
+@media (max-width: 480px) {
+    .navbar h2 { font-size: 17px; }
+    .portal-card { padding: 25px; }
+    .portal-logo { width: 70px; height: 70px; }
+}
+
+
+
+/* =========================================================
+   EDUTRACK — PROFESSIONAL ADMIN NAVIGATION
+========================================================= */
+
+.edutrack-sidebar {
+    padding: 22px 14px;
+}
+
+.sidebar-brand-block {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    padding: 5px 10px 23px;
+
+    margin-bottom: 12px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+}
+
+.sidebar-brand-icon {
+    width: 39px;
+    height: 39px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #6366f1
+        );
+
+    box-shadow:
+        0 8px 18px
+        rgba(37,99,235,.25);
+
+    font-size: 19px;
+}
+
+.sidebar-brand-block strong {
+    display: block;
+
+    color: white;
+
+    font-size: 17px;
+
+    letter-spacing: -.3px;
+}
+
+.sidebar-brand-block small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #7f8da8;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .08em;
+}
+
+
+.sidebar-section-title {
+    padding:
+        18px
+        12px
+        7px;
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+}
+
+
+.sidebar-group {
+    display: grid;
+
+    gap: 3px;
+}
+
+
+.edutrack-sidebar .sidebar-group a {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-height: 42px;
+
+    padding:
+        10px
+        12px;
+
+    margin: 0;
+
+    border-radius: 9px;
+
+    color: #aebbd0;
+
+    font-size: 13px;
+
+    font-weight: 550;
+
+    text-decoration: none;
+
+    border:
+        1px solid transparent;
+
+    transition: .18s ease;
+}
+
+
+.edutrack-sidebar .sidebar-group a span {
+    width: 20px;
+
+    display: inline-grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    font-size: 15px;
+}
+
+
+.edutrack-sidebar .sidebar-group a:hover {
+    color: white;
+
+    background:
+        rgba(255,255,255,.065);
+
+    transform: translateX(2px);
+}
+
+
+.edutrack-sidebar .sidebar-group a.active {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    border-color:
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 7px 18px
+        rgba(37,99,235,.22);
+}
+
+
+.sidebar-account {
+    margin-top: 2px;
+}
+
+
+.edutrack-sidebar .sidebar-account a:hover {
+    color: #fecaca;
+
+    background:
+        rgba(220,38,38,.12);
+}
+
+
+
+
+
+/* =========================================================
+   EDUTRACK DASHBOARD V2
+   Append this section to the END of css/style.css
+========================================================= */
+
+.admin-dashboard-page{
+    background:#f5f7fb;
+}
+
+.dashboard-nav-brand,
+.dashboard-nav-user{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.dashboard-nav-brand > span{
+    width:39px;
+    height:39px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    background:linear-gradient(135deg,#2563eb,#6366f1);
+    box-shadow:0 8px 18px rgba(37,99,235,.22);
+}
+
+.dashboard-nav-brand strong,
+.dashboard-admin-copy strong{
+    display:block;
+}
+
+.dashboard-nav-brand small,
+.dashboard-admin-copy small{
+    display:block;
+    margin-top:2px;
+    color:#98a2b3;
+    font-size:10px;
+}
+
+.dashboard-admin-avatar{
+    width:36px;
+    height:36px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:800;
+}
+
+.dashboard-v2{
+    background:
+        radial-gradient(circle at 95% 0%,rgba(99,102,241,.07),transparent 22rem),
+        #f6f8fc;
+}
+
+.university-dashboard-hero{
+    position:relative;
+    overflow:hidden;
+    min-height:285px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+    padding:42px;
+    border-radius:24px;
+    color:white;
+    background:
+        radial-gradient(circle at 85% 20%,rgba(167,139,250,.34),transparent 18rem),
+        radial-gradient(circle at 20% 120%,rgba(59,130,246,.32),transparent 23rem),
+        linear-gradient(120deg,#071426,#112c55 55%,#312e81);
+    box-shadow:0 24px 55px rgba(15,23,42,.17);
+}
+
+.university-dashboard-hero:before{
+    content:"";
+    position:absolute;
+    right:12%;
+    bottom:-85px;
+    width:330px;
+    height:210px;
+    opacity:.13;
+    border:2px solid white;
+    border-bottom:0;
+    clip-path:polygon(50% 0,100% 35%,88% 35%,88% 100%,12% 100%,12% 35%,0 35%);
+}
+
+.university-hero-copy,
+.university-hero-side{
+    position:relative;
+    z-index:2;
+}
+
+.dashboard-eyebrow{
+    display:inline-block;
+    margin-bottom:10px;
+    color:#bfdbfe;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.16em;
+}
+
+.dashboard-eyebrow.dark{
+    color:#4f46e5;
+}
+
+.university-hero-copy h1{
+    max-width:700px;
+    margin:0 0 12px;
+    font-size:clamp(32px,4vw,48px);
+    line-height:1.05;
+    letter-spacing:-1.7px;
+}
+
+.university-hero-copy p{
+    max-width:650px;
+    margin:0;
+    color:#bdcbe0;
+    font-size:15px;
+    line-height:1.7;
+}
+
+.university-hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:25px;
+}
+
+.hero-action-primary,
+.hero-action-secondary{
+    padding:12px 17px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:700;
+    transition:.2s;
+}
+
+.hero-action-primary{
+    color:white;
+    background:linear-gradient(135deg,#2563eb,#6366f1);
+    box-shadow:0 9px 22px rgba(37,99,235,.3);
+}
+
+.hero-action-secondary{
+    color:white;
+    border:1px solid rgba(255,255,255,.17);
+    background:rgba(255,255,255,.08);
+}
+
+.hero-action-primary:hover,
+.hero-action-secondary:hover{
+    transform:translateY(-2px);
+}
+
+.university-hero-side{
+    min-width:190px;
+    text-align:center;
+}
+
+.academic-year-chip{
+    margin-bottom:10px;
+    padding:8px 11px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:999px;
+    background:rgba(255,255,255,.07);
+    color:#dbeafe;
+    font-size:10px;
+    font-weight:700;
+}
+
+.hero-today-card{
+    padding:20px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:18px;
+    background:rgba(255,255,255,.09);
+    backdrop-filter:blur(12px);
+}
+
+.hero-today-card small,
+.hero-today-card span,
+.hero-today-card em{
+    display:block;
+}
+
+.hero-today-card small{
+    color:#a5b4fc;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.15em;
+}
+
+.hero-today-card strong{
+    display:block;
+    margin:4px 0 -2px;
+    font-size:48px;
+    line-height:1;
+}
+
+.hero-today-card span{
+    color:#e2e8f0;
+    font-size:12px;
+}
+
+.hero-today-card em{
+    margin-top:8px;
+    color:#94a3b8;
+    font-size:11px;
+    font-style:normal;
+}
+
+.dashboard-v2-section{
+    margin-top:30px;
+}
+
+.dashboard-v2-heading,
+.card-title-row{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.dashboard-v2-heading{
+    margin-bottom:15px;
+}
+
+.dashboard-v2-heading h2,
+.card-title-row h2{
+    margin:0;
+    color:#111827;
+    font-size:20px;
+    letter-spacing:-.4px;
+}
+
+.live-data-label{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#667085;
+    font-size:11px;
+}
+
+.live-data-label i{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 0 4px rgba(34,197,94,.1);
+}
+
+.primary-metric-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+}
+
+.primary-metric-card{
+    padding:20px;
+    border:1px solid #e4e9f2;
+    border-radius:17px;
+    background:white;
+    box-shadow:0 9px 25px rgba(15,23,42,.045);
+    transition:.2s;
+}
+
+.primary-metric-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 32px rgba(15,23,42,.075);
+}
+
+.metric-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.metric-icon{
+    width:39px;
+    height:39px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    background:#eef2ff;
+}
+
+.metric-tag{
+    color:#98a2b3;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.primary-metric-card > strong{
+    display:block;
+    margin-top:18px;
+    color:#111827;
+    font-size:31px;
+    letter-spacing:-1px;
+}
+
+.primary-metric-card p{
+    margin:4px 0 0;
+    color:#667085;
+    font-size:12px;
+}
+
+.attention-card{
+    background:linear-gradient(145deg,#fff,#fffaf5);
+    border-color:#fed7aa;
+}
+
+.dashboard-focus-grid{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:17px;
+    margin-top:17px;
+}
+
+.dashboard-v2-card{
+    padding:23px;
+    border:1px solid #e4e9f2;
+    border-radius:18px;
+    background:white;
+    box-shadow:0 10px 30px rgba(15,23,42,.05);
+}
+
+.card-title-row{
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.card-title-row a,
+.section-text-link{
+    color:#4f46e5;
+    font-size:11px;
+    font-weight:700;
+    text-decoration:none;
+}
+
+.attendance-focus-content{
+    display:flex;
+    align-items:center;
+    gap:28px;
+}
+
+.v2-attendance-ring{
+    --attendance:0;
+    position:relative;
+    flex:0 0 145px;
+    width:145px;
+    height:145px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:conic-gradient(#4f46e5 calc(var(--attendance) * 1%),#e9edf5 0);
+}
+
+.v2-attendance-ring:before{
+    content:"";
+    position:absolute;
+    width:108px;
+    height:108px;
+    border-radius:50%;
+    background:white;
+}
+
+.v2-attendance-ring div{
+    position:relative;
+    z-index:1;
+    text-align:center;
+}
+
+.v2-attendance-ring strong{
+    display:block;
+    color:#111827;
+    font-size:25px;
+}
+
+.v2-attendance-ring span{
+    color:#98a2b3;
+    font-size:10px;
+}
+
+.today-stat-list{
+    flex:1;
+}
+
+.today-stat-list > div{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:11px 0;
+    border-bottom:1px solid #eef1f5;
+    color:#667085;
+    font-size:12px;
+}
+
+.today-stat-list > div:last-child{
+    border-bottom:0;
+}
+
+.today-stat-list strong{
+    color:#111827;
+    font-size:14px;
+}
+
+.status-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    margin-right:5px;
+    border-radius:50%;
+}
+
+.status-dot.present{background:#22c55e}
+.status-dot.absent{background:#ef4444}
+
+.priority-item{
+    display:flex;
+    gap:12px;
+    margin-bottom:11px;
+    padding:14px;
+    border-radius:13px;
+}
+
+.priority-item strong{
+    color:inherit;
+    font-size:13px;
+}
+
+.priority-item p{
+    margin:3px 0 0;
+    color:inherit;
+    opacity:.8;
+    font-size:11px;
+    line-height:1.55;
+}
+
+.priority-icon{
+    flex:0 0 31px;
+    width:31px;
+    height:31px;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+    font-weight:800;
+}
+
+.priority-warning{
+    color:#9a3412;
+    border:1px solid #fed7aa;
+    background:#fff7ed;
+}
+
+.priority-success{
+    color:#166534;
+    border:1px solid #bbf7d0;
+    background:#ecfdf3;
+}
+
+.priority-neutral{
+    color:#334155;
+    border:1px solid #e2e8f0;
+    background:#f8fafc;
+}
+
+.panel-link-button{
+    display:block;
+    margin-top:15px;
+    padding:11px 14px;
+    border-radius:10px;
+    text-align:center;
+    text-decoration:none;
+    color:#4338ca;
+    background:#eef2ff;
+    font-size:11px;
+    font-weight:750;
+}
+
+.academic-snapshot{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.snapshot-stat{
+    padding:14px;
+    border:1px solid #edf0f5;
+    border-radius:12px;
+    background:#fafbfc;
+}
+
+.snapshot-stat span{
+    display:block;
+    min-height:30px;
+    color:#667085;
+    font-size:10px;
+    line-height:1.4;
+}
+
+.snapshot-stat strong{
+    display:block;
+    margin-top:8px;
+    color:#111827;
+    font-size:23px;
+}
+
+.v2-top-performer{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:12px;
+    align-items:center;
+    margin-top:15px;
+    padding:15px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#f5f3ff,#eef2ff);
+}
+
+.performer-medal{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:white;
+    font-size:20px;
+}
+
+.performer-info small,
+.performer-info strong,
+.performer-info span{
+    display:block;
+}
+
+.performer-info small{
+    color:#7c3aed;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:.08em;
+}
+
+.performer-info strong{
+    margin:2px 0;
+    color:#111827;
+    font-size:14px;
+}
+
+.performer-info span{
+    color:#667085;
+    font-size:10px;
+}
+
+.performer-average{
+    color:#4338ca;
+    font-size:20px;
+    font-weight:800;
+}
+
+.department-v2-row{
+    margin-bottom:15px;
+}
+
+.department-v2-row > div:first-child{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+}
+
+.department-v2-row strong{
+    font-size:12px;
+}
+
+.department-v2-row span{
+    color:#667085;
+    font-size:10px;
+}
+
+.department-v2-track{
+    height:7px;
+    overflow:hidden;
+    border-radius:99px;
+    background:#edf0f5;
+}
+
+.department-v2-track span{
+    display:block;
+    height:100%;
+    border-radius:99px;
+    background:linear-gradient(90deg,#2563eb,#6366f1);
+}
+
+.dashboard-action-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.dashboard-action-grid a{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:11px;
+    align-items:center;
+    padding:16px;
+    border:1px solid #e5e9f1;
+    border-radius:14px;
+    background:white;
+    color:#111827;
+    text-decoration:none;
+    box-shadow:0 7px 20px rgba(15,23,42,.035);
+    transition:.2s;
+}
+
+.dashboard-action-grid a:hover{
+    transform:translateY(-3px);
+    border-color:#c7d2fe;
+}
+
+.dashboard-action-grid > a > span{
+    width:37px;
+    height:37px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background:#eef2ff;
+}
+
+.dashboard-action-grid strong,
+.dashboard-action-grid small{
+    display:block;
+}
+
+.dashboard-action-grid strong{
+    font-size:12px;
+}
+
+.dashboard-action-grid small{
+    margin-top:2px;
+    color:#98a2b3;
+    font-size:9px;
+}
+
+.dashboard-action-grid b{
+    color:#6366f1;
+}
+
+.dashboard-v2-table-card{
+    overflow-x:auto;
+    border:1px solid #e4e9f2;
+    border-radius:17px;
+    background:white;
+    box-shadow:0 10px 30px rgba(15,23,42,.045);
+}
+
+.dashboard-v2-table-card .modern-table{
+    margin:0;
+}
+
+.class-pill,
+.period-pill{
+    display:inline-block;
+    padding:6px 9px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.class-pill{
+    color:#1d4ed8;
+    background:#eff6ff;
+}
+
+.period-pill{
+    color:#6d28d9;
+    background:#f5f3ff;
+}
+
+.dashboard-v2-empty{
+    padding:25px;
+    color:#98a2b3;
+    text-align:center;
+}
+
+.dashboard-reveal{
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity .45s ease,transform .45s ease;
+}
+
+.dashboard-reveal.is-visible{
+    opacity:1;
+    transform:none;
+}
+
+@media(max-width:1100px){
+    .primary-metric-grid,
+    .dashboard-action-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .dashboard-focus-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:720px){
+    .dashboard-admin-copy{
+        display:none;
+    }
+
+    .university-dashboard-hero{
+        align-items:flex-start;
+        flex-direction:column;
+        padding:27px 22px;
+    }
+
+    .university-hero-side{
+        width:100%;
+    }
+
+    .hero-today-card{
+        display:grid;
+        grid-template-columns:auto auto 1fr auto;
+        gap:9px;
+        align-items:center;
+        text-align:left;
+    }
+
+    .hero-today-card strong{
+        font-size:30px;
+    }
+
+    .hero-today-card em{
+        margin:0;
+        text-align:right;
+    }
+
+    .primary-metric-grid,
+    .dashboard-action-grid{
+        grid-template-columns:1fr;
+    }
+
+    .attendance-focus-content{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .academic-snapshot{
+        grid-template-columns:1fr;
+    }
+
+    .v2-top-performer{
+        grid-template-columns:auto 1fr;
+    }
+
+    .performer-average{
+        grid-column:2;
+    }
+}
+
+
+/* =========================================================
+   EDUTRACK STUDENT DASHBOARD V2
+========================================================= */
+
+.student-dashboard-v2-page {
+    background: #f6f8fc;
+}
+
+
+/* HERO */
+
+.student-campus-hero {
+    position: relative;
+
+    min-height: 310px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    overflow: hidden;
+
+    padding: 45px;
+
+    border-radius: 24px;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(99,102,241,.45),
+            transparent 270px
+        ),
+        radial-gradient(
+            circle at 15% 110%,
+            rgba(37,99,235,.35),
+            transparent 330px
+        ),
+        linear-gradient(
+            120deg,
+            #071426,
+            #102b53 55%,
+            #312e81
+        );
+
+    box-shadow:
+        0 25px 60px
+        rgba(15,23,42,.18);
+}
+
+
+.student-campus-hero::after {
+    content: "EDUTRACK";
+
+    position: absolute;
+
+    right: -20px;
+    bottom: -30px;
+
+    color:
+        rgba(255,255,255,.035);
+
+    font-size: 100px;
+
+    font-weight: 900;
+
+    letter-spacing: -6px;
+
+    pointer-events: none;
+}
+
+
+.student-campus-copy {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 720px;
+}
+
+
+.student-campus-copy h1 {
+    margin: 0 0 15px;
+
+    font-size:
+        clamp(
+            34px,
+            4vw,
+            50px
+        );
+
+    line-height: 1.05;
+
+    letter-spacing: -1.7px;
+}
+
+
+.student-campus-copy p {
+    max-width: 620px;
+
+    margin: 0;
+
+    color: #bdcbe0;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+.student-hero-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 21px;
+}
+
+
+.student-hero-meta span {
+    padding:
+        7px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color: #dbeafe;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+
+/* HERO PROFILE */
+
+.student-hero-profile {
+    position: relative;
+
+    z-index: 2;
+
+    min-width: 210px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    backdrop-filter:
+        blur(12px);
+}
+
+
+.student-large-avatar {
+    width: 72px;
+    height: 72px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin:
+        0 auto
+        13px;
+
+    border-radius: 50%;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #8b5cf6
+        );
+
+    box-shadow:
+        0 12px 30px
+        rgba(37,99,235,.35);
+
+    font-size: 29px;
+
+    font-weight: 800;
+}
+
+
+.student-hero-profile strong,
+.student-hero-profile span,
+.student-hero-profile small {
+    display: block;
+}
+
+
+.student-hero-profile strong {
+    font-size: 15px;
+}
+
+
+.student-hero-profile span {
+    margin-top: 4px;
+
+    color: #c7d2fe;
+
+    font-size: 11px;
+}
+
+
+.student-hero-profile small {
+    margin-top: 8px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* METRICS */
+
+.student-v2-metric-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    gap: 14px;
+}
+
+
+.student-v2-metric-card {
+    padding: 21px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 17px;
+
+    background: white;
+
+    box-shadow:
+        0 9px 25px
+        rgba(15,23,42,.045);
+
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+
+.student-v2-metric-card:hover {
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 16px 34px
+        rgba(15,23,42,.08);
+}
+
+
+.student-v2-metric-card > strong {
+    display: block;
+
+    margin-top: 18px;
+
+    color: #111827;
+
+    font-size: 30px;
+
+    letter-spacing: -1px;
+}
+
+
+.student-v2-metric-card p {
+    margin:
+        5px 0 0;
+
+    color: #667085;
+
+    font-size: 11px;
+}
+
+
+/* TWO-COLUMN CONTENT */
+
+.student-dashboard-focus-grid {
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        .85fr;
+
+    gap: 17px;
+
+    margin-top: 17px;
+}
+
+
+/* ATTENDANCE */
+
+.student-attendance-v2-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+}
+
+
+.student-attendance-details {
+    flex: 1;
+}
+
+
+.student-attendance-details > div {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        12px 0;
+
+    border-bottom:
+        1px solid
+        #edf0f5;
+}
+
+
+.student-attendance-details > div:last-child {
+    border-bottom: 0;
+}
+
+
+.student-attendance-details span {
+    color: #667085;
+
+    font-size: 11px;
+}
+
+
+.student-attendance-details strong {
+    color: #111827;
+
+    font-size: 14px;
+}
+
+
+/* RECENT ACTIVITY */
+
+.student-activity-row {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding:
+        11px 0;
+
+    border-bottom:
+        1px solid
+        #edf0f5;
+}
+
+
+.student-activity-row:last-child {
+    border-bottom: 0;
+}
+
+
+.activity-date-box {
+    width: 42px;
+    height: 45px;
+
+    display: grid;
+
+    place-items: center;
+
+    align-content: center;
+
+    border-radius: 10px;
+
+    background: #eef2ff;
+
+    color: #4338ca;
+}
+
+
+.activity-date-box strong,
+.activity-date-box span {
+    display: block;
+
+    line-height: 1;
+}
+
+
+.activity-date-box strong {
+    font-size: 15px;
+}
+
+
+.activity-date-box span {
+    margin-top: 3px;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+}
+
+
+.activity-main strong,
+.activity-main span {
+    display: block;
+}
+
+
+.activity-main strong {
+    color: #111827;
+
+    font-size: 12px;
+}
+
+
+.activity-main span {
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.student-status-chip {
+    padding:
+        6px 9px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.student-status-chip.present {
+    color: #166534;
+
+    background: #dcfce7;
+}
+
+
+.student-status-chip.absent {
+    color: #991b1b;
+
+    background: #fee2e2;
+}
+
+
+/* RESULTS */
+
+.student-result-row {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        auto
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding:
+        13px 0;
+
+    border-bottom:
+        1px solid
+        #edf0f5;
+}
+
+
+.student-result-row:last-child {
+    border-bottom: 0;
+}
+
+
+.result-subject strong,
+.result-subject span {
+    display: block;
+}
+
+
+.result-subject strong {
+    color: #111827;
+
+    font-size: 12px;
+}
+
+
+.result-subject span {
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.result-score strong {
+    color: #111827;
+
+    font-size: 17px;
+}
+
+
+.result-score small {
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.result-grade-chip {
+    min-width: 35px;
+
+    padding:
+        7px
+        8px;
+
+    text-align: center;
+
+    border-radius: 8px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+/* EMPTY */
+
+.student-empty-state {
+    padding:
+        30px
+        15px;
+
+    color: #98a2b3;
+
+    text-align: center;
+
+    font-size: 11px;
+}
+
+
+/* QUICK ACCESS */
+
+.student-v2-action-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 14px;
+}
+
+
+.student-v2-action-grid a {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 20px;
+
+    color: #111827;
+
+    text-decoration: none;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 24px
+        rgba(15,23,42,.04);
+
+    transition: .2s;
+}
+
+
+.student-v2-action-grid a:hover {
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #c7d2fe;
+
+    box-shadow:
+        0 14px 30px
+        rgba(15,23,42,.07);
+}
+
+
+.student-action-icon {
+    width: 45px;
+    height: 45px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #eef2ff;
+
+    font-size: 19px;
+}
+
+
+.student-v2-action-grid strong,
+.student-v2-action-grid small {
+    display: block;
+}
+
+
+.student-v2-action-grid strong {
+    font-size: 13px;
+}
+
+
+.student-v2-action-grid small {
+    margin-top: 4px;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+.student-v2-action-grid b {
+    color: #6366f1;
+
+    font-size: 17px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+
+    .student-v2-metric-grid {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .student-dashboard-focus-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 720px) {
+
+    .student-campus-hero {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        padding:
+            30px
+            22px;
+    }
+
+
+    .student-hero-profile {
+        min-width: 0;
+    }
+
+
+    .student-v2-metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .student-attendance-v2-content {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .student-attendance-details {
+        width: 100%;
+    }
+
+
+    .student-v2-action-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================================================
+   EDUTRACK - STUDENT ATTENDANCE V2
+========================================================= */
+
+
+/* =========================
+   ATTENDANCE HERO
+========================= */
+
+.attendance-v2-hero {
+    position: relative;
+
+    min-height: 280px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    overflow: hidden;
+
+    padding: 42px;
+
+    border-radius: 24px;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(99,102,241,.42),
+            transparent 260px
+        ),
+        radial-gradient(
+            circle at 15% 120%,
+            rgba(37,99,235,.35),
+            transparent 330px
+        ),
+        linear-gradient(
+            120deg,
+            #071426,
+            #102b53 55%,
+            #312e81
+        );
+
+    box-shadow:
+        0 25px 60px
+        rgba(15,23,42,.18);
+}
+
+
+.attendance-v2-hero::after {
+    content: "ATTENDANCE";
+
+    position: absolute;
+
+    right: -25px;
+
+    bottom: -30px;
+
+    color:
+        rgba(255,255,255,.035);
+
+    font-size: 85px;
+
+    font-weight: 900;
+
+    letter-spacing: -5px;
+}
+
+
+.attendance-v2-hero-copy {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 680px;
+}
+
+
+.attendance-v2-hero-copy h1 {
+    margin: 0 0 13px;
+
+    font-size:
+        clamp(
+            36px,
+            4vw,
+            52px
+        );
+
+    line-height: 1;
+
+    letter-spacing: -1.8px;
+}
+
+
+.attendance-v2-hero-copy p {
+    max-width: 600px;
+
+    margin: 0;
+
+    color: #bdcbe0;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================
+   LARGE ATTENDANCE RING
+========================= */
+
+.attendance-hero-score {
+    position: relative;
+
+    z-index: 2;
+
+    min-width: 210px;
+
+    text-align: center;
+}
+
+
+.attendance-large-ring {
+    --attendance: 0;
+
+    position: relative;
+
+    width: 165px;
+
+    height: 165px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin:
+        0 auto
+        15px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #60a5fa
+            calc(
+                var(--attendance) * 1%
+            ),
+
+            rgba(255,255,255,.12)
+            0
+        );
+}
+
+
+.attendance-large-ring::before {
+    content: "";
+
+    position: absolute;
+
+    width: 128px;
+
+    height: 128px;
+
+    border-radius: 50%;
+
+    background: #102544;
+
+    box-shadow:
+        inset
+        0 0 25px
+        rgba(255,255,255,.04);
+}
+
+
+.attendance-large-ring div {
+    position: relative;
+
+    z-index: 2;
+
+    text-align: center;
+}
+
+
+.attendance-large-ring strong {
+    display: block;
+
+    font-size: 29px;
+
+    letter-spacing: -1px;
+}
+
+
+.attendance-large-ring span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+.attendance-hero-safe,
+.attendance-hero-danger,
+.attendance-hero-neutral {
+    display: inline-block;
+
+    padding:
+        7px
+        12px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.attendance-hero-safe {
+    color: #bbf7d0;
+
+    background:
+        rgba(34,197,94,.15);
+
+    border:
+        1px solid
+        rgba(34,197,94,.2);
+}
+
+
+.attendance-hero-danger {
+    color: #fecaca;
+
+    background:
+        rgba(239,68,68,.15);
+
+    border:
+        1px solid
+        rgba(239,68,68,.2);
+}
+
+
+.attendance-hero-neutral {
+    color: #cbd5e1;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+.attendance-big-number {
+    color: #4338ca;
+
+    font-size: 23px;
+}
+
+
+.attendance-v2-progress-track {
+    position: relative;
+
+    height: 12px;
+
+    overflow: hidden;
+
+    margin-top: 24px;
+
+    border-radius: 999px;
+
+    background: #edf0f5;
+}
+
+
+.attendance-v2-progress-track::after {
+    content: "";
+
+    position: absolute;
+
+    left: 75%;
+
+    top: -4px;
+
+    width: 2px;
+
+    height: 20px;
+
+    background: #f59e0b;
+}
+
+
+.attendance-v2-progress-fill {
+    height: 100%;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #6366f1
+        );
+
+    transition:
+        width .7s ease;
+}
+
+
+.attendance-progress-labels {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 7px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.attendance-progress-labels span:nth-child(2) {
+    color: #d97706;
+
+    font-weight: 700;
+}
+
+
+.attendance-v2-breakdown {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 10px;
+
+    margin-top: 24px;
+}
+
+
+.attendance-v2-breakdown div {
+    padding: 13px;
+
+    border:
+        1px solid
+        #edf0f5;
+
+    border-radius: 11px;
+
+    background: #fafbfc;
+}
+
+
+.attendance-v2-breakdown span {
+    display: block;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.attendance-v2-breakdown strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #111827;
+
+    font-size: 19px;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.attendance-v2-status {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+}
+
+
+.attendance-v2-status.safe {
+    color: #166534;
+
+    border:
+        1px solid
+        #bbf7d0;
+
+    background: #f0fdf4;
+}
+
+
+.attendance-v2-status.danger {
+    color: #9a3412;
+
+    border:
+        1px solid
+        #fed7aa;
+
+    background: #fff7ed;
+}
+
+
+.attendance-v2-status.neutral {
+    color: #334155;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    background: #f8fafc;
+}
+
+
+.attendance-status-icon {
+    flex: 0 0 40px;
+
+    width: 40px;
+
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.7);
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+
+.attendance-v2-status strong {
+    font-size: 13px;
+}
+
+
+.attendance-v2-status p {
+    margin:
+        5px 0 0;
+
+    color: inherit;
+
+    opacity: .8;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   SECTION DESCRIPTION
+========================= */
+
+.attendance-section-description {
+    margin:
+        5px 0 0;
+
+    color: #667085;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   SUBJECT CARDS
+========================= */
+
+.subject-attendance-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
+
+    gap: 14px;
+}
+
+
+.subject-attendance-card {
+    padding: 20px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 24px
+        rgba(15,23,42,.04);
+
+    transition:
+        transform .2s,
+        box-shadow .2s,
+        border-color .2s;
+}
+
+
+.subject-attendance-card:hover {
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #c7d2fe;
+
+    box-shadow:
+        0 15px 32px
+        rgba(15,23,42,.07);
+}
+
+
+.subject-card-top {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.subject-code {
+    display: inline-block;
+
+    margin-bottom: 6px;
+
+    color: #4f46e5;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .06em;
+}
+
+
+.subject-card-top h3 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+.subject-eligible,
+.subject-shortage {
+    flex-shrink: 0;
+
+    padding:
+        5px
+        8px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 750;
+}
+
+
+.subject-eligible {
+    color: #166534;
+
+    background: #dcfce7;
+}
+
+
+.subject-shortage {
+    color: #9a3412;
+
+    background: #ffedd5;
+}
+
+
+.subject-percentage-row {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 21px;
+}
+
+
+.subject-percentage-row strong {
+    color: #111827;
+
+    font-size: 25px;
+
+    letter-spacing: -1px;
+}
+
+
+.subject-percentage-row span {
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.subject-progress-track {
+    height: 7px;
+
+    overflow: hidden;
+
+    margin-top: 10px;
+
+    border-radius: 999px;
+
+    background: #edf0f5;
+}
+
+
+.subject-progress-fill {
+    height: 100%;
+
+    border-radius: 999px;
+}
+
+
+.subject-progress-fill.safe {
+    background:
+        linear-gradient(
+            90deg,
+            #22c55e,
+            #16a34a
+        );
+}
+
+
+.subject-progress-fill.danger {
+    background:
+        linear-gradient(
+            90deg,
+            #f97316,
+            #ef4444
+        );
+}
+
+
+.subject-card-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    margin-top: 17px;
+
+    padding-top: 14px;
+
+    border-top:
+        1px solid
+        #edf0f5;
+}
+
+
+.subject-card-stats div {
+    text-align: center;
+
+    border-right:
+        1px solid
+        #edf0f5;
+}
+
+
+.subject-card-stats div:last-child {
+    border-right: 0;
+}
+
+
+.subject-card-stats span,
+.subject-card-stats strong {
+    display: block;
+}
+
+
+.subject-card-stats span {
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.subject-card-stats strong {
+    margin-top: 3px;
+
+    color: #111827;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   EMPTY SUBJECT CARD
+========================= */
+
+.attendance-empty-card {
+    grid-column: 1 / -1;
+
+    padding: 45px;
+
+    text-align: center;
+
+    border:
+        1px dashed
+        #cbd5e1;
+
+    border-radius: 17px;
+
+    background: white;
+}
+
+
+.attendance-empty-card > div {
+    font-size: 30px;
+}
+
+
+.attendance-empty-card h3 {
+    margin:
+        10px 0 4px;
+
+    color: #111827;
+}
+
+
+.attendance-empty-card p {
+    margin: 0;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+.attendance-record-count {
+    padding:
+        6px
+        10px;
+
+    border-radius: 999px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.attendance-date-cell {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.attendance-date-icon {
+    width: 35px;
+
+    height: 35px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 9px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.attendance-date-cell strong,
+.attendance-date-cell span {
+    display: block;
+}
+
+
+.attendance-date-cell strong {
+    color: #111827;
+
+    font-size: 11px;
+}
+
+
+.attendance-date-cell span {
+    margin-top: 2px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.attendance-back-area {
+    margin-top: 22px;
+
+    text-align: right;
+}
+
+
+.attendance-back-button {
+    display: inline-block;
+
+    padding:
+        10px
+        15px;
+
+    color: #4338ca;
+
+    text-decoration: none;
+
+    border:
+        1px solid
+        #c7d2fe;
+
+    border-radius: 9px;
+
+    background: white;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    transition: .2s;
+}
+
+
+.attendance-back-button:hover {
+    background: #eef2ff;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+    .subject-attendance-grid {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+
+@media (max-width: 720px) {
+
+    .attendance-v2-hero {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding:
+            30px
+            22px;
+    }
+
+
+    .attendance-hero-score {
+        width: 100%;
+    }
+
+
+    .subject-attendance-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .attendance-v2-breakdown {
+        grid-template-columns: 1fr;
+    }
+
+
+    .attendance-history-v2 {
+        min-width: 700px;
+    }
+
+}
+
+/* =========================================================
+   EDUTRACK - STUDENT MARKS V2
+========================================================= */
+
+
+/* HERO */
+
+.marks-v2-hero {
+    position: relative;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    overflow: hidden;
+    padding: 42px;
+    border-radius: 24px;
+    color: #fff;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(139,92,246,.45),
+            transparent 250px
+        ),
+        radial-gradient(
+            circle at 10% 120%,
+            rgba(37,99,235,.35),
+            transparent 320px
+        ),
+        linear-gradient(
+            120deg,
+            #071426,
+            #172554 55%,
+            #4c1d95
+        );
+
+    box-shadow:
+        0 25px 60px
+        rgba(15,23,42,.18);
+}
+
+
+.marks-v2-hero::after {
+    content: "RESULTS";
+    position: absolute;
+    right: -15px;
+    bottom: -35px;
+
+    font-size: 100px;
+    font-weight: 900;
+    letter-spacing: -7px;
+
+    color:
+        rgba(255,255,255,.035);
+}
+
+
+.marks-v2-hero-copy {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+}
+
+
+.marks-v2-hero-copy h1 {
+    margin: 0 0 13px;
+
+    font-size:
+        clamp(36px, 4vw, 52px);
+
+    line-height: 1;
+    letter-spacing: -1.8px;
+}
+
+
+.marks-v2-hero-copy p {
+    max-width: 590px;
+    margin: 0;
+
+    color: #c7d2e4;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* HERO GRADE */
+
+.marks-hero-score {
+    position: relative;
+    z-index: 2;
+
+    min-width: 200px;
+
+    text-align: center;
+}
+
+
+.marks-grade-circle {
+    width: 165px;
+    height: 165px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 15px;
+
+    border:
+        7px solid
+        rgba(255,255,255,.13);
+
+    border-radius: 50%;
+
+    background:
+        rgba(15,23,42,.25);
+
+    box-shadow:
+        inset 0 0 30px
+        rgba(255,255,255,.05);
+}
+
+
+.marks-grade-circle span {
+    color: #a5b4fc;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+}
+
+
+.marks-grade-circle strong {
+    margin: 3px 0;
+
+    font-size: 45px;
+    line-height: 1;
+}
+
+
+.marks-grade-circle small {
+    color: #cbd5e1;
+
+    font-size: 9px;
+}
+
+
+.marks-hero-success,
+.marks-hero-warning,
+.marks-hero-neutral {
+    display: inline-block;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 750;
+}
+
+
+.marks-hero-success {
+    color: #bbf7d0;
+    background: rgba(34,197,94,.15);
+}
+
+
+.marks-hero-warning {
+    color: #fed7aa;
+    background: rgba(249,115,22,.15);
+}
+
+
+.marks-hero-neutral {
+    color: #cbd5e1;
+    background: rgba(255,255,255,.08);
+}
+
+
+/* STUDENT INFO BAR */
+
+.marks-student-info {
+    display: grid;
+
+    grid-template-columns:
+        auto 2fr repeat(3, 1fr);
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 18px;
+
+    padding: 18px 22px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 16px;
+
+    background: #fff;
+
+    box-shadow:
+        0 8px 25px
+        rgba(15,23,42,.04);
+}
+
+
+.marks-student-avatar {
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 13px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+
+.marks-student-primary span,
+.marks-student-detail span {
+    display: block;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+    font-weight: 750;
+
+    letter-spacing: .05em;
+}
+
+
+.marks-student-primary strong,
+.marks-student-detail strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #111827;
+
+    font-size: 11px;
+}
+
+
+.marks-student-primary small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #667085;
+
+    font-size: 9px;
+}
+
+
+/* RESULT SUMMARY */
+
+.marks-result-stat-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+
+.marks-result-stat {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border:
+        1px solid
+        #edf0f5;
+
+    border-radius: 12px;
+
+    background: #fafbfc;
+}
+
+
+.marks-result-stat > span {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-weight: 800;
+}
+
+
+.marks-result-stat strong,
+.marks-result-stat small {
+    display: block;
+}
+
+
+.marks-result-stat strong {
+    color: #111827;
+
+    font-size: 18px;
+}
+
+
+.marks-result-stat small {
+    margin-top: 2px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+/* STATUS */
+
+.marks-v2-status {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+}
+
+
+.marks-v2-status.success {
+    color: #166534;
+
+    border:
+        1px solid #bbf7d0;
+
+    background: #f0fdf4;
+}
+
+
+.marks-v2-status.warning {
+    color: #9a3412;
+
+    border:
+        1px solid #fed7aa;
+
+    background: #fff7ed;
+}
+
+
+.marks-v2-status.neutral {
+    color: #334155;
+
+    border:
+        1px solid #e2e8f0;
+
+    background: #f8fafc;
+}
+
+
+.marks-status-icon {
+    flex: 0 0 40px;
+
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.8);
+
+    font-size: 16px;
+    font-weight: 900;
+}
+
+
+.marks-v2-status strong {
+    font-size: 12px;
+}
+
+
+.marks-v2-status p {
+    margin: 5px 0 0;
+
+    color: inherit;
+
+    opacity: .82;
+
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+
+.marks-overall-result {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 14px;
+
+    padding: 13px 15px;
+
+    border-radius: 11px;
+
+    background: #f8fafc;
+}
+
+
+.marks-overall-result span {
+    color: #667085;
+
+    font-size: 9px;
+}
+
+
+.marks-overall-result strong {
+    color: #111827;
+
+    font-size: 10px;
+}
+
+
+/* SCORE RANGE */
+
+.marks-score-range-card {
+    display: grid;
+
+    grid-template-columns:
+        auto 1fr auto;
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 22px;
+
+    border:
+        1px solid #e4e9f2;
+
+    border-radius: 16px;
+
+    background: #fff;
+}
+
+
+.marks-range-item span,
+.marks-range-item strong {
+    display: block;
+}
+
+
+.marks-range-item span {
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.marks-range-item strong {
+    margin-top: 3px;
+
+    color: #111827;
+
+    font-size: 23px;
+}
+
+
+.marks-range-item strong small {
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.marks-range-item.right {
+    text-align: right;
+}
+
+
+.marks-range-line {
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #edf0f5;
+}
+
+
+.marks-range-progress {
+    height: 100%;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #7c3aed
+        );
+}
+
+
+/* TABLE */
+
+.marks-section-description {
+    margin: 5px 0 0;
+
+    color: #667085;
+
+    font-size: 10px;
+}
+
+
+.marks-record-count {
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 9px;
+    font-weight: 750;
+}
+
+
+.marks-subject-cell {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.marks-subject-icon {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+
+.marks-subject-cell strong,
+.marks-subject-cell span {
+    display: block;
+}
+
+
+.marks-subject-cell strong {
+    color: #111827;
+
+    font-size: 10px;
+}
+
+
+.marks-subject-cell span {
+    margin-top: 2px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.marks-score-cell {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 2px;
+}
+
+
+.marks-score-cell strong {
+    color: #111827;
+
+    font-size: 12px;
+}
+
+
+.marks-score-cell span {
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.marks-mini-track {
+    width: 65px;
+    height: 4px;
+
+    overflow: hidden;
+
+    margin-top: 5px;
+
+    border-radius: 999px;
+
+    background: #edf0f5;
+}
+
+
+.marks-mini-track div {
+    height: 100%;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #3b82f6,
+            #6366f1
+        );
+}
+
+
+.marks-total-score strong {
+    color: #111827;
+
+    font-size: 15px;
+}
+
+
+.marks-total-score span {
+    margin-left: 2px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+/* GRADE BADGES */
+
+.marks-grade-badge {
+    display: inline-grid;
+
+    min-width: 37px;
+    height: 30px;
+
+    place-items: center;
+
+    padding: 0 8px;
+
+    border-radius: 8px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 10px;
+    font-weight: 850;
+}
+
+
+.marks-grade-badge.o {
+    color: #166534;
+    background: #dcfce7;
+}
+
+
+.marks-grade-badge.aplus {
+    color: #166534;
+    background: #ecfdf5;
+}
+
+
+.marks-grade-badge.a {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+
+.marks-grade-badge.bplus,
+.marks-grade-badge.b {
+    color: #4338ca;
+    background: #eef2ff;
+}
+
+
+.marks-grade-badge.c {
+    color: #a16207;
+    background: #fef9c3;
+}
+
+
+.marks-grade-badge.f {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+
+/* GRADING SCALE */
+
+.grade-scale-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7,1fr);
+
+    overflow: hidden;
+
+    border:
+        1px solid #e4e9f2;
+
+    border-radius: 16px;
+
+    background: #fff;
+}
+
+
+.grade-scale-grid > div {
+    padding: 18px 10px;
+
+    text-align: center;
+
+    border-right:
+        1px solid #edf0f5;
+}
+
+
+.grade-scale-grid > div:last-child {
+    border-right: 0;
+}
+
+
+.grade-scale-grid strong,
+.grade-scale-grid span,
+.grade-scale-grid small {
+    display: block;
+}
+
+
+.grade-scale-grid strong {
+    color: #4338ca;
+
+    font-size: 20px;
+}
+
+
+.grade-scale-grid span {
+    margin-top: 5px;
+
+    color: #111827;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.grade-scale-grid small {
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 7px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .marks-student-info {
+        grid-template-columns:
+            auto 1fr 1fr;
+    }
+
+    .grade-scale-grid {
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+}
+
+
+@media (max-width: 720px) {
+
+    .marks-v2-hero {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 30px 22px;
+    }
+
+
+    .marks-hero-score {
+        width: 100%;
+    }
+
+
+    .marks-student-info {
+        grid-template-columns:
+            auto 1fr;
+    }
+
+
+    .marks-result-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .marks-score-range-card {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+
+    .marks-range-item.right {
+        text-align: left;
+    }
+
+
+    .grade-scale-grid {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .marks-history-v2 {
+        min-width: 720px;
+    }
+
+}
+
+/* ==========================================================
+   EDUTRACK ADMIN V2
+   PROFESSIONAL UNIVERSITY MANAGEMENT INTERFACE
+   ADD THIS AT THE VERY BOTTOM OF style.css
+========================================================== */
+
+
+/* ==========================================================
+   1. ADMIN PAGE FOUNDATION
+========================================================== */
+
+body.edutrack-admin-v2 {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(79, 70, 229, 0.06),
+            transparent 350px
+        ),
+        #f5f7fb;
+
+    color: #172033;
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+/* ==========================================================
+   2. PROFESSIONAL NAVBAR
+========================================================== */
+
+.edutrack-admin-v2 .navbar {
+    min-height: 76px;
+
+    padding:
+        0 30px;
+
+    background:
+        linear-gradient(
+            115deg,
+            #071426,
+            #102a4c 55%,
+            #172554
+        );
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 8px 30px
+        rgba(15,23,42,.15);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content:
+        space-between;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+}
+
+
+.edutrack-admin-v2 .navbar h2 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 21px;
+
+    font-weight: 850;
+
+    letter-spacing:
+        -.5px;
+}
+
+
+.edutrack-admin-v2 .navbar small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #9fb5d3;
+
+    font-size: 10px;
+
+    letter-spacing:
+        .04em;
+}
+
+
+.edutrack-admin-v2 .navbar > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.edutrack-admin-v2 .navbar span {
+    color: #dce7f6;
+
+    font-size: 12px;
+
+    font-weight: 650;
+}
+
+
+.edutrack-admin-v2 .logout-btn {
+    padding:
+        9px 15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.17);
+
+    border-radius:
+        10px;
+
+    color: white;
+
+    background:
+        rgba(255,255,255,.08);
+
+    text-decoration:
+        none;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    transition:
+        .22s ease;
+}
+
+
+.edutrack-admin-v2 .logout-btn:hover {
+    color: #0f2746;
+
+    background:
+        white;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* ==========================================================
+   3. ADMIN APPLICATION LAYOUT
+========================================================== */
+
+.edutrack-admin-v2 .main-layout {
+    display: grid;
+
+    grid-template-columns:
+        250px minmax(0,1fr);
+
+    min-height:
+        calc(100vh - 76px);
+}
+
+
+/* ==========================================================
+   4. UNIVERSITY SIDEBAR
+========================================================== */
+
+.edutrack-admin-v2 .sidebar {
+    width: auto;
+
+    height:
+        calc(100vh - 76px);
+
+    padding:
+        24px 15px;
+
+    position: sticky;
+
+    top: 76px;
+
+    overflow-y: auto;
+
+    background:
+        #ffffff;
+
+    border-right:
+        1px solid #e5eaf1;
+
+    box-shadow:
+        7px 0 25px
+        rgba(15,23,42,.025);
+}
+
+
+.edutrack-admin-v2 .sidebar h3 {
+    margin:
+        5px 12px
+        20px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 850;
+
+    letter-spacing:
+        1.6px;
+}
+
+
+.edutrack-admin-v2 .sidebar a {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-height: 45px;
+
+    margin:
+        4px 0;
+
+    padding:
+        0 13px;
+
+    border-radius:
+        11px;
+
+    color: #526176;
+
+    text-decoration:
+        none;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    transition:
+        .2s ease;
+}
+
+
+.edutrack-admin-v2 .sidebar a:hover {
+    color: #315fc8;
+
+    background:
+        #f3f7ff;
+
+    transform:
+        translateX(3px);
+}
+
+
+.edutrack-admin-v2 .sidebar a.active {
+    color: #234fc1;
+
+    background:
+        linear-gradient(
+            100deg,
+            #e9f0ff,
+            #f5f8ff
+        );
+
+    box-shadow:
+        inset 3px 0 0
+        #3b6ee8;
+
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   5. MAIN CONTENT
+========================================================== */
+
+.edutrack-admin-v2 .main-content {
+    min-width: 0;
+
+    padding:
+        30px
+        clamp(20px,3vw,42px)
+        55px;
+}
+
+
+/* ==========================================================
+   6. UNIVERSITY PAGE HERO
+========================================================== */
+
+.edutrack-admin-v2 .page-header {
+    min-height:
+        205px;
+
+    margin-bottom:
+        22px;
+
+    padding:
+        35px 38px;
+
+    border-radius:
+        23px;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    display: flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    color: white;
+
+    background:
+
+        radial-gradient(
+            circle at 88% 20%,
+            rgba(99,102,241,.42),
+            transparent 230px
+        ),
+
+        radial-gradient(
+            circle at 12% 130%,
+            rgba(37,99,235,.32),
+            transparent 300px
+        ),
+
+        linear-gradient(
+            120deg,
+            #071426,
+            #102b50 52%,
+            #312e81
+        );
+
+    box-shadow:
+        0 24px 55px
+        rgba(15,23,42,.16);
+}
+
+
+.edutrack-admin-v2 .page-header::before {
+    content: "";
+
+    position:
+        absolute;
+
+    width:
+        240px;
+
+    height:
+        240px;
+
+    right:
+        -70px;
+
+    top:
+        -100px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-radius:
+        50%;
+}
+
+
+.edutrack-admin-v2 .page-header::after {
+    content: "";
+
+    position:
+        absolute;
+
+    width:
+        150px;
+
+    height:
+        150px;
+
+    right:
+        70px;
+
+    bottom:
+        -100px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius:
+        50%;
+}
+
+
+.edutrack-admin-v2 .page-header > * {
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+.edutrack-admin-v2 .page-header h1 {
+    margin:
+        0 0 10px;
+
+    color:
+        white;
+
+    font-size:
+        clamp(
+            30px,
+            3vw,
+            43px
+        );
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        -1.3px;
+}
+
+
+.edutrack-admin-v2 .page-header p {
+    max-width:
+        650px;
+
+    margin:
+        0;
+
+    color:
+        #c9d7ea;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.7;
+}
+
+
+.edutrack-admin-v2
+.marks-header-badge {
+    padding:
+        9px 14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius:
+        999px;
+
+    color:
+        #e0e7ff;
+
+    background:
+        rgba(255,255,255,.07);
+
+    backdrop-filter:
+        blur(10px);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .04em;
+}
+
+
+/* ==========================================================
+   7. MARKS ANALYTICS CARDS
+========================================================== */
+
+.edutrack-admin-v2
+.marks-overview-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+
+    gap:
+        15px;
+
+    margin-bottom:
+        24px;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card {
+    min-height:
+        115px;
+
+    padding:
+        19px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid #e6eaf1;
+
+    border-radius:
+        17px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    box-shadow:
+        0 9px 28px
+        rgba(15,23,42,.045);
+
+    transition:
+        transform .23s ease,
+        box-shadow .23s ease,
+        border-color .23s ease;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card::after {
+    content: "";
+
+    width:
+        75px;
+
+    height:
+        75px;
+
+    position:
+        absolute;
+
+    right:
+        -35px;
+
+    bottom:
+        -40px;
+
+    border-radius:
+        50%;
+
+    background:
+        #eef4ff;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card:hover {
+    transform:
+        translateY(-5px);
+
+    border-color:
+        #cbdaf7;
+
+    box-shadow:
+        0 17px 40px
+        rgba(15,23,42,.09);
+}
+
+
+.edutrack-admin-v2
+.marks-overview-icon {
+    width:
+        47px;
+
+    height:
+        47px;
+
+    flex:
+        0 0 47px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        13px;
+
+    color:
+        #315cc7;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e9f1ff,
+            #f4f7ff
+        );
+
+    font-size:
+        19px;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card p {
+    margin:
+        0 0 4px;
+
+    color:
+        #8b98aa;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .06em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card h3 {
+    margin:
+        0;
+
+    color:
+        #172033;
+
+    font-size:
+        27px;
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -.8px;
+}
+
+
+/* ==========================================================
+   8. PROFESSIONAL ACADEMIC WORKSPACE
+========================================================== */
+
+.edutrack-admin-v2
+.academic-workspace {
+    margin:
+        0 0 24px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid #e5eaf1;
+
+    border-radius:
+        19px;
+
+    background:
+        white;
+
+    box-shadow:
+        0 10px 32px
+        rgba(15,23,42,.055);
+}
+
+
+.edutrack-admin-v2
+.workspace-heading {
+    min-height:
+        80px;
+
+    padding:
+        18px 22px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border-bottom:
+        1px solid #edf0f5;
+
+    background:
+        linear-gradient(
+            100deg,
+            #ffffff,
+            #fafcff
+        );
+}
+
+
+.edutrack-admin-v2
+.workspace-heading h2 {
+    margin:
+        0 0 4px;
+
+    color:
+        #172033;
+
+    font-size:
+        17px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -.3px;
+}
+
+
+.edutrack-admin-v2
+.workspace-heading p {
+    margin:
+        0;
+
+    color:
+        #8290a4;
+
+    font-size:
+        10px;
+}
+
+
+.edutrack-admin-v2
+.workspace-number {
+    width:
+        35px;
+
+    height:
+        35px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        10px;
+
+    color:
+        white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    box-shadow:
+        0 7px 18px
+        rgba(37,99,235,.22);
+
+    font-size:
+        11px;
+
+    font-weight:
+        850;
+}
+
+
+/* ==========================================================
+   9. CLASS FILTERS
+========================================================== */
+
+.edutrack-admin-v2
+.class-filter-form {
+    padding:
+        21px 22px;
+}
+
+
+.edutrack-admin-v2
+.class-filter-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4,minmax(130px,1fr))
+        auto;
+
+    align-items:
+        end;
+
+    gap:
+        13px;
+}
+
+
+.edutrack-admin-v2
+.filter-field label,
+.edutrack-admin-v2
+.subject-selection-area label {
+    display:
+        block;
+
+    margin:
+        0 0 7px;
+
+    color:
+        #64748b;
+
+    font-size:
+        8px;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        .06em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.edutrack-admin-v2 select,
+.edutrack-admin-v2 input[type="text"],
+.edutrack-admin-v2 input[type="number"] {
+    width:
+        100%;
+
+    min-height:
+        43px;
+
+    padding:
+        9px 12px;
+
+    border:
+        1px solid #dce3ed;
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    color:
+        #26364b;
+
+    background:
+        #fff;
+
+    font-size:
+        11px;
+
+    transition:
+        .2s ease;
+}
+
+
+.edutrack-admin-v2 select:focus,
+.edutrack-admin-v2 input:focus {
+    border-color:
+        #7ba4f4;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(37,99,235,.08);
+}
+
+
+.edutrack-admin-v2
+.load-class-button,
+.edutrack-admin-v2
+.save-marks-button {
+    min-height:
+        43px;
+
+    padding:
+        0 17px;
+
+    border:
+        0;
+
+    border-radius:
+        10px;
+
+    color:
+        white;
+
+    background:
+        linear-gradient(
+            100deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(37,99,235,.17);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s ease;
+}
+
+
+.edutrack-admin-v2
+.load-class-button:hover,
+.edutrack-admin-v2
+.save-marks-button:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(37,99,235,.25);
+}
+
+
+/* ==========================================================
+   10. SELECTED CLASS BANNER
+========================================================== */
+
+.edutrack-admin-v2
+.selected-class-banner {
+    margin:
+        0 0 22px;
+
+    padding:
+        18px 20px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border:
+        1px solid #d8e5f7;
+
+    border-radius:
+        16px;
+
+    background:
+        linear-gradient(
+            100deg,
+            #eef5ff,
+            #f9fbff
+        );
+}
+
+
+.edutrack-admin-v2
+.selected-class-banner h3 {
+    margin:
+        0 0 9px;
+
+    color:
+        #183c70;
+
+    font-size:
+        14px;
+}
+
+
+.edutrack-admin-v2
+.class-meta {
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        7px;
+}
+
+
+.edutrack-admin-v2
+.class-meta span {
+    padding:
+        6px 10px;
+
+    border:
+        1px solid #d9e4f2;
+
+    border-radius:
+        999px;
+
+    color:
+        #526a85;
+
+    background:
+        white;
+
+    font-size:
+        8px;
+
+    font-weight:
+        750;
+}
+
+
+.edutrack-admin-v2
+.student-count-box {
+    min-width:
+        90px;
+
+    text-align:
+        center;
+}
+
+
+.edutrack-admin-v2
+.student-count-box strong {
+    display:
+        block;
+
+    color:
+        #2453ae;
+
+    font-size:
+        27px;
+
+    line-height:
+        1;
+}
+
+
+.edutrack-admin-v2
+.student-count-box small {
+    color:
+        #8492a6;
+
+    font-size:
+        8px;
+}
+
+
+/* ==========================================================
+   11. SUBJECT SELECTOR
+========================================================== */
+
+.edutrack-admin-v2
+.subject-selection-area {
+    padding:
+        19px 22px;
+
+    border-bottom:
+        1px solid #edf0f5;
+
+    background:
+        #f9fbfe;
+}
+
+
+.edutrack-admin-v2
+.subject-selection-area select {
+    max-width:
+        600px;
+}
+
+
+.edutrack-admin-v2
+.form-help {
+    display:
+        block;
+
+    margin-top:
+        6px;
+
+    color:
+        #94a3b8;
+
+    font-size:
+        8px;
+}
+
+
+/* ==========================================================
+   12. PREMIUM MARKS TABLE
+========================================================== */
+
+.edutrack-admin-v2
+.marks-table-wrapper {
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table,
+.edutrack-admin-v2
+.modern-table {
+    width:
+        100%;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table {
+    min-width:
+        850px;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table th,
+.edutrack-admin-v2
+.modern-table th {
+    padding:
+        12px 14px;
+
+    color:
+        #748196;
+
+    background:
+        #f5f7fb;
+
+    border-bottom:
+        1px solid #e6eaf0;
+
+    text-align:
+        left;
+
+    font-size:
+        8px;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        .06em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table td,
+.edutrack-admin-v2
+.modern-table td {
+    padding:
+        13px 14px;
+
+    border-bottom:
+        1px solid #edf0f4;
+
+    color:
+        #344258;
+
+    font-size:
+        10px;
+
+    vertical-align:
+        middle;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table tbody tr,
+.edutrack-admin-v2
+.modern-table tbody tr {
+    transition:
+        background .18s ease;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table tbody tr:hover,
+.edutrack-admin-v2
+.modern-table tbody tr:hover {
+    background:
+        #f9fbff;
+}
+
+
+.edutrack-admin-v2
+.marks-entry-table input[type="number"] {
+    width:
+        85px;
+
+    min-height:
+        37px;
+
+    text-align:
+        center;
+
+    font-weight:
+        750;
+}
+
+
+.edutrack-admin-v2
+.student-number {
+    color:
+        #3d5c82;
+
+    font-weight:
+        800;
+}
+
+
+.edutrack-admin-v2
+.student-name-cell strong {
+    display:
+        block;
+
+    color:
+        #172033;
+
+    font-size:
+        10px;
+}
+
+
+.edutrack-admin-v2
+.student-name-cell small {
+    color:
+        #9aa5b5;
+
+    font-size:
+        8px;
+}
+
+
+.edutrack-admin-v2
+.live-total {
+    color:
+        #172033;
+
+    font-size:
+        13px;
+}
+
+
+.edutrack-admin-v2
+.live-grade,
+.edutrack-admin-v2
+.grade-pill {
+    display:
+        inline-grid;
+
+    min-width:
+        36px;
+
+    min-height:
+        28px;
+
+    place-items:
+        center;
+
+    padding:
+        0 7px;
+
+    border-radius:
+        8px;
+
+    color:
+        #3c4fc2;
+
+    background:
+        #eef1ff;
+
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+}
+
+
+.edutrack-admin-v2
+.live-result {
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+}
+
+
+/* ==========================================================
+   13. SAVE BAR
+========================================================== */
+
+.edutrack-admin-v2
+.marks-action-bar {
+    min-height:
+        70px;
+
+    padding:
+        15px 22px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    background:
+        #fafbfd;
+
+    border-top:
+        1px solid #edf0f4;
+}
+
+
+.edutrack-admin-v2
+.marks-action-note {
+    color:
+        #7b8798;
+
+    font-size:
+        9px;
+}
+
+
+/* ==========================================================
+   14. RECENT RESULTS
+========================================================== */
+
+.edutrack-admin-v2
+.recent-results-header {
+    display:
+        flex;
+
+    align-items:
+        end;
+
+    justify-content:
+        space-between;
+
+    gap:
+        18px;
+
+    margin:
+        30px 0 14px;
+}
+
+
+.edutrack-admin-v2
+.recent-results-header h2 {
+    margin:
+        0 0 4px;
+
+    color:
+        #172033;
+
+    font-size:
+        19px;
+
+    letter-spacing:
+        -.4px;
+}
+
+
+.edutrack-admin-v2
+.recent-results-header p {
+    margin:
+        0;
+
+    color:
+        #8290a4;
+
+    font-size:
+        10px;
+}
+
+
+.edutrack-admin-v2
+.result-search {
+    width:
+        min(310px,100%);
+}
+
+
+.edutrack-admin-v2
+.table-card {
+    padding:
+        0;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid #e5eaf1;
+
+    border-radius:
+        17px;
+
+    background:
+        white;
+
+    box-shadow:
+        0 10px 30px
+        rgba(15,23,42,.05);
+}
+
+
+.edutrack-admin-v2
+.result-student strong {
+    display:
+        block;
+
+    color:
+        #172033;
+
+    font-size:
+        10px;
+}
+
+
+.edutrack-admin-v2
+.result-student small {
+    color:
+        #8e9aad;
+
+    font-size:
+        8px;
+}
+
+
+.edutrack-admin-v2
+.result-pass-pill,
+.edutrack-admin-v2
+.result-fail-pill {
+    display:
+        inline-flex;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        999px;
+
+    font-size:
+        8px;
+
+    font-weight:
+        850;
+}
+
+
+.edutrack-admin-v2
+.result-pass-pill {
+    color:
+        #167243;
+
+    background:
+        #eafaf1;
+}
+
+
+.edutrack-admin-v2
+.result-fail-pill {
+    color:
+        #b4233c;
+
+    background:
+        #fff0f2;
+}
+
+
+/* ==========================================================
+   15. ALERTS
+========================================================== */
+
+.edutrack-admin-v2
+.alert-success {
+    margin:
+        0 0 20px;
+
+    padding:
+        13px 16px;
+
+    border:
+        1px solid #bbefd1;
+
+    border-radius:
+        12px;
+
+    color:
+        #166534;
+
+    background:
+        #ecfdf3;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+}
+
+
+.edutrack-admin-v2
+.error-message {
+    margin:
+        0 0 20px;
+
+    padding:
+        13px 16px;
+
+    border:
+        1px solid #fed7aa;
+
+    border-radius:
+        12px;
+
+    color:
+        #9a3412;
+
+    background:
+        #fff7ed;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+}
+
+
+/* ==========================================================
+   16. EMPTY STATES
+========================================================== */
+
+.edutrack-admin-v2
+.no-class-state,
+.edutrack-admin-v2
+.no-data {
+    padding:
+        38px 25px;
+
+    color:
+        #7c899b;
+
+    text-align:
+        center;
+}
+
+
+.edutrack-admin-v2
+.no-class-state span {
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    font-size:
+        30px;
+}
+
+
+.edutrack-admin-v2
+.no-class-state h3 {
+    margin:
+        0 0 6px;
+
+    color:
+        #27364b;
+}
+
+
+/* ==========================================================
+   17. PROFESSIONAL PAGE ANIMATIONS
+========================================================== */
+
+@keyframes adminV2Rise {
+
+    from {
+        opacity:
+            0;
+
+        transform:
+            translateY(13px);
+    }
+
+    to {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+.edutrack-admin-v2
+.page-header {
+    animation:
+        adminV2Rise
+        .48s ease both;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card {
+    animation:
+        adminV2Rise
+        .45s ease both;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card:nth-child(1) {
+    animation-delay:
+        .05s;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card:nth-child(2) {
+    animation-delay:
+        .10s;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card:nth-child(3) {
+    animation-delay:
+        .15s;
+}
+
+
+.edutrack-admin-v2
+.marks-overview-card:nth-child(4) {
+    animation-delay:
+        .20s;
+}
+
+
+.edutrack-admin-v2
+.academic-workspace {
+    animation:
+        adminV2Rise
+        .5s ease both;
+
+    animation-delay:
+        .12s;
+}
+
+
+/* ==========================================================
+   18. RESPONSIVE ADMIN UI
+========================================================== */
+
+@media
+(max-width: 1100px) {
+
+    .edutrack-admin-v2
+    .marks-overview-grid {
+
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+    }
+
+
+    .edutrack-admin-v2
+    .class-filter-grid {
+
+        grid-template-columns:
+            repeat(2,minmax(150px,1fr));
+    }
+
+
+    .edutrack-admin-v2
+    .load-class-button {
+
+        grid-column:
+            1 / -1;
+    }
+}
+
+
+@media
+(max-width: 850px) {
+
+    .edutrack-admin-v2
+    .main-layout {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .edutrack-admin-v2
+    .sidebar {
+
+        width:
+            100%;
+
+        height:
+            auto;
+
+        position:
+            relative;
+
+        top:
+            0;
+
+        display:
+            flex;
+
+        overflow-x:
+            auto;
+
+        gap:
+            5px;
+
+        padding:
+            10px;
+
+        border-right:
+            0;
+
+        border-bottom:
+            1px solid #e5eaf1;
+    }
+
+
+    .edutrack-admin-v2
+    .sidebar h3 {
+
+        display:
+            none;
+    }
+
+
+    .edutrack-admin-v2
+    .sidebar a {
+
+        min-width:
+            max-content;
+
+        margin:
+            0;
+    }
+
+
+    .edutrack-admin-v2
+    .main-content {
+
+        padding:
+            20px 15px 40px;
+    }
+}
+
+
+@media
+(max-width: 650px) {
+
+    .edutrack-admin-v2
+    .marks-overview-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .edutrack-admin-v2
+    .class-filter-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .edutrack-admin-v2
+    .page-header {
+
+        min-height:
+            190px;
+
+        padding:
+            27px 22px;
+    }
+
+
+    .edutrack-admin-v2
+    .marks-header-badge {
+
+        display:
+            none;
+    }
+
+
+    .edutrack-admin-v2
+    .selected-class-banner,
+    .edutrack-admin-v2
+    .marks-action-bar,
+    .edutrack-admin-v2
+    .recent-results-header {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+    }
+
+
+    .edutrack-admin-v2
+    .result-search {
+
+        width:
+            100%;
+    }
+}
+
+
+@media
+(prefers-reduced-motion: reduce) {
+
+    .edutrack-admin-v2 * {
+
+        animation:
+            none !important;
+
+        transition:
+            none !important;
+    }
+}
+
+/* ==========================================================
+   EDUTRACK ADMIN V2 — DARK UNIVERSITY SIDEBAR
+   Keep this at the VERY BOTTOM of style.css
+========================================================== */
+
+.edutrack-admin-v2 .sidebar {
+    background:
+        linear-gradient(
+            180deg,
+            #08172b 0%,
+            #0c203a 50%,
+            #101d34 100%
+        );
+
+    border-right:
+        1px solid rgba(255,255,255,0.07);
+
+    box-shadow:
+        8px 0 30px rgba(8, 23, 43, 0.12);
+}
+
+
+/* ADMINISTRATION TITLE */
+
+.edutrack-admin-v2 .sidebar h3 {
+    color: #7186a4;
+
+    font-size: 9px;
+
+    font-weight: 850;
+
+    letter-spacing: 1.7px;
+}
+
+
+/* NORMAL SIDEBAR LINKS */
+
+.edutrack-admin-v2 .sidebar a {
+    color: #aebed2;
+
+    background: transparent;
+
+    border:
+        1px solid transparent;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease,
+        border-color .2s ease;
+}
+
+
+/* HOVER */
+
+.edutrack-admin-v2 .sidebar a:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255,255,255,0.065);
+
+    border-color:
+        rgba(255,255,255,0.06);
+
+    transform:
+        translateX(4px);
+}
+
+
+/* CURRENT / ACTIVE PAGE */
+
+.edutrack-admin-v2 .sidebar a.active {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            100deg,
+            rgba(59,130,246,0.24),
+            rgba(79,70,229,0.12)
+        );
+
+    border:
+        1px solid rgba(96,165,250,0.18);
+
+    box-shadow:
+        inset 3px 0 0 #60a5fa,
+        0 8px 22px rgba(0,0,0,0.08);
+
+    font-weight: 800;
+}
+
+
+/* ACTIVE LINK HOVER */
+
+.edutrack-admin-v2 .sidebar a.active:hover {
+    transform: none;
+
+    background:
+        linear-gradient(
+            100deg,
+            rgba(59,130,246,0.30),
+            rgba(79,70,229,0.16)
+        );
+}
+
+
+/* SUBTLE SEPARATOR BEFORE LOGOUT */
+
+.edutrack-admin-v2 .sidebar a:last-child {
+    margin-top: 20px;
+
+    border-top:
+        1px solid rgba(255,255,255,0.07);
+
+    border-radius:
+        0 0 10px 10px;
+
+    padding-top: 12px;
+}
+
+
+/* LOGOUT HOVER */
+
+.edutrack-admin-v2 .sidebar a:last-child:hover {
+    color: #fecaca;
+
+    background:
+        rgba(239,68,68,0.08);
+}
+
+
+/* SIDEBAR SCROLLBAR */
+
+.edutrack-admin-v2 .sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.edutrack-admin-v2 .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.edutrack-admin-v2 .sidebar::-webkit-scrollbar-thumb {
+    background:
+        rgba(148,163,184,0.25);
+
+    border-radius: 10px;
+}
+
+/* ==========================================================
+   EDUTRACK — PROFESSIONAL ATTENDANCE MODULE
+========================================================== */
+
+.attendance-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 42px 44px;
+    margin-bottom: 24px;
+    border-radius: 24px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 82% 15%,
+        rgba(96,165,250,.28), transparent 26%),
+        linear-gradient(125deg,
+        #102b52 0%,
+        #123d75 52%,
+        #1554a1 100%);
+    box-shadow: 0 18px 45px rgba(15,42,79,.16);
+}
+
+.attendance-hero::after {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 50%;
+    right: -60px;
+    bottom: -150px;
+}
+
+.admin-eyebrow,
+.section-kicker {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+}
+
+.admin-eyebrow {
+    color: #9cc8ff;
+}
+
+.attendance-hero h1 {
+    margin: 0 0 11px;
+    font-size: clamp(30px, 3vw, 43px);
+    letter-spacing: -1.3px;
+}
+
+.attendance-hero > div:first-child > p:not(.admin-eyebrow) {
+    max-width: 670px;
+    margin: 0;
+    color: rgba(255,255,255,.79);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.hero-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 23px;
+}
+
+.hero-meta-row span {
+    padding: 7px 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    color: #dcecff;
+    font-size: 11px;
+}
+
+.hero-icon-circle {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 105px;
+    height: 105px;
+    margin-right: 30px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 28px;
+    background: rgba(255,255,255,.10);
+    box-shadow: inset 0 0 35px rgba(255,255,255,.05);
+    font-size: 44px;
+    font-weight: 900;
+    transform: rotate(4deg);
+}
+
+
+/* ==========================================================
+   METRICS
+========================================================== */
+
+.admin-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.admin-metric-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 116px;
+    padding: 19px;
+    border: 1px solid #e8edf5;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(15,23,42,.045);
+    transition: .22s ease;
+}
+
+.admin-metric-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 13px 32px rgba(15,23,42,.075);
+}
+
+.metric-icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.metric-blue {
+    background: #e9f3ff;
+    color: #2474d3;
+}
+
+.metric-purple {
+    background: #f1edff;
+    color: #7254cf;
+}
+
+.metric-green {
+    background: #e8f8ef;
+    color: #158b50;
+}
+
+.metric-orange {
+    background: #fff3df;
+    color: #c77912;
+}
+
+.metric-label {
+    color: #8290a4;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 1.1px;
+}
+
+.admin-metric-card h2 {
+    margin: 4px 0 2px;
+    color: #17243a;
+    font-size: 26px;
+}
+
+.admin-metric-card p {
+    margin: 0;
+    color: #8793a5;
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   SECTION CARD
+========================================================== */
+
+.admin-section-card {
+    margin-bottom: 24px;
+    padding: 27px;
+    border: 1px solid #e7ecf3;
+    border-radius: 21px;
+    background: #fff;
+    box-shadow: 0 9px 30px rgba(15,23,42,.045);
+}
+
+.admin-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.section-kicker {
+    color: #4775b4;
+}
+
+.admin-section-header h2 {
+    margin: 0 0 6px;
+    color: #17243a;
+    font-size: 21px;
+}
+
+.admin-section-header p {
+    margin: 0;
+    color: #8b96a7;
+    font-size: 12px;
+}
+
+.section-header-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    background: #edf5ff;
+}
+
+
+/* ==========================================================
+   PROFESSIONAL FILTERS
+========================================================== */
+
+.professional-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(5,minmax(0,1fr));
+    gap: 14px;
+}
+
+.professional-field label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.professional-field label span {
+    display: block;
+    color: #26354b;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.professional-field label small {
+    display: block;
+    margin-top: 2px;
+    color: #a0a9b7;
+    font-size: 9px;
+}
+
+.professional-field select {
+    width: 100%;
+    height: 45px;
+    padding: 0 12px;
+    border: 1px solid #dfe5ee;
+    border-radius: 11px;
+    outline: none;
+    background: #fbfcfe;
+    color: #28374d;
+    font-size: 11px;
+    transition: .2s;
+}
+
+.professional-field select:hover {
+    border-color: #b9c9dd;
+}
+
+.professional-field select:focus {
+    border-color: #4b8fe2;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.10);
+}
+
+.filter-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid #edf0f5;
+}
+
+.filter-help {
+    color: #8b96a6;
+    font-size: 10px;
+}
+
+.filter-help span {
+    margin-right: 5px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 9px;
+}
+
+.primary-admin-btn,
+.secondary-admin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.primary-admin-btn {
+    border: 0;
+    background: linear-gradient(135deg,#246fc5,#1556a4);
+    color: #fff;
+    box-shadow: 0 7px 17px rgba(37,111,197,.18);
+}
+
+.primary-admin-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(37,111,197,.25);
+}
+
+.secondary-admin-btn {
+    border: 1px solid #dfe5ed;
+    background: #fff;
+    color: #647287;
+}
+
+
+/* ==========================================================
+   SELECTED CLASS
+========================================================== */
+
+.selected-class-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 19px 22px;
+    border: 1px solid #dce8f7;
+    border-radius: 17px;
+    background: linear-gradient(90deg,#f4f9ff,#fbfdff);
+}
+
+.selected-class-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: #e2efff;
+    font-size: 20px;
+}
+
+.selected-class-banner > div:nth-child(2) {
+    flex: 1;
+}
+
+.selected-class-banner span {
+    color: #7990ac;
+    font-size: 8px;
+    font-weight: 850;
+    letter-spacing: 1.2px;
+}
+
+.selected-class-banner h3 {
+    margin: 3px 0;
+    color: #1e3552;
+    font-size: 15px;
+}
+
+.selected-class-banner p {
+    margin: 0;
+    color: #8190a3;
+    font-size: 10px;
+}
+
+.selected-class-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #278052 !important;
+    font-size: 10px !important;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2bb673;
+    box-shadow: 0 0 0 4px rgba(43,182,115,.11);
+}
+
+
+/* ==========================================================
+   TIMETABLE
+========================================================== */
+
+.record-counter {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #f1f5fa;
+    color: #6d7b8e;
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.professional-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #e8edf3;
+    border-radius: 15px;
+}
+
+.professional-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.professional-admin-table thead {
+    background: #f6f8fb;
+}
+
+.professional-admin-table th {
+    padding: 13px 16px;
+    border-bottom: 1px solid #e6ebf2;
+    color: #718096;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: .8px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.professional-admin-table td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #edf0f4;
+    color: #4b596c;
+    font-size: 11px;
+}
+
+.professional-admin-table tbody tr {
+    transition: .18s ease;
+}
+
+.professional-admin-table tbody tr:hover {
+    background: #f9fbfe;
+}
+
+.professional-admin-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.period-pill {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #edf4fd;
+    color: #2869b5;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.course-code {
+    color: #263d5d;
+    font-weight: 800;
+}
+
+.subject-cell strong {
+    display: block;
+    color: #26364d;
+    font-size: 11px;
+}
+
+.subject-cell small {
+    display: block;
+    margin-top: 4px;
+    color: #9aa4b2;
+    font-size: 9px;
+}
+
+.class-time strong {
+    color: #35465c;
+}
+
+.class-time span {
+    margin: 0 4px;
+    color: #a5adba;
+    font-size: 9px;
+}
+
+.session-type-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f2efff;
+    color: #6954b7;
+    font-size: 9px;
+    font-weight: 750;
+}
+
+.attendance-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: #eaf8f1;
+    color: #16744a;
+    font-size: 10px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.attendance-action-btn:hover {
+    background: #16744a;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================================
+   INITIAL STATE
+========================================================== */
+
+.attendance-start-state {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 24px;
+    padding: 32px;
+    border: 1px dashed #cedaea;
+    border-radius: 20px;
+    background: linear-gradient(120deg,#f8fbff,#fff);
+}
+
+.attendance-start-visual {
+    display: grid;
+    place-items: center;
+}
+
+.start-calendar {
+    display: grid;
+    place-items: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 28px;
+    background: linear-gradient(145deg,#e6f2ff,#f4f9ff);
+    color: #2874c7;
+    font-size: 40px;
+    box-shadow: 0 10px 30px rgba(37,108,190,.10);
+}
+
+.attendance-start-state h2 {
+    margin: 0 0 8px;
+    color: #1d304b;
+}
+
+.attendance-start-state p {
+    max-width: 700px;
+    color: #8491a3;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.attendance-workflow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 19px;
+}
+
+.attendance-workflow span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #69809b;
+    font-size: 9px;
+}
+
+.attendance-workflow span:first-letter {
+    font-weight: 900;
+}
+
+.attendance-workflow > div {
+    width: 28px;
+    height: 1px;
+    background: #d9e2ed;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.professional-empty-state {
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    margin-bottom: 10px;
+    font-size: 36px;
+}
+
+.professional-empty-state h3 {
+    margin: 0 0 7px;
+    color: #27364b;
+}
+
+.professional-empty-state p {
+    margin: 0 auto 18px;
+    max-width: 450px;
+    color: #8b96a5;
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   FACULTY TIP
+========================================================== */
+
+.faculty-tip-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+    padding: 17px 20px;
+    border: 1px solid #e7edf4;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.faculty-tip-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #fff6df;
+}
+
+.faculty-tip-card > div:nth-child(2) {
+    flex: 1;
+}
+
+.faculty-tip-card strong {
+    color: #34435a;
+    font-size: 11px;
+}
+
+.faculty-tip-card p {
+    margin: 3px 0 0;
+    color: #8b96a5;
+    font-size: 9px;
+}
+
+.faculty-tip-card > a {
+    color: #3975bb;
+    font-size: 10px;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1150px) {
+
+    .admin-metric-grid {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .professional-filter-grid {
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+}
+
+@media (max-width: 760px) {
+
+    .attendance-hero {
+        padding: 30px 24px;
+    }
+
+    .hero-decoration {
+        display: none;
+    }
+
+    .admin-metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .professional-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-action-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .filter-buttons {
+        justify-content: flex-end;
+    }
+
+    .attendance-start-state {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .attendance-workflow {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .selected-class-banner {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .selected-class-status {
+        width: 100%;
+        padding-left: 62px;
+    }
+
+    .faculty-tip-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+/* =========================================================
+   EDUTRACK ACADEMIC OPERATIONS V2
+   Attendance + Attendance History
+   Matches Student Dashboard V2
+========================================================= */
+
+
+/* =========================================================
+   COMMON PAGE
+========================================================= */
+
+.attendance-v2-page,
+.attendance-history-v2-page {
+    background: #f6f8fc;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.attendance-v2-hero {
+    position: relative;
+
+    min-height: 270px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    overflow: hidden;
+
+    padding: 42px 45px;
+
+    margin-bottom: 18px;
+
+    border-radius: 24px;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(99,102,241,.45),
+            transparent 270px
+        ),
+        radial-gradient(
+            circle at 15% 110%,
+            rgba(37,99,235,.35),
+            transparent 330px
+        ),
+        linear-gradient(
+            120deg,
+            #071426,
+            #102b53 55%,
+            #312e81
+        );
+
+    box-shadow:
+        0 25px 60px
+        rgba(15,23,42,.18);
+}
+
+
+.attendance-v2-hero::after {
+    content: "EDUTRACK";
+
+    position: absolute;
+
+    right: -20px;
+    bottom: -30px;
+
+    color:
+        rgba(255,255,255,.035);
+
+    font-size: 95px;
+
+    font-weight: 900;
+
+    letter-spacing: -6px;
+
+    pointer-events: none;
+}
+
+
+.attendance-v2-hero-copy {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 720px;
+}
+
+
+.attendance-v2-eyebrow {
+    display: block;
+
+    margin-bottom: 11px;
+
+    color: #a5b4fc;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+
+    text-transform: uppercase;
+}
+
+
+.attendance-v2-hero h1 {
+    margin: 0 0 14px;
+
+    font-size:
+        clamp(
+            34px,
+            4vw,
+            48px
+        );
+
+    line-height: 1.05;
+
+    letter-spacing: -1.7px;
+}
+
+
+.attendance-v2-hero-copy > p {
+    max-width: 620px;
+
+    margin: 0;
+
+    color: #bdcbe0;
+
+    font-size: 13px;
+
+    line-height: 1.75;
+}
+
+
+.attendance-v2-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 21px;
+}
+
+
+.attendance-v2-meta span {
+    padding: 7px 11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color: #dbeafe;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+/* HERO VISUAL */
+
+.attendance-v2-hero-visual {
+    position: relative;
+
+    z-index: 2;
+
+    min-width: 190px;
+
+    padding: 26px;
+
+    text-align: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    backdrop-filter: blur(12px);
+}
+
+
+.attendance-v2-hero-icon {
+    width: 70px;
+    height: 70px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin:
+        0 auto
+        13px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #8b5cf6
+        );
+
+    box-shadow:
+        0 12px 30px
+        rgba(37,99,235,.35);
+
+    font-size: 28px;
+}
+
+
+.attendance-v2-hero-visual strong,
+.attendance-v2-hero-visual span {
+    display: block;
+}
+
+
+.attendance-v2-hero-visual strong {
+    font-size: 14px;
+}
+
+
+.attendance-v2-hero-visual span {
+    margin-top: 5px;
+
+    color: #c7d2fe;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   METRIC CARDS
+========================================================= */
+
+.attendance-v2-metrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+}
+
+
+.attendance-v2-metric {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 17px;
+
+    background: white;
+
+    box-shadow:
+        0 9px 25px
+        rgba(15,23,42,.045);
+
+    transition:
+        transform .2s,
+        box-shadow .2s,
+        border-color .2s;
+}
+
+
+.attendance-v2-metric:hover {
+    transform:
+        translateY(-3px);
+
+    border-color: #c7d2fe;
+
+    box-shadow:
+        0 16px 34px
+        rgba(15,23,42,.08);
+}
+
+
+.attendance-v2-metric-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.attendance-v2-metric-icon {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #eef2ff;
+
+    font-size: 17px;
+}
+
+
+.attendance-v2-metric-label {
+    color: #98a2b3;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.attendance-v2-metric > strong {
+    display: block;
+
+    margin-top: 17px;
+
+    color: #111827;
+
+    font-size: 29px;
+
+    letter-spacing: -1px;
+}
+
+
+.attendance-v2-metric > p {
+    margin:
+        5px 0 0;
+
+    color: #667085;
+
+    font-size: 10px;
+}
+
+
+.attendance-v2-metric.present
+.attendance-v2-metric-icon {
+    color: #166534;
+    background: #dcfce7;
+}
+
+
+.attendance-v2-metric.absent
+.attendance-v2-metric-icon {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+
+.attendance-v2-metric.rate
+.attendance-v2-metric-icon {
+    color: #4338ca;
+    background: #eef2ff;
+}
+
+
+/* =========================================================
+   MAIN WHITE PANELS
+========================================================= */
+
+.attendance-v2-panel {
+    margin-bottom: 18px;
+
+    padding: 25px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        0 9px 25px
+        rgba(15,23,42,.04);
+}
+
+
+.attendance-v2-panel-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+}
+
+
+.attendance-v2-section-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #6366f1;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+
+    text-transform: uppercase;
+}
+
+
+.attendance-v2-panel-header h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 19px;
+
+    letter-spacing: -.4px;
+}
+
+
+.attendance-v2-panel-header p {
+    margin:
+        5px 0 0;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+.attendance-v2-panel-badge {
+    padding:
+        7px
+        11px;
+
+    border-radius: 999px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   FILTER AREA
+========================================================= */
+
+.attendance-v2-filter-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0,1fr)
+        );
+
+    gap: 13px;
+}
+
+
+.attendance-history-v2-page
+.attendance-v2-filter-grid {
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
+}
+
+
+.attendance-v2-field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #475467;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.attendance-v2-field small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.attendance-v2-field select,
+.attendance-v2-field input {
+    width: 100%;
+
+    min-height: 43px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        12px;
+
+    outline: none;
+
+    border:
+        1px solid
+        #e1e6ef;
+
+    border-radius: 10px;
+
+    color: #344054;
+
+    background: #fbfcfe;
+
+    font-size: 10px;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
+}
+
+
+.attendance-v2-field select:focus,
+.attendance-v2-field input:focus {
+    border-color: #818cf8;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(99,102,241,.10);
+}
+
+
+.attendance-v2-filter-actions {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 20px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid
+        #edf0f5;
+}
+
+
+.attendance-v2-filter-note {
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.attendance-v2-buttons {
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.attendance-v2-primary-btn,
+.attendance-v2-secondary-btn {
+    min-height: 39px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        16px;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+
+.attendance-v2-primary-btn {
+    border: 0;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #2563eb
+        );
+
+    box-shadow:
+        0 7px 17px
+        rgba(79,70,229,.18);
+}
+
+
+.attendance-v2-primary-btn:hover {
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 10px 22px
+        rgba(79,70,229,.25);
+}
+
+
+.attendance-v2-secondary-btn {
+    border:
+        1px solid
+        #e1e6ef;
+
+    color: #667085;
+
+    background: white;
+}
+
+
+.attendance-v2-secondary-btn:hover {
+    color: #4338ca;
+
+    border-color: #c7d2fe;
+
+    background: #f8f9ff;
+}
+
+
+/* =========================================================
+   SELECTED CLASS
+========================================================= */
+
+.attendance-v2-selection {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+
+    padding: 17px 19px;
+
+    border:
+        1px solid
+        #dfe5f5;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f7f9ff,
+            #ffffff
+        );
+}
+
+
+.attendance-v2-selection-icon {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 17px;
+}
+
+
+.attendance-v2-selection strong,
+.attendance-v2-selection span,
+.attendance-v2-selection small {
+    display: block;
+}
+
+
+.attendance-v2-selection strong {
+    color: #111827;
+
+    font-size: 12px;
+}
+
+
+.attendance-v2-selection span {
+    margin-top: 3px;
+
+    color: #667085;
+
+    font-size: 9px;
+}
+
+
+.attendance-v2-selection small {
+    color: #16a34a;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PROFESSIONAL TABLE
+========================================================= */
+
+.attendance-v2-table-wrap {
+    overflow-x: auto;
+
+    border:
+        1px solid
+        #e7ebf2;
+
+    border-radius: 14px;
+}
+
+
+.attendance-v2-table {
+    width: 100%;
+
+    min-width: 950px;
+
+    border-collapse: collapse;
+
+    background: white;
+}
+
+
+.attendance-v2-table thead {
+    background: #f8f9fc;
+}
+
+
+.attendance-v2-table th {
+    padding:
+        12px
+        14px;
+
+    color: #667085;
+
+    border-bottom:
+        1px solid
+        #e7ebf2;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+
+.attendance-v2-table td {
+    padding:
+        13px
+        14px;
+
+    color: #475467;
+
+    border-bottom:
+        1px solid
+        #edf0f5;
+
+    font-size: 10px;
+
+    vertical-align: middle;
+}
+
+
+.attendance-v2-table tbody tr {
+    transition:
+        background .18s;
+}
+
+
+.attendance-v2-table tbody tr:hover {
+    background: #fafbff;
+}
+
+
+.attendance-v2-table
+tbody
+tr:last-child
+td {
+    border-bottom: 0;
+}
+
+
+/* STUDENT */
+
+.attendance-student-cell {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.attendance-student-avatar {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 9px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.attendance-student-cell strong,
+.attendance-student-cell span {
+    display: block;
+}
+
+
+.attendance-student-cell strong {
+    color: #111827;
+
+    font-size: 10px;
+}
+
+
+.attendance-student-cell span {
+    margin-top: 2px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+/* SUBJECT */
+
+.attendance-subject-cell strong,
+.attendance-subject-cell span {
+    display: block;
+}
+
+
+.attendance-subject-cell strong {
+    color: #111827;
+
+    font-size: 10px;
+}
+
+
+.attendance-subject-cell span {
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+/* PERIOD */
+
+.attendance-period-chip {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 8px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+/* STATUS */
+
+.attendance-status-chip {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+.attendance-status-chip.present {
+    color: #166534;
+
+    background: #dcfce7;
+}
+
+
+.attendance-status-chip.absent {
+    color: #991b1b;
+
+    background: #fee2e2;
+}
+
+
+/* =========================================================
+   EDIT ATTENDANCE
+========================================================= */
+
+.attendance-v2-edit-form {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+.attendance-v2-edit-form select {
+    min-width: 86px;
+
+    height: 34px;
+
+    padding:
+        0
+        7px;
+
+    outline: none;
+
+    border:
+        1px solid
+        #e1e6ef;
+
+    border-radius: 8px;
+
+    color: #475467;
+
+    background: white;
+
+    font-size: 8px;
+}
+
+
+.attendance-v2-save-btn {
+    height: 34px;
+
+    padding:
+        0
+        10px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    color: white;
+
+    background: #4f46e5;
+
+    font-size: 8px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+
+.attendance-v2-save-btn:hover {
+    background: #3730a3;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.attendance-v2-message {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+
+    padding:
+        13px
+        15px;
+
+    border-radius: 11px;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+
+.attendance-v2-message.success {
+    color: #166534;
+
+    border:
+        1px solid
+        #bbf7d0;
+
+    background: #f0fdf4;
+}
+
+
+.attendance-v2-message.error {
+    color: #991b1b;
+
+    border:
+        1px solid
+        #fecaca;
+
+    background: #fef2f2;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.attendance-v2-empty {
+    padding:
+        48px
+        20px;
+
+    text-align: center;
+}
+
+
+.attendance-v2-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin:
+        0 auto
+        13px;
+
+    border-radius: 16px;
+
+    background: #eef2ff;
+
+    font-size: 23px;
+}
+
+
+.attendance-v2-empty h3 {
+    margin:
+        0 0
+        6px;
+
+    color: #111827;
+
+    font-size: 15px;
+}
+
+
+.attendance-v2-empty p {
+    max-width: 450px;
+
+    margin:
+        0 auto;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   ATTENDANCE RATE PROGRESS
+========================================================= */
+
+.attendance-rate-box {
+    margin-top: 16px;
+}
+
+
+.attendance-rate-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    color: #667085;
+
+    font-size: 9px;
+}
+
+
+.attendance-rate-heading strong {
+    color: #111827;
+}
+
+
+.attendance-rate-track {
+    width: 100%;
+
+    height: 7px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #eef1f5;
+}
+
+
+.attendance-rate-fill {
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4f46e5,
+            #3b82f6
+        );
+
+    transition:
+        width .7s ease;
+}
+
+
+/* =========================================================
+   FACULTY INFO
+========================================================= */
+
+.attendance-v2-info {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 30px;
+
+    padding:
+        16px
+        18px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 14px;
+
+    background: white;
+}
+
+
+.attendance-v2-info-icon {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+}
+
+
+.attendance-v2-info strong {
+    display: block;
+
+    color: #344054;
+
+    font-size: 10px;
+}
+
+
+.attendance-v2-info p {
+    margin:
+        3px 0 0;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+
+.attendance-v2-info a {
+    color: #4f46e5;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+.attendance-v2-hero,
+.attendance-v2-metric,
+.attendance-v2-panel,
+.attendance-v2-selection,
+.attendance-v2-info {
+    animation:
+        attendanceV2Fade
+        .45s ease
+        both;
+}
+
+
+.attendance-v2-metric:nth-child(2) {
+    animation-delay: .05s;
+}
+
+
+.attendance-v2-metric:nth-child(3) {
+    animation-delay: .10s;
+}
+
+
+.attendance-v2-metric:nth-child(4) {
+    animation-delay: .15s;
+}
+
+
+@keyframes attendanceV2Fade {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(9px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .attendance-v2-metrics {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .attendance-v2-filter-grid {
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+}
+
+
+@media (max-width: 760px) {
+
+    .attendance-v2-hero {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        padding:
+            30px
+            22px;
+    }
+
+
+    .attendance-v2-hero-visual {
+        min-width: 0;
+    }
+
+
+    .attendance-v2-metrics {
+        grid-template-columns: 1fr;
+    }
+
+
+    .attendance-v2-filter-grid,
+    .attendance-history-v2-page
+    .attendance-v2-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .attendance-v2-filter-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .attendance-v2-buttons {
+        width: 100%;
+    }
+
+
+    .attendance-v2-primary-btn,
+    .attendance-v2-secondary-btn {
+        flex: 1;
+    }
+
+
+    .attendance-v2-selection {
+        grid-template-columns:
+            auto
+            1fr;
+    }
+
+
+    .attendance-v2-selection small {
+        grid-column:
+            1 / -1;
+    }
+
+
+    .attendance-v2-info {
+        grid-template-columns:
+            auto
+            1fr;
+    }
+
+
+    .attendance-v2-info a {
+        grid-column:
+            1 / -1;
+
+        margin-left: 51px;
+    }
+
+}
+
+/* =========================================================
+   EDUTRACK — FINAL UNIVERSITY ADMIN DESIGN SYSTEM
+   FINAL OVERRIDE LAYER
+   ---------------------------------------------------------
+   Add this at the END of style.css.
+   Does not replace Student Dashboard V2.
+========================================================= */
+
+:root {
+    --edu-navy: #071426;
+    --edu-navy-2: #102b53;
+    --edu-indigo: #312e81;
+    --edu-blue: #2563eb;
+    --edu-purple: #6366f1;
+
+    --edu-bg: #f6f8fc;
+    --edu-card: #ffffff;
+
+    --edu-text: #101828;
+    --edu-muted: #667085;
+    --edu-light-muted: #98a2b3;
+
+    --edu-border: #e4e9f2;
+
+    --edu-success: #15803d;
+    --edu-danger: #dc2626;
+    --edu-warning: #d97706;
+
+    --edu-radius: 17px;
+
+    --edu-shadow:
+        0 10px 30px rgba(15, 23, 42, .055);
+
+    --edu-shadow-hover:
+        0 18px 42px rgba(15, 23, 42, .10);
+}
+
+
+/* =========================================================
+   ADMIN PAGE
+========================================================= */
+
+body.edutrack-admin,
+body.attendance-v2-page {
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(99,102,241,.07),
+            transparent 420px
+        ),
+        #f6f8fc;
+}
+
+
+/* =========================================================
+   ADMIN NAVBAR
+========================================================= */
+
+.admin-navbar {
+    min-height: 72px;
+
+    padding:
+        0
+        30px;
+
+    background:
+        rgba(7,20,38,.98);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 8px 30px
+        rgba(15,23,42,.15);
+}
+
+
+.admin-brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.admin-brand-icon {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #6366f1
+        );
+
+    box-shadow:
+        0 8px 22px
+        rgba(37,99,235,.3);
+}
+
+
+.admin-brand h2 {
+    margin: 0;
+
+    font-size: 18px;
+}
+
+
+.admin-brand small {
+    display: block;
+
+    margin-top: 1px;
+
+    color: #8495af;
+
+    font-size: 8px;
+
+    letter-spacing: .13em;
+}
+
+
+.admin-navbar-title {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    letter-spacing: .04em;
+}
+
+
+.admin-navbar-user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.admin-user-info {
+    text-align: right;
+}
+
+
+.admin-user-info span,
+.admin-user-info strong {
+    display: block;
+}
+
+
+.admin-user-label {
+    color: #64748b;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .1em;
+}
+
+
+.admin-user-info strong {
+    color: #e2e8f0;
+
+    font-size: 11px;
+}
+
+
+.admin-avatar {
+    width: 35px;
+    height: 35px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ADMIN SIDEBAR
+========================================================= */
+
+body.edutrack-admin .sidebar,
+body.attendance-v2-page .sidebar {
+
+    width: 245px;
+    min-width: 245px;
+
+    padding:
+        28px
+        14px;
+
+    background:
+        radial-gradient(
+            circle at 20% 0%,
+            rgba(79,70,229,.22),
+            transparent 220px
+        ),
+        linear-gradient(
+            180deg,
+            #071426,
+            #0b1d35 55%,
+            #101d38
+        );
+
+    border-right:
+        1px solid
+        rgba(255,255,255,.04);
+}
+
+
+body.edutrack-admin .sidebar h3,
+body.attendance-v2-page .sidebar h3 {
+
+    margin:
+        0 0
+        17px;
+
+    padding:
+        0
+        13px;
+
+    color: #667892;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .14em;
+}
+
+
+body.edutrack-admin .sidebar a,
+body.attendance-v2-page .sidebar a {
+
+    min-height: 43px;
+
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 4px;
+
+    padding:
+        10px
+        13px;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 10px;
+
+    color: #b6c3d6;
+
+    font-size: 12px;
+
+    font-weight: 550;
+}
+
+
+body.edutrack-admin .sidebar a:hover,
+body.attendance-v2-page .sidebar a:hover {
+
+    color: white;
+
+    background:
+        rgba(255,255,255,.065);
+
+    border-color:
+        rgba(255,255,255,.05);
+
+    transform:
+        translateX(3px);
+}
+
+
+body.edutrack-admin .sidebar a.active,
+body.attendance-v2-page .sidebar a.active {
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    box-shadow:
+        0 9px 23px
+        rgba(37,99,235,.25);
+}
+
+
+/* =========================================================
+   ADMIN WORKSPACE
+========================================================= */
+
+.admin-v2-content,
+body.edutrack-admin .main-content {
+
+    padding:
+        36px
+        clamp(24px,3vw,48px);
+
+    background:
+        transparent;
+}
+
+
+/* =========================================================
+   UNIVERSITY HERO
+========================================================= */
+
+.admin-page-hero {
+
+    position: relative;
+
+    min-height: 235px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 35px;
+
+    overflow: hidden;
+
+    margin-bottom: 18px;
+
+    padding:
+        40px
+        44px;
+
+    border-radius: 24px;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(99,102,241,.45),
+            transparent 270px
+        ),
+        radial-gradient(
+            circle at 15% 110%,
+            rgba(37,99,235,.35),
+            transparent 330px
+        ),
+        linear-gradient(
+            120deg,
+            #071426,
+            #102b53 55%,
+            #312e81
+        );
+
+    box-shadow:
+        0 25px 60px
+        rgba(15,23,42,.18);
+
+    animation:
+        eduFadeUp
+        .45s ease both;
+}
+
+
+.admin-page-hero::after {
+
+    content: "EDUTRACK";
+
+    position: absolute;
+
+    right: -25px;
+
+    bottom: -35px;
+
+    color:
+        rgba(255,255,255,.035);
+
+    font-size:
+        clamp(65px,8vw,110px);
+
+    font-weight: 900;
+
+    letter-spacing: -6px;
+
+    pointer-events: none;
+}
+
+
+.admin-page-hero > div {
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.admin-eyebrow,
+.section-kicker {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #93c5fd;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .16em;
+
+    text-transform: uppercase;
+}
+
+
+.admin-page-hero h1 {
+
+    margin:
+        0 0
+        13px;
+
+    font-size:
+        clamp(
+            35px,
+            4vw,
+            49px
+        );
+
+    line-height: 1.03;
+
+    letter-spacing: -1.7px;
+}
+
+
+.admin-page-hero > div > p:not(.admin-eyebrow) {
+
+    max-width: 650px;
+
+    margin: 0;
+
+    color: #bdcbe0;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+.hero-meta-row {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+
+.hero-meta-row span {
+
+    padding:
+        7px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color: #dbeafe;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+/* HERO DECORATION */
+
+.hero-decoration {
+
+    min-width: 155px;
+
+    display: grid;
+
+    place-items: center;
+}
+
+
+.hero-icon-circle {
+
+    width: 105px;
+    height: 105px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.16);
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    backdrop-filter:
+        blur(10px);
+
+    box-shadow:
+        inset 0 1px
+        rgba(255,255,255,.13);
+
+    font-size: 43px;
+}
+
+
+/* =========================================================
+   METRIC GRID
+========================================================= */
+
+.admin-metric-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+}
+
+
+.admin-metric-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-height: 115px;
+
+    padding: 19px;
+
+    border:
+        1px solid
+        var(--edu-border);
+
+    border-radius: 17px;
+
+    background: white;
+
+    box-shadow:
+        var(--edu-shadow);
+
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+
+    animation:
+        eduFadeUp
+        .45s ease both;
+}
+
+
+.admin-metric-card:hover {
+
+    transform:
+        translateY(-4px);
+
+    border-color:
+        #d5dbed;
+
+    box-shadow:
+        var(--edu-shadow-hover);
+}
+
+
+.metric-icon {
+
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    font-size: 18px;
+}
+
+
+.metric-blue {
+
+    color: #1d4ed8;
+
+    background: #eff6ff;
+}
+
+
+.metric-purple {
+
+    color: #6d28d9;
+
+    background: #f5f3ff;
+}
+
+
+.metric-green {
+
+    color: #15803d;
+
+    background: #ecfdf5;
+}
+
+
+.metric-orange {
+
+    color: #c2410c;
+
+    background: #fff7ed;
+}
+
+
+.metric-label {
+
+    color: #98a2b3;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .1em;
+}
+
+
+.admin-metric-card h2 {
+
+    margin:
+        3px 0
+        1px;
+
+    color: #101828;
+
+    font-size: 27px;
+
+    letter-spacing: -.8px;
+}
+
+
+.admin-metric-card p {
+
+    margin: 0;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   UNIVERSITY SECTION CARD
+========================================================= */
+
+.admin-section-card {
+
+    margin-bottom: 18px;
+
+    padding: 26px;
+
+    border:
+        1px solid
+        var(--edu-border);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.97);
+
+    box-shadow:
+        var(--edu-shadow);
+
+    animation:
+        eduFadeUp
+        .45s ease both;
+}
+
+
+.admin-section-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 20px;
+
+    margin-bottom: 23px;
+}
+
+
+.admin-section-header h2 {
+
+    margin:
+        0 0
+        5px;
+
+    color: #101828;
+
+    font-size: 20px;
+
+    letter-spacing: -.4px;
+}
+
+
+.admin-section-header p {
+
+    margin: 0;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+.admin-section-header .section-kicker {
+
+    color: #6366f1;
+}
+
+
+.section-header-icon {
+
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   PROFESSIONAL FILTERS
+========================================================= */
+
+.professional-filter-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0,1fr)
+        );
+
+    gap: 13px;
+}
+
+
+.professional-field label {
+
+    margin:
+        0 0
+        7px;
+
+    color: #344054;
+}
+
+
+.professional-field label span {
+
+    display: block;
+
+    font-size: 10px;
+
+    font-weight: 750;
+}
+
+
+.professional-field label small {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+
+    font-weight: 400;
+}
+
+
+.professional-field select,
+.professional-field input {
+
+    height: 43px;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid
+        #dfe4ed;
+
+    border-radius: 10px;
+
+    color: #344054;
+
+    background: #fbfcfe;
+
+    font-size: 10px;
+}
+
+
+.professional-field select:focus,
+.professional-field input:focus {
+
+    border-color: #6366f1;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(99,102,241,.09);
+}
+
+
+.filter-action-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 19px;
+
+    padding-top: 17px;
+
+    border-top:
+        1px solid
+        #edf0f5;
+}
+
+
+.filter-help {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.filter-help span {
+
+    width: 24px;
+    height: 24px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    color: #4338ca;
+
+    background: #eef2ff;
+
+    font-weight: 800;
+}
+
+
+.filter-buttons {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   BUTTON SYSTEM
+========================================================= */
+
+.primary-admin-btn,
+.secondary-admin-btn {
+
+    min-height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        0
+        16px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    transition: .2s ease;
+}
+
+
+.primary-admin-btn {
+
+    border: 0;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    box-shadow:
+        0 7px 17px
+        rgba(79,70,229,.18);
+}
+
+
+.primary-admin-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 11px 22px
+        rgba(79,70,229,.25);
+}
+
+
+.secondary-admin-btn {
+
+    color: #475467;
+
+    background: #f4f6f9;
+
+    border:
+        1px solid
+        #e4e7ec;
+}
+
+
+.secondary-admin-btn:hover {
+
+    color: #344054;
+
+    background: #eaecf0;
+}
+
+
+/* =========================================================
+   SELECTED CLASS BANNER
+========================================================= */
+
+.selected-class-banner {
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+
+    padding:
+        17px
+        19px;
+
+    border:
+        1px solid
+        #dbe4ff;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8faff,
+            #f4f3ff
+        );
+}
+
+
+.selected-class-icon {
+
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    color: #4338ca;
+
+    background: white;
+
+    box-shadow:
+        0 5px 15px
+        rgba(79,70,229,.08);
+}
+
+
+.selected-class-banner span {
+
+    color: #6366f1;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+}
+
+
+.selected-class-banner h3 {
+
+    margin:
+        2px 0
+        2px;
+
+    color: #1d2939;
+
+    font-size: 13px;
+}
+
+
+.selected-class-banner p {
+
+    margin: 0;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+}
+
+
+.selected-class-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        6px
+        10px;
+
+    border-radius: 999px;
+
+    color: #15803d !important;
+
+    background: #ecfdf3;
+
+    font-size: 8px !important;
+
+    font-weight: 750;
+}
+
+
+.status-dot {
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+}
+
+
+/* =========================================================
+   PROFESSIONAL TABLE
+========================================================= */
+
+.professional-table-wrapper {
+
+    overflow-x: auto;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 14px;
+}
+
+
+.professional-admin-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: white;
+}
+
+
+.professional-admin-table th {
+
+    padding:
+        12px
+        14px;
+
+    border-bottom:
+        1px solid
+        #e4e9f2;
+
+    color: #667085;
+
+    background: #f8fafc;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+
+.professional-admin-table td {
+
+    padding:
+        14px;
+
+    border-bottom:
+        1px solid
+        #edf0f5;
+
+    color: #475467;
+
+    font-size: 10px;
+}
+
+
+.professional-admin-table tbody tr {
+
+    transition:
+        background .18s ease;
+}
+
+
+.professional-admin-table tbody tr:hover {
+
+    background: #fafaff;
+}
+
+
+.professional-admin-table tbody tr:last-child td {
+
+    border-bottom: 0;
+}
+
+
+.period-pill {
+
+    display: inline-flex;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    color: #6d28d9;
+
+    background: #f5f3ff;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+.course-code {
+
+    color: #2563eb;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.subject-cell strong,
+.subject-cell small {
+
+    display: block;
+}
+
+
+.subject-cell strong {
+
+    color: #101828;
+
+    font-size: 11px;
+}
+
+
+.subject-cell small {
+
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.class-time strong {
+
+    color: #344054;
+
+    font-size: 10px;
+}
+
+
+.class-time span {
+
+    margin:
+        0
+        4px;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+}
+
+
+.session-type-badge {
+
+    display: inline-block;
+
+    padding:
+        5px
+        8px;
+
+    border-radius: 999px;
+
+    color: #1d4ed8;
+
+    background: #eff6ff;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.attendance-action-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        8px
+        11px;
+
+    border-radius: 8px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    text-decoration: none;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+
+    transition: .2s;
+}
+
+
+.attendance-action-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(79,70,229,.2);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.professional-empty-state {
+
+    padding:
+        50px
+        20px;
+
+    text-align: center;
+}
+
+
+.empty-state-icon {
+
+    width: 58px;
+    height: 58px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin:
+        0 auto
+        13px;
+
+    border-radius: 15px;
+
+    background: #f4f3ff;
+
+    font-size: 24px;
+}
+
+
+.professional-empty-state h3 {
+
+    margin:
+        0 0
+        6px;
+
+    color: #1d2939;
+}
+
+
+.professional-empty-state p {
+
+    max-width: 480px;
+
+    margin:
+        0 auto
+        18px;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   ATTENDANCE START STATE
+========================================================= */
+
+.attendance-start-state {
+
+    display: grid;
+
+    grid-template-columns:
+        170px
+        1fr;
+
+    align-items: center;
+
+    gap: 30px;
+
+    padding: 30px;
+
+    border:
+        1px solid
+        var(--edu-border);
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        var(--edu-shadow);
+}
+
+
+.attendance-start-visual {
+
+    display: grid;
+
+    place-items: center;
+}
+
+
+.start-calendar {
+
+    width: 100px;
+    height: 100px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 27px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #6366f1
+        );
+
+    box-shadow:
+        0 16px 32px
+        rgba(79,70,229,.22);
+
+    font-size: 38px;
+}
+
+
+.attendance-start-state h2 {
+
+    margin:
+        0 0
+        7px;
+
+    color: #101828;
+
+    font-size: 21px;
+}
+
+
+.attendance-start-state p {
+
+    max-width: 650px;
+
+    margin: 0;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+
+    line-height: 1.65;
+}
+
+
+.attendance-start-state .section-kicker {
+
+    color: #6366f1;
+}
+
+
+.attendance-workflow {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 19px;
+}
+
+
+.attendance-workflow > span {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #6366f1;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.attendance-workflow strong {
+
+    color: #475467;
+
+    font-size: 9px;
+}
+
+
+.attendance-workflow > div {
+
+    width: 30px;
+    height: 1px;
+
+    background: #d9deea;
+}
+
+
+/* =========================================================
+   FACULTY TIP
+========================================================= */
+
+.faculty-tip-card {
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 18px;
+
+    padding:
+        17px
+        19px;
+
+    border:
+        1px solid
+        #e4e9f2;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #fafaff
+        );
+}
+
+
+.faculty-tip-icon {
+
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+}
+
+
+.faculty-tip-card strong {
+
+    color: #344054;
+
+    font-size: 10px;
+}
+
+
+.faculty-tip-card p {
+
+    margin:
+        3px 0
+        0;
+
+    color: #98a2b3;
+
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+
+.faculty-tip-card a {
+
+    color: #4f46e5;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   LEGACY ADMIN PAGES
+   Makes marks.php/history/etc look closer immediately
+========================================================= */
+
+body.edutrack-admin .page-header {
+
+    position: relative;
+
+    overflow: hidden;
+
+    min-height: 185px;
+
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+    padding:
+        34px
+        38px;
+
+    border: 0;
+
+    border-radius: 22px;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(99,102,241,.42),
+            transparent 250px
+        ),
+        linear-gradient(
+            120deg,
+            #071426,
+            #102b53 55%,
+            #312e81
+        );
+
+    box-shadow:
+        0 22px 50px
+        rgba(15,23,42,.17);
+}
+
+
+body.edutrack-admin .page-header::after {
+
+    content: "EDUTRACK";
+
+    position: absolute;
+
+    right: -15px;
+
+    bottom: -28px;
+
+    color:
+        rgba(255,255,255,.035);
+
+    font-size: 75px;
+
+    font-weight: 900;
+
+    letter-spacing: -5px;
+}
+
+
+body.edutrack-admin .page-header > * {
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+body.edutrack-admin .page-header h1 {
+
+    margin:
+        0 0
+        8px;
+
+    color: white;
+
+    font-size:
+        clamp(
+            30px,
+            3.5vw,
+            43px
+        );
+
+    letter-spacing: -1.3px;
+}
+
+
+body.edutrack-admin .page-header p {
+
+    margin: 0;
+
+    color: #bdcbe0;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   MARKS PAGE UPGRADE
+========================================================= */
+
+body.edutrack-admin .marks-form-card {
+
+    width: 100%;
+
+    margin-bottom: 18px;
+
+    padding: 25px;
+
+    border:
+        1px solid
+        var(--edu-border);
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        var(--edu-shadow);
+}
+
+
+body.edutrack-admin .marks-form-card h2 {
+
+    margin:
+        0 0
+        17px;
+
+    color: #101828;
+
+    font-size: 19px;
+}
+
+
+body.edutrack-admin .marks-form-card label {
+
+    color: #475467;
+
+    font-size: 10px;
+}
+
+
+body.edutrack-admin .marks-form-card select,
+body.edutrack-admin .marks-form-card input {
+
+    min-height: 43px;
+
+    border-radius: 10px;
+
+    background: #fbfcfe;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   HISTORY PAGE UPGRADE
+========================================================= */
+
+body.edutrack-admin .history-card {
+
+    padding: 0;
+
+    overflow-x: auto;
+
+    border:
+        1px solid
+        var(--edu-border);
+
+    border-radius: 17px;
+
+    background: white;
+
+    box-shadow:
+        var(--edu-shadow);
+}
+
+
+body.edutrack-admin .edit-attendance-form {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+body.edutrack-admin .edit-attendance-form select {
+
+    min-height: 34px;
+
+    padding:
+        0
+        8px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+}
+
+
+body.edutrack-admin .edit-save-button {
+
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    border-radius: 8px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes eduFadeUp {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+.admin-metric-card:nth-child(2) {
+    animation-delay: .05s;
+}
+
+
+.admin-metric-card:nth-child(3) {
+    animation-delay: .10s;
+}
+
+
+.admin-metric-card:nth-child(4) {
+    animation-delay: .15s;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .admin-metric-grid {
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .professional-filter-grid {
+
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+}
+
+
+@media (max-width: 760px) {
+
+    .admin-navbar-title,
+    .admin-user-info {
+
+        display: none;
+    }
+
+
+    body.edutrack-admin .sidebar,
+    body.attendance-v2-page .sidebar {
+
+        width: 100%;
+
+        min-width: 100%;
+
+        min-height: auto;
+    }
+
+
+    .admin-page-hero {
+
+        min-height: 0;
+
+        padding:
+            30px
+            22px;
+    }
+
+
+    .hero-decoration {
+
+        display: none;
+    }
+
+
+    .admin-metric-grid,
+    .professional-filter-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .filter-action-row {
+
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .filter-buttons {
+
+        width: 100%;
+    }
+
+
+    .filter-buttons > * {
+
+        flex: 1;
+    }
+
+
+    .selected-class-banner {
+
+        grid-template-columns:
+            auto
+            1fr;
+    }
+
+
+    .selected-class-status {
+
+        grid-column:
+            1 / -1;
+
+        justify-self:
+            flex-start;
+    }
+
+
+    .attendance-start-state {
+
+        grid-template-columns: 1fr;
+
+        text-align: center;
+    }
+
+
+    .attendance-workflow {
+
+        justify-content: center;
+
+        flex-wrap: wrap;
+    }
+
+
+    .faculty-tip-card {
+
+        grid-template-columns:
+            auto
+            1fr;
+    }
+
+
+    .faculty-tip-card a {
+
+        grid-column:
+            1 / -1;
+
+        margin-left: 54px;
+    }
+
+
+    body.edutrack-admin .page-header {
+
+        min-height: 160px;
+
+        padding:
+            28px
+            23px;
+    }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            .001ms !important;
+
+        transition-duration:
+            .001ms !important;
+    }
+
+}
